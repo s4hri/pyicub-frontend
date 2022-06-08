@@ -1,0 +1,34 @@
+.container.Camera {
+  background-color: goldenrod;
+}
+
+.formCam {
+	/*border: 3px solid blue;*/
+  	border-radius: 20px;
+  	font-size: 1.3vw;
+  	font-weight: bold;
+}
+
+.formCam.run{
+  	background: lightgreen;
+}
+
+.formCam.ready{
+  	background: ghostwhite;
+}
+
+.formCam.disabled{
+	background: lightgray;
+}
+.formCam.done{
+  	background: dodgerblue;
+}
+
+.refFrame {
+	/*border: solid pink;*/
+	width: min-content;
+}
+
+.formCam.click{
+	border-radius: 0px;
+}

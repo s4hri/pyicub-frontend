@@ -1,0 +1,50 @@
+.form_input {
+  background: ghostwhite;
+  border-radius: 20px;
+  font-size: 1.5vw;
+  font-weight: bold;
+  text-align: left;
+  width: 100%;
+}
+
+.label_input{
+  color: cornflowerblue;
+  margin-left: 5%;
+}
+
+.label_input.id {
+  width: 40%;
+}
+
+.label_input.number {
+  width: 40%;
+}
+
+.label_input.select {
+  height: 90%;
+}
+
+.label_input.string {
+  width: 40%;
+}
+
+.label_input.textArea {
+  font-weight: lighter;
+  color: black;
+  font-size: 1.1vw;
+  border-radius: 5px;
+  border: solid lightseagreen;
+  width : 90%;
+  height: 70%;
+  margin-top: 10px;
+}
+/*
+input {
+  border-radius: 3px;
+  width: 90%;
+  padding: 10px;
+  box-shadow: none;
+  background: yellow;
+  border: 1px solid #ccc;
+}
+*/

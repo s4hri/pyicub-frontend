@@ -1,0 +1,27 @@
+.container.GetIntros {
+  background-color: lightseagreen;
+}
+
+.form_info {
+  background: ghostwhite;
+  border-radius: 20px;
+  font-size: 1.3vw;
+  font-weight: bold;
+  text-align: left;
+}
+
+.label_info{
+  margin-left: 5%;
+}
+
+.label_info.name {
+  width: 40%;
+  color: lightseagreen;
+}
+
+.label_info.value {
+  width: 40%;
+  border-radius: 10px;
+  background: powderblue;
+  color: lightslategray;
+}
