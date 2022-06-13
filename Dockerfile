@@ -19,7 +19,8 @@ RUN npm i react-icons
 RUN npm install http-proxy-middleware --save
 
 RUN mkdir -p /root/.vscode-server /root/.vscode-server-insiders
-RUN git clone https://github.com/s4hri/pyicub-frontend tmp
+RUN git clone https://github.com/s4hri/pyicub-frontend -b master tmp
+RUN cd tmp && git checkout ${RELEASE}
 RUN cp -a tmp/. /app/pyicub-frontend/
 RUN rm -rf tmp
 

@@ -32,11 +32,13 @@ services:
 
     build:
       context: .
+      args:
+        RELEASE: ${RELEASE}
 
     environment:
-      - PORT=9001
+      - PORT=${PYICUB_API_FRONTEND_PORT}
       - REACT_APP_API=pyicub
-      - REACT_APP_PROXY=http://localhost:9000
+      - REACT_APP_PROXY=http://${PYICUB_API_BACKEND_HOST}:${PYICUB_API_BACKEND_PORT}
       - REACT_APP_NAME="appname"
 
 volumes:
