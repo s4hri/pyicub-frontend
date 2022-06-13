@@ -5,10 +5,10 @@ RUN mkdir /app
 WORKDIR /app
 
 # Create react app
-RUN npx create-react-app pyicub
+RUN npx create-react-app pyicub-frontend
 
 # Define work directory
-WORKDIR /app/pyicub
+WORKDIR /app/pyicub-frontend
 
 RUN npm ci
 RUN npm install @mui/material @emotion/react @emotion/styled
@@ -17,5 +17,10 @@ RUN npm install react-iframe
 RUN npm install react-router-dom@6
 RUN npm i react-icons
 RUN npm install http-proxy-middleware --save
-COPY ./src /app/pyicub/src
+
+RUN mkdir -p /root/.vscode-server /root/.vscode-server-insiders
+RUN git clone https://github.com/s4hri/pyicub-frontend tmp
+RUN cp -a tmp/. /app/pyicub-frontend/
+RUN rm -rf tmp
+
 CMD ["npm", "start"]
