@@ -70,7 +70,7 @@ export default class Intro extends API {
 		return (
 			<>
 				{view}
-				<SetIntros appName={this.state.appName} apiTarget={"SetIntros"} enabled={this.state.enabled} intros={this.state.intros}/>
+				<SetIntros robotName={this.state.robotName} appName={this.state.appName} apiTarget={"SetIntros"} enabled={this.state.enabled} intros={this.state.intros}/>
 			</>
 		)
 	}

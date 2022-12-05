@@ -11,6 +11,7 @@ export class API extends Component {
 		this.myRef = React.createRef()
 		this.state = {
 			api		  : process.env.REACT_APP_API,
+			robotName : props.robotName			 ,
 			appName   : props.appName			 ,
 			apiTarget : props.apiTarget 		 ,
 			request   : props.request			 ,
@@ -28,10 +29,11 @@ export class API extends Component {
   	}
 
 	async POSTGET(request) {
-		const resPOST = await POST(this.state.api, this.state.appName, this.state.apiTarget, request)
+		const resPOST = await POST(this.state.api, this.state.robotName, this.state.appName, this.state.apiTarget, request)
 		var resGET = null
 		do {
-			resGET  = await GET(this.state.api, this.state.appName, this.state.apiTarget, resPOST)
+			resGET  = await GET(this.state.api, this.state.robotName, this.state.appName, this.state.apiTarget, resPOST)
+			//resGET  = await GET(resPOST)
 			this.setState({
 				response: resGET.retval,
 				status	: resGET.status
@@ -47,7 +49,7 @@ export class API extends Component {
 			headers: { 'Contet-Type': 'application/json' },
 			body: JSON.stringify(request)
 		}
-		const resPOST     = await fetch(`/${this.state.api}/${this.state.appName}/${this.state.apiTarget}?sync`, config);
+		const resPOST     = await fetch(`/${this.state.api}/${this.state.robotName}/${this.state.appName}/${this.state.apiTarget}?sync`, config);
 		const resPOSTJSON = await resPOST.json()
 
 		console.log(`POSTsync ${this.state.apiTarget}`, resPOSTJSON)

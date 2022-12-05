@@ -46,7 +46,7 @@ export default class Camera extends API {
 				<div ref={this.myRef} className="refFrame" >
 					<Iframe url={'http://localhost:'+this.state.portNum+'/?action=stream'} width={this.state.widthCamera} height={this.state.heightCamera}/>
 				</div>
-				<ClickCamera appName={this.state.appName} apiTarget={"ClickCamera"} busy={this.state.busy} callback={this.SetBusy} refX={this.state.refX} refY={this.state.refY} width={this.state.widthCamera} height={this.state.heightCamera}/>
+				<ClickCamera robotName={this.state.robotName} appName={this.state.appName} apiTarget={"ClickCamera"} busy={this.state.busy} callback={this.SetBusy} refX={this.state.refX} refY={this.state.refY} width={this.state.widthCamera} height={this.state.heightCamera}/>
 			</center>
 		return view
 	}

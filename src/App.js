@@ -15,11 +15,12 @@ import Intro from './controller/Intro/Intro';
 import {Main}  from './controller/Main/Main'
 
 const AppRoutes = () => {
-  	const appName = process.env.REACT_APP_NAME
+	const appName = process.env.REACT_APP_NAME
+	const robotName = process.env.REACT_APP_ROBOT_NAME
 
   	let routes = useRoutes([
-  	  	{ path: "/"    , element: <Intro appName={appName} apiTarget={"IntroGUI"} request={{}}/> },
-  	  	{ path: "/main", element: <Main  appName={appName} /> },
+  	  	{ path: "/"    , element: <Intro robotName={robotName} appName={appName} apiTarget={"IntroGUI"} request={{}}/> },
+  	  	{ path: "/main", element: <Main  robotName={robotName} appName={appName} /> },
   	])
   	return routes;
 }

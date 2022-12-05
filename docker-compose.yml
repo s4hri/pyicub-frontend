@@ -39,7 +39,7 @@ services:
       - PORT=${PYICUB_API_FRONTEND_PORT}
       - REACT_APP_API=pyicub
       - REACT_APP_PROXY=http://${PYICUB_API_BACKEND_HOST}:${PYICUB_API_BACKEND_PORT}
-      - REACT_APP_NAME="appname"
+      - REACT_APP_NAME="webapp"
 
 volumes:
   pyicub-frontend-workspace:

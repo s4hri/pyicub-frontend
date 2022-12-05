@@ -23,7 +23,7 @@ export default class Actions extends API {
 			}
 			return (
 				<div key={k}>
-					<Action appName={this.state.appName} apiTarget={"ExecuteAction"} request={request} busy={this.state.busy} callback={this.SetBusy}/> 
+					<Action robotName={this.state.robotName} appName={this.state.appName} apiTarget={"ExecuteAction"} request={request} busy={this.state.busy} callback={this.SetBusy}/> 
 				</div>
 			)
 		})
