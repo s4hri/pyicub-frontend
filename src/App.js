@@ -16,7 +16,7 @@ import {Main}  from './controller/Main/Main'
 
 const AppRoutes = () => {
 	const appName = process.env.REACT_APP_NAME
-	const robotName = process.env.REACT_APP_ROBOT_NAME
+	const robotName = process.env.REACT_APP_ICUB_SIMULATION ? "icubSim" : "icub"
 
   	let routes = useRoutes([
   	  	{ path: "/"    , element: <Intro robotName={robotName} appName={appName} apiTarget={"IntroGUI"} request={{}}/> },
