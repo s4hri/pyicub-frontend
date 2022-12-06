@@ -17,7 +17,7 @@ export async function POST (api, robotName, appName, apiTarget, request) {
 
 export async function GET (api, robotName, appName, apiTarget, resPOST) {
     
-    const resGET     = await fetch(`${resPOST}`);
+    const resGET     = await fetch(`/${api}/${robotName}/${appName}/requests?id=${resPOST}`);
     const resGETJSON = await resGET.json()
     
     console.log(`GET ${apiTarget}`, resPOST, resGETJSON.status, resGETJSON.retval)
