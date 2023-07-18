@@ -1,0 +1,23 @@
+name: Build and Push Docker Image
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            iitschri/pyicub-frontend:latest
+            iitschri/pyicub-frontend:${{ github.event.release.tag_name }}
