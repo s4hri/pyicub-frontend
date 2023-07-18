@@ -1,16 +1,10 @@
 # pyicub-frontend
 
-## How to build
+## How to build (Visual Studio Code)
 
 ```
 git clone https://github.com/s4hri/pyicub-frontend
 cd pyicub-frontend
-docker-compose build
+code .
 ```
 
-## How to run
-
-```
-cd pyicub-frontend
-docker-compose up
-```
