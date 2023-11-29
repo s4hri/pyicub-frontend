@@ -1,1 +1,13 @@
-<div>Hello iCub</div>
+<mat-toolbar class="app-bar mat-elevation-z8 p-0">
+  <button mat-button (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-sidenav-container class="drawer-container">
+  <mat-sidenav #drawer mode="over" opened class="drawer">
+    <app-robot-cell *ngFor="let robot of robots" [robot]="robot" />
+  </mat-sidenav>
+  <mat-sidenav-content class="page-container">
+    <router-outlet/>
+  </mat-sidenav-content>
+</mat-sidenav-container>

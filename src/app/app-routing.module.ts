@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {HomePageComponent} from "./home-page/home-page.component";
+import {ApplicationsPageComponent} from "./applications-page/applications-page.component";
 
-const routes: Routes = [];
+const routes: Routes = [
+  {path:'', component:HomePageComponent},
+  {path:'icub', component:ApplicationsPageComponent}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
