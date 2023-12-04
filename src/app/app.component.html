@@ -5,7 +5,17 @@
 </mat-toolbar>
 <mat-sidenav-container class="drawer-container">
   <mat-sidenav #drawer mode="over" opened class="drawer">
-    <app-robot-cell *ngFor="let robot of robots" [robot]="robot" />
+    <div *ngIf="isLoadingRobots$ | async; else notLoading" class="spinner-container">
+      <mat-progress-spinner mode="indeterminate" class="orange-spinner"/>
+    </div>
+    <ng-template #notLoading>
+    <app-robot-cell *ngFor="let robot of robots$ | async" [robot]="robot" />
+      <div class="reload-button-container">
+        <button (click)="onReloadButtonClick()" class="reload-button">
+          <img src="assets/reload.png" alt="reload Icon" class="reload-button-image"/>
+        </button>
+      </div>
+    </ng-template>
   </mat-sidenav>
   <mat-sidenav-content class="page-container">
     <router-outlet/>

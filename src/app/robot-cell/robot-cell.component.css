@@ -10,6 +10,7 @@
 
 .robot-cell-container:hover{
   background-color: #dfdfdf;
+  cursor:pointer;
 }
 
 .robot-cell-container:active{
@@ -18,10 +19,14 @@
 }
 
 .robot-cell-image{
-  width:16%;
+  width:20%;
   aspect-ratio: 1;
   margin:5%;
   justify-content: flex-start;
+  background-color: #FFECC2;
+  border-radius: 50%;
+  padding:3%;
+  box-sizing: border-box;
 }
 
 .robot-cell-textContainer{

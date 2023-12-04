@@ -32,3 +32,41 @@
   height: 100%;
   width: 100%;
 }
+
+.spinner-container{
+  height:100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reload-button-container{
+  display:flex;
+  width:100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.reload-button{
+  background-color: white;
+  width:12%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.reload-button-image{
+  width:70%;
+  aspect-ratio: 1;
+}
+
+.reload-button:hover{
+  background-color: #dfdfdf;
+  cursor:pointer;
+}
+
+.reload-button:active{
+  transform: scale(0.99);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.10);
+}
+
+

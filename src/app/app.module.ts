@@ -11,6 +11,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatButtonModule} from "@angular/material/button";
 import { ApplicationsPageComponent } from './applications-page/applications-page.component';
+import {HttpClientModule} from "@angular/common/http";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { ApplicationsPageComponent } from './applications-page/applications-page
     MatToolbarModule,
     MatIconModule,
     MatSidenavModule,
-    MatButtonModule
+    MatButtonModule,
+    HttpClientModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
