@@ -2,11 +2,11 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Robot} from "../robotInterface";
 
 @Component({
-  selector: 'app-robot-cell',
-  templateUrl: './robot-cell.component.html',
-  styleUrl: './robot-cell.component.css'
+  selector: 'appbar-robot-cell',
+  templateUrl: './appbar-robot-cell.component.html',
+  styleUrl: './appbar-robot-cell.component.css'
 })
-export class RobotCellComponent {
+export class AppbarRobotCellComponent {
   @Input() robot:Robot
   @Output() public cellClicked = new EventEmitter<Robot>();
 

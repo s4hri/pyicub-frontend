@@ -1,1 +1,3 @@
-<p>applications-page works!</p>
+<button (click)="onApplicationClick(application)" *ngFor="let application of (applications$ | async)">
+  {{application.name}}
+</button>

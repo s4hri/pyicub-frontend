@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {GetRobotsResponse} from "./types/GetRobotsResponse";
+import {GetApplicationsResponse} from "./types/GetApplicationsResponse";
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +17,7 @@ export class ApiService {
 
   getApplications(robotName:string){
     const path = robotName;
-    return this.http.get(`${this.baseUrl}/${path}`)
+    return this.http.get<GetApplicationsResponse>(`${this.baseUrl}/${path}`)
   }
 
 

@@ -12,6 +12,9 @@
 }
 
 .drawer{
+  display:flex;
+  justify-content: center;
+  align-items: center;
   width:18vw;
   background-color: rgb(119,161,215);
   box-sizing: border-box;
@@ -20,9 +23,24 @@
   border-radius: 1vw;
 }
 
+.drawer-robotCellContainer{
+  margin:0%;
+  width:16vw;
+  margin-left:1vw;
+  margin-top:1vw;
+}
+
 .app-bar{
+  box-sizing: border-box;
   display: flex;
   background-color: rgb(119,161,215);
+}
+
+.app-bar-CellContainer{
+  box-sizing: border-box;
+  aspect-ratio: 181/52;
+  margin-inline:0.5vw;
+  height:80%;
 }
 
 .page-container{
@@ -43,6 +61,7 @@
 .reload-button-container{
   display:flex;
   width:100%;
+  margin-top:1vw;
   justify-content: center;
   align-items: center;
 }

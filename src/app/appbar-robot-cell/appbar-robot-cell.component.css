@@ -2,8 +2,7 @@
   display: flex;
   background-color: white;
   aspect-ratio: 181/52;
-  width:100%;
-  border-radius: 1vw;
+  border-radius: 10px;
   box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
   transition: background-color 0.2s ease;
 }
@@ -38,12 +37,6 @@
 
 .robot-cell-primaryText{
   text-align: left;
-  font-size: 1.4vw;
+  font-size: 24px;
   font-weight: bold;
-}
-
-.robot-cell-secondaryText{
-  text-align: left;
-  font-size: 0.7vw;
-  font-weight: normal;
 }

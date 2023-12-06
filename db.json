@@ -1,36 +1,30 @@
 {
-  "icub1": {
-    "applications": [
-      {
-        "name": "myRestApp1",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies iaculis augue, ac iaculis nisl tempus ac."
-      },
-      {
-        "name": "myRestApp2",
-        "description": "Suspendisse vel posuere sapien. Nunc ultrices in nisi in pulvinar. Aliquam vitae imperdiet metus, et luctus diam."
-      }
-    ]
-  },
-  "icub2": {
-    "applications": [
-      {
-        "name": "myRestApp3"
-      },
-      {
-        "name": "myRestApp4"
-      }
-    ]
-  },
-  "icub3": {
-    "applications": [
-      {
-        "name": "myRestApp5"
-      },
-      {
-        "name": "myRestApp6"
-      }
-    ]
-  },
+  "icub1": [
+    {
+      "name": "myRestApp1",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultricies iaculis augue, ac iaculis nisl tempus ac."
+    },
+    {
+      "name": "myRestApp2",
+      "description": "Suspendisse vel posuere sapien. Nunc ultrices in nisi in pulvinar. Aliquam vitae imperdiet metus, et luctus diam."
+    }
+  ],
+  "icub2": [
+    {
+      "name": "myRestApp3"
+    },
+    {
+      "name": "myRestApp4"
+    }
+  ],
+  "icub3": [
+    {
+      "name": "myRestApp5"
+    },
+    {
+      "name": "myRestApp6"
+    }
+  ],
   "pyicub": [
     {
       "name": "icub1",
