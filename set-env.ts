@@ -7,7 +7,7 @@ const targetPath = './src/environments/environment.development.ts';
 require('dotenv').config();
 // `environment.ts` file structure
 const envConfigFile = `export const environment = {
-   apiHost: '${process.env['PYICUB_API_PROXY_HOST']}',
+   apiHost: 'localhost,
    apiPort: '${process.env['PYICUB_API_PROXY_PORT']}'
 };
 `;
