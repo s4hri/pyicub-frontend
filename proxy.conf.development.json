@@ -1,0 +1,14 @@
+{
+  "/robots": {
+    "target": "http://localhost:3000/pyicub",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/robots": "" }
+  },
+  "/applications/*": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/applications": "" }
+  }
+}

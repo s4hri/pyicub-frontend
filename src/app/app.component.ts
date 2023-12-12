@@ -33,7 +33,8 @@ export class AppComponent implements OnInit{
   }
 
   onAppBarApplicationCellClick(application:Application){
-    console.log(application);
+    this.userSessionService.selectApplication(null);
+    this.router.navigate(['icub']);
   }
 
   onAppBarButtonClick(){

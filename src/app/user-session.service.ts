@@ -26,6 +26,9 @@ export class UserSessionService {
     this._selectedApplication.next(val);
   }
   selectRobot(robot:Robot){
+    if(robot !== this.selectedRobot){
+      this.selectedApplication = null;
+    }
     this.selectedRobot = robot;
   }
 

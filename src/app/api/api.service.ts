@@ -8,19 +8,19 @@ import {environment} from "../../environments/environment";
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = `http://${environment.apiHost}:${environment.apiPort}`
+
+  //I path simbolici utilizzati saranno sostituiti da quelli veri tramite la configurazione presente in proxy.conf.json
 
   constructor(private http: HttpClient) { }
 
   getRobots(){
     const path = "pyicub"
-    return this.http.get<GetRobotsResponse>(`${this.baseUrl}/${path}`);
-  }
+    return this.http.get<GetRobotsResponse>(`/robots`);
 
+  }
   getApplications(robotName:string){
     const path = `pyicub/${robotName}`;
-    return this.http.get<GetApplicationsResponse>(`${this.baseUrl}/${path}`)
+    return this.http.get<GetApplicationsResponse>(`/applications/${robotName}`)
   }
-
 
 }

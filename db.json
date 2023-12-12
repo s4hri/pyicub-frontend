@@ -28,39 +28,15 @@
   "pyicub": [
     {
       "name": "icub1",
-      "url": "http://0.0.0.0:9001/pyicub/icub1",
-      "applications": [
-        {
-          "name": "myRestApp1"
-        },
-        {
-          "name": "myRestApp2"
-        }
-      ]
+      "url": "http://0.0.0.0:9001/pyicub/icub1"
     },
     {
       "name": "icub2",
-      "url": "http://0.0.0.0:9001/pyicub/icub2",
-      "applications": [
-        {
-          "name": "myRestApp3"
-        },
-        {
-          "name": "myRestApp4"
-        }
-      ]
+      "url": "http://0.0.0.0:9001/pyicub/icub2"
     },
     {
       "name": "icub3",
-      "url": "http://0.0.0.0:9001/pyicub/icub3",
-      "applications": [
-        {
-          "name": "myRestApp5"
-        },
-        {
-          "name": "myRestApp6"
-        }
-      ]
+      "url": "http://0.0.0.0:9001/pyicub/icub3"
     }
   ]
 }

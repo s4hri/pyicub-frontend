@@ -1,4 +1,4 @@
 export const environment = {
-   apiHost: 'undefined',
-   apiPort: 'undefined'
+  apiHost: undefined,
+  apiPort: undefined
 };

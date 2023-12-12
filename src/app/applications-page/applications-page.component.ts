@@ -4,6 +4,8 @@ import {UserSessionService} from "../user-session.service";
 import {Application} from "../application";
 import {map, Observable, tap} from "rxjs";
 import {Robot} from "../robotInterface";
+import {Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-applications-page',
@@ -18,12 +20,12 @@ export class ApplicationsPageComponent implements OnInit{
 
   onApplicationClick(application:Application){
     this.userSession.selectApplication(application);
+    this.router.navigate(['icub/application']);
   }
 
-  constructor(private applicationsService:ApplicationsService, private userSession:UserSessionService) {}
+  constructor(private applicationsService:ApplicationsService, private userSession:UserSessionService,private router:Router) {}
 
   ngOnInit() {
-
 
     this.userSession.selectedRobot$.subscribe(robot => {
       this.selectedRobot = robot;
@@ -36,7 +38,9 @@ export class ApplicationsPageComponent implements OnInit{
       tap( value => console.log(value)),
       map(robotApps => robotApps[this.selectedRobot.name])
     )
+    console.log(this.userSession.selectedRobot)
 
   }
+
 
 }

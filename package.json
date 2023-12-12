@@ -5,7 +5,8 @@
     "ng": "ng",
     "server": "json-server -p 3000 --watch db.json",
     "config": "ts-node set-env.ts",
-    "start": "npm run config && ng serve",
+    "start": "npm run server & ng serve",
+    "production": "npm run config && ng serve --configuration=production",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

@@ -29,7 +29,7 @@ import { AppbarApplicationCellComponent } from './appbar-application-cell/appbar
     ApplicationsPageComponent,
     AppbarRobotCellComponent,
     ApplicationPageComponent,
-    AppbarApplicationCellComponent,
+    AppbarApplicationCellComponent
   ],
   imports: [
     BrowserModule,

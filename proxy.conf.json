@@ -1,0 +1,15 @@
+{
+
+  "/robots": {
+    "target": "http://localhost:undefined/pyicub",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/robots": "" }
+  },
+  "/applications/*": {
+    "target": "http://localhost:undefined/pyicub",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/applications": "" }
+  }
+}
