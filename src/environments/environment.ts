@@ -1,4 +1,4 @@
 export const environment = {
    apiHost: 'localhost',
-   apiPort: 'undefined'
+   apiPort: '9001'
 };

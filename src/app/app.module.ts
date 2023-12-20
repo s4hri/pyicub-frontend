@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { GridsterModule } from 'angular-gridster2';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,7 +19,13 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { AppbarApplicationCellComponent } from './appbar-application-cell/appbar-application-cell.component';
-
+import { PluginManagerComponent } from './plugin-manager/plugin-manager.component';
+import { Plugin1Component } from './plugins/plugin1/plugin1.component';
+import { Plugin2Component } from './plugins/plugin2/plugin2.component';
+import { PluginWidgetContainerComponent } from './plugin-widget-container/plugin-widget-container.component';
+import { WidgetBaseComponent } from './widget-base/widget-base.component';
+import { ServicesListPluginComponent } from './plugins/services-list-plugin/services-list-plugin.component';
+import { ServiceListItemComponent } from './plugins/services-list-plugin/service-list-item/service-list-item.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +35,14 @@ import { AppbarApplicationCellComponent } from './appbar-application-cell/appbar
     ApplicationsPageComponent,
     AppbarRobotCellComponent,
     ApplicationPageComponent,
-    AppbarApplicationCellComponent
+    AppbarApplicationCellComponent,
+    PluginManagerComponent,
+    Plugin1Component,
+    Plugin2Component,
+    PluginWidgetContainerComponent,
+    WidgetBaseComponent,
+    ServicesListPluginComponent,
+    ServiceListItemComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +56,8 @@ import { AppbarApplicationCellComponent } from './appbar-application-cell/appbar
     MatProgressSpinnerModule,
     MatGridListModule,
     MatCardModule,
-    MatMenuModule
+    MatMenuModule,
+    GridsterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,25 +1,71 @@
-import {Component, OnInit} from '@angular/core';
-import {ApplicationsService} from "../services/applications.service";
-import {UserSessionService} from "../user-session.service";
-import {Observable} from "rxjs";
-import {Application} from "../application";
+import {Component, ViewChild, ViewContainerRef, AfterViewInit, OnInit, ComponentRef} from '@angular/core';
+import {GridsterConfig, GridType, DisplayGrid} from 'angular-gridster2';
+import {PluginService} from "../services/plugin.service";
+import {map} from "rxjs";
 
 @Component({
   selector: 'app-application-page',
   templateUrl: './application-page.component.html',
   styleUrl: './application-page.component.css'
 })
-export class ApplicationPageComponent implements OnInit{
+export class ApplicationPageComponent implements AfterViewInit,OnInit{
 
-  applications$:Observable<Application[]>
+  @ViewChild('content', { read: ViewContainerRef })
+  content: ViewContainerRef;
+  private componentRefs = new Map<string, ComponentRef<any>>();
+  private prevComponentsRefs = new Map<string, ComponentRef<any>>();
 
-  constructor(private applicationsService:ApplicationsService, private userSession:UserSessionService) {}
+  options: GridsterConfig;
+  dashboard: Array<any>;
+  enabledPlugins$ = this.pluginsService.plugins$.pipe(
+    map(plugins => plugins.filter(plugin => plugin.enabled))
+  )
+
+  constructor(public pluginsService:PluginService) {}
 
   ngOnInit(): void {
-    console.log("APPLICATION PAGE SELECTED ROBOT")
-    console.log(this.userSession.selectedRobot)
+    this.options = {
+      gridType: GridType.Fit,
+      displayGrid: DisplayGrid.OnDragAndResize,
+      draggable: {
+        enabled: true,
+        ignoreContent:true,
+        dragHandleClass: 'drag-handler'
+      },
+      resizable: {
+        enabled: true
+      },
+      swapWhileDragging:true,
+      pushItems:true,
+      minCols: 100,
+      maxCols: 100,
+      minRows: 100,
+      maxRows: 100,
+      maxItemCols:100,
+      maxItemRows:100,
+      maxItemArea:100000
+    };
+
+    this.dashboard = [
+      { cols: 30, rows: 15, y: 0, x: 0 },
+      { cols: 30, rows: 30, y: 0, x: 2 }
+      // altri elementi della griglia...
+    ];
+
   }
 
+  ngAfterViewInit(): void {
+    this.options.api.optionsChanged()
+    //this.pluginsService.plugins$.subscribe(plugins => {
 
+      //this.content.clear()
+      //plugins.forEach(plugin => {
+        //if(plugin.enabled){
+          //const ref = this.content.createComponent(PluginWidgetContainerComponent)
+          //ref.setInput('widget',this.pluginsService.pluginMap[plugin.name])
+        //}
+      //})
+    //})
+  }
 
 }

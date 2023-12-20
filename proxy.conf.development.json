@@ -10,5 +10,11 @@
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": { "^/applications": "" }
+  },
+  "/services": {
+    "target": "http://localhost:3000/services",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/services": "" }
   }
 }

@@ -6,7 +6,6 @@ import {map, Observable, tap} from "rxjs";
 import {Robot} from "../robotInterface";
 import {Router} from "@angular/router";
 
-
 @Component({
   selector: 'app-applications-page',
   templateUrl: './applications-page.component.html',
