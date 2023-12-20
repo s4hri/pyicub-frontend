@@ -1,0 +1,42 @@
+.robot-cell-container{
+  display: flex;
+  background-color: white;
+  aspect-ratio: 181/52;
+  border-radius: 10px;
+  box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
+  transition: background-color 0.2s ease;
+}
+
+.robot-cell-container:hover{
+  background-color: #dfdfdf;
+  cursor:pointer;
+}
+
+.robot-cell-container:active{
+  transform: scale(0.99);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}
+
+.robot-cell-image{
+  width:20%;
+  aspect-ratio: 1;
+  margin:5%;
+  justify-content: flex-start;
+  background-color: #FFECC2;
+  border-radius: 50%;
+  padding:3%;
+  box-sizing: border-box;
+}
+
+.robot-cell-textContainer{
+  display:flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+}
+
+.robot-cell-primaryText{
+  text-align: left;
+  font-size: 24px;
+  font-weight: bold;
+}

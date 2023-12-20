@@ -1,0 +1,38 @@
+.grid{
+  margin:2%
+}
+
+
+.application-cell-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap:20px;
+  align-items: center;
+  background-color: white;
+  aspect-ratio: 166/121;
+  width:100%;
+  border-radius: 1vw;
+  transition: background-color 0.2s ease;
+}
+
+.application-cell-container:hover{
+  background-color: #dfdfdf;
+  cursor:pointer;
+}
+
+.application-cell-container:active{
+  transform: scale(0.99);
+}
+
+.application-cell-image{
+  width:20%;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+}
+
+.application-cell-primaryText{
+  text-align: center;
+  font-size: 1.4vw;
+  font-weight: bold;
+}

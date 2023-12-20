@@ -1,0 +1,32 @@
+<mat-toolbar class="app-bar mat-elevation-z8 p-0">
+  <button mat-button (click)="onAppBarButtonClick()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+    <div *ngIf="selectedRobot$ | async" class="app-bar-CellContainer">
+      <appbar-robot-cell (cellClicked)="onAppBarRobotCellClick($event)" [robot]="selectedRobot$ | async"/>
+    </div>
+    <div  *ngIf="(selectedRobot$ | async) && (selectedApplication$ | async)" class="app-bar-CellContainer">
+      <appbar-application-cell (cellClicked)="onAppBarApplicationCellClick($event)" [application]="selectedApplication$ | async"/>
+    </div>
+</mat-toolbar>
+<mat-sidenav-container class="drawer-container">
+  <mat-sidenav mode="over" [(opened)]="isDrawerOpened" class="drawer" >
+    <div *ngIf="isLoadingRobots$ | async; else notLoading" class="spinner-container">
+      <mat-progress-spinner mode="indeterminate" class="orange-spinner"/>
+    </div>
+    <ng-template #notLoading>
+      <div *ngFor="let robot of robots$ | async" class="drawer-robotCellContainer">
+        <app-robot-cell (cellClicked)="onDrawerCellClick($event)" [robot]="robot"/>
+      </div>
+      <div class="reload-button-container">
+        <button (click)="onReloadButtonClick()" class="reload-button">
+          <img src="assets/reload.png" alt="reload Icon" class="reload-button-image"/>
+        </button>
+      </div>
+    </ng-template>
+  </mat-sidenav>
+  <mat-sidenav-content class="page-container">
+    <router-outlet/>
+  </mat-sidenav-content>
+</mat-sidenav-container>

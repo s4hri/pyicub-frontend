@@ -1,0 +1,4 @@
+<div *ngFor="let plugin of plugins$ | async">
+  {{plugin.name}} {{plugin.enabled}}
+  <button (click)="onToggleClick(plugin)">toggle</button>
+</div>
