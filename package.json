@@ -7,7 +7,7 @@
     "config": "ts-node set-env.ts",
     "build-plugins": "ts-node config-plugins.ts",
     "start": "npm run build-plugins && (npm run server & ng serve)",
-    "production": "npm run config && npm run build-plugins && npm run build && ng serve --configuration=production",
+    "production": "npm run config && npm run build-plugins && ng serve --configuration=production",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
