@@ -12,4 +12,6 @@ export class WidgetBaseComponent {
 
   protected apiService = inject(ApiService);
 
+
+
 }

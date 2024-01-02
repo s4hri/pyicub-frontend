@@ -5,6 +5,8 @@ import {GetApplicationsResponse} from "./types/GetApplicationsResponse";
 import {GetApplicationsServicesResponse} from "./types/GetApplicationServicesResponse";
 import {environment} from "../../environments/environment";
 import {map} from "rxjs";
+import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,23 +18,31 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   getRobots(){
-    const path = "pyicub"
-    return this.http.get<GetRobotsResponse>(`/robots`);
+    //const path = "pyicub";
+    const path = "/api/pyicub";
+    //return this.http.get<GetRobotsResponse>(`/robots`);
+    return this.http.get<GetRobotsResponse>(path);
 
   }
   getApplications(robotName:string){
-    const path = `pyicub/${robotName}`;
-    return this.http.get<GetApplicationsResponse>(`/applications/${robotName}`)
+    //const path = `pyicub/${robotName}`;
+    const path = `/api/pyicub/${robotName}`;
+    //return this.http.get<GetApplicationsResponse>(`/applications/${robotName}`);
+    return this.http.get<GetApplicationsResponse>(path);
   }
 
-  getApplicationServices(robotName:string="",appName:string=""){
-    const path = `pyicub/${appName}/${robotName}`;
-    return this.http.get<GetApplicationsServicesResponse>('/services').pipe(
+  getServices(robotName:string="", appName:string=""){
+    const path = `/api/pyicub/${robotName}/${appName}`;
+    return this.http.get<GetApplicationsServicesResponse>(path).pipe(
       map(response => {
         return Object.entries(response).map(([key, value]) => value)
-
       })
     )
+  }
+
+  getRobotActions(robotName:string){
+    const path = `/api/pyicub/${robotName}/helper/actions.getActions`;
+    return this.http.post<GetRobotActionsResponse>(path,{})
   }
 
 }

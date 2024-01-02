@@ -12,7 +12,7 @@ export class ServicesListPluginComponent extends WidgetBaseComponent implements 
   services: ServiceListItem[] = []
 
   ngOnInit(): void {
-    this.apiService.getApplicationServices().subscribe(services => {
+    this.apiService.getServices("icubSim","helper").subscribe(services => {
       this.services = services;
       }
     )

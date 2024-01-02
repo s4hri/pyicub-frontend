@@ -1,21 +1,8 @@
 {
-
-  "/robots": {
-    "target": "http://localhost:9001/pyicub",
+"/api": {
+    "target": "http://localhost:9001",
     "secure": false,
     "changeOrigin": true,
-    "pathRewrite": { "^/robots": "" }
-  },
-  "/applications/*": {
-    "target": "http://localhost:9001/pyicub",
-    "secure": false,
-    "changeOrigin": true,
-    "pathRewrite": { "^/applications": "" }
-  },
-  "/services/*": {
-    "target": "http://localhost:9001/pyicub",
-    "secure": false,
-    "changeOrigin":true,
-    "pathRewrite": { "^/services": "" }
+    "pathRewrite": {"^/api": "" }
   }
 }

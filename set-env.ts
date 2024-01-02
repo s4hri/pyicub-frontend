@@ -7,7 +7,7 @@ const proxyPath = './proxy.conf.json';
 // Load node modules
 require('dotenv').config();
 
-const apiPort = process.env['PYICUB_API_PROXY_PORT'];
+const apiPort = process.env['PYICUB_API_PROXY_PORT'] || '9001';
 
 // `environment.ts` file structure
 const envConfigFile = `export const environment = {
@@ -17,18 +17,11 @@ const envConfigFile = `export const environment = {
 `;
 
 const proxyConfigFile = `{
-
-  "/robots": {
-    "target": "http://localhost:${apiPort}/pyicub",
+"/api": {
+    "target": "http://localhost:9001",
     "secure": false,
     "changeOrigin": true,
-    "pathRewrite": { "^/robots": "" }
-  },
-  "/applications/*": {
-    "target": "http://localhost:${apiPort}/pyicub",
-    "secure": false,
-    "changeOrigin": true,
-    "pathRewrite": { "^/applications": "" }
+    "pathRewrite": {"^/api": "" }
   }
 }
 `
