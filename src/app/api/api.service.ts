@@ -1,11 +1,12 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 import {GetRobotsResponse} from "./types/GetRobotsResponse";
 import {GetApplicationsResponse} from "./types/GetApplicationsResponse";
 import {GetApplicationsServicesResponse} from "./types/GetApplicationServicesResponse";
-import {environment} from "../../environments/environment";
-import {map} from "rxjs";
+import {interval, map, switchMap, takeWhile, tap} from "rxjs";
 import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
+import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
+import {ICubRequestStatus} from "../types/ICubRequestStatus";
 
 
 @Injectable({
@@ -43,6 +44,54 @@ export class ApiService {
   getRobotActions(robotName:string){
     const path = `/api/pyicub/${robotName}/helper/actions.getActions`;
     return this.http.post<GetRobotActionsResponse>(path,{})
+  }
+
+  private getRequestStatus(reqID:string){
+    const path = `/api/${reqID}`
+    return this.http.get<GetRequestStatusResponse>(path)
+  }
+
+  runService(robotName:string, appName:string,serviceName:string){
+    let params = new HttpParams().set('sync','');
+    const path = `/api/pyicub/${robotName}/${appName}/${serviceName}`
+
+    return this.http.post(path,{}, {params:params})
+  }
+
+  runServiceAsync(robotName:string, appName:string,serviceName:string,body:any = {},runningCallback: () => void,doneCallback: (retval:any) => void,failedCallback: () => void){
+    const path = `/api/pyicub/${robotName}/${appName}/${serviceName}`;
+
+    this.http.post<string>(path,body).subscribe(requestID => {
+      const url = new URL(requestID).pathname;
+      const requestStatusPath = `/api${url}`;
+
+      interval(100).pipe(
+        switchMap(() => {
+          return this.http.get<GetRequestStatusResponse>(requestStatusPath).pipe(
+            tap(response => {
+              console.log("POLLING DONE...")
+              console.log(response)
+              switch (response.status) {
+                case ICubRequestStatus.RUNNING:
+                  runningCallback();
+                  break;
+                case ICubRequestStatus.DONE:
+                  doneCallback(response.retval);
+                  break;
+                case ICubRequestStatus.FAILED:
+                  failedCallback();
+                  break;
+                default:
+                  console.log("unknown response status.")
+              }
+            })
+          )
+        }),
+        takeWhile(response => response.status !== ICubRequestStatus.DONE && response.status !== ICubRequestStatus.FAILED && response.status !== ICubRequestStatus.TIMEOUT,true)
+      ).subscribe()
+
+      }
+    )
   }
 
 }

@@ -2,6 +2,7 @@ import {Component, ViewChild, ViewContainerRef, AfterViewInit, OnInit, Component
 import {GridsterConfig, GridType, DisplayGrid} from 'angular-gridster2';
 import {PluginService} from "../services/plugin.service";
 import {map} from "rxjs";
+import {ApiService} from "../api/api.service";
 
 @Component({
   selector: 'app-application-page',
@@ -21,9 +22,10 @@ export class ApplicationPageComponent implements AfterViewInit,OnInit{
     map(plugins => plugins.filter(plugin => plugin.enabled))
   )
 
-  constructor(public pluginsService:PluginService) {}
+  constructor(public pluginsService:PluginService,public apiService:ApiService) {}
 
   ngOnInit(): void {
+    //this.apiService.runServiceAsync('icubSim','myRESTApp','foo',{},() => {console.log("RUNNING CALLBACK!")},() => {console.log("DONE CALLBACK!")},() => {console.log("FAILED CALLBACK!!")})
     this.options = {
       gridType: GridType.Fit,
       displayGrid: DisplayGrid.OnDragAndResize,
