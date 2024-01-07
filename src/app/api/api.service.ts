@@ -16,6 +16,7 @@ export class ApiService {
 
   //I path simbolici utilizzati saranno sostituiti da quelli veri tramite la configurazione presente in proxy.conf.json
 
+  private asyncRequestsStatus:{ [key:string]:ICubRequestStatus } = {}
   constructor(private http: HttpClient) { }
 
   getRobots(){
@@ -41,44 +42,44 @@ export class ApiService {
     )
   }
 
-  getRobotActions(robotName:string){
-    const path = `/api/pyicub/${robotName}/helper/actions.getActions`;
-    return this.http.post<GetRobotActionsResponse>(path,{})
-  }
-
-  private getRequestStatus(reqID:string){
-    const path = `/api/${reqID}`
-    return this.http.get<GetRequestStatusResponse>(path)
-  }
-
-  runService(robotName:string, appName:string,serviceName:string){
+  runService(robotName:string, appName:string,serviceName:string,body:any = {}){
     let params = new HttpParams().set('sync','');
     const path = `/api/pyicub/${robotName}/${appName}/${serviceName}`
 
-    return this.http.post(path,{}, {params:params})
+    return this.http.post(path,body, {params:params})
   }
 
-  runServiceAsync(robotName:string, appName:string,serviceName:string,body:any = {},runningCallback: () => void,doneCallback: (retval:any) => void,failedCallback: () => void){
+  runServiceAsync(robotName:string, appName:string,serviceName:string,body:any = {},initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
     const path = `/api/pyicub/${robotName}/${appName}/${serviceName}`;
 
+    //effettuo la chiamata al servizio
     this.http.post<string>(path,body).subscribe(requestID => {
       const url = new URL(requestID).pathname;
       const requestStatusPath = `/api${url}`;
 
+      this.asyncRequestsStatus[requestID] = ICubRequestStatus.INIT
+      initCallback()
+
+      //ogni 100ms controllo lo stato della richiesta.
       interval(100).pipe(
         switchMap(() => {
           return this.http.get<GetRequestStatusResponse>(requestStatusPath).pipe(
             tap(response => {
-              console.log("POLLING DONE...")
-              console.log(response)
               switch (response.status) {
                 case ICubRequestStatus.RUNNING:
-                  runningCallback();
+                  if(this.asyncRequestsStatus[requestID] !== ICubRequestStatus.RUNNING){
+                    this.asyncRequestsStatus[requestID] = ICubRequestStatus.RUNNING;
+                    runningCallback();
+                  }
                   break;
                 case ICubRequestStatus.DONE:
-                  doneCallback(response.retval);
+                  if(this.asyncRequestsStatus[requestID] !== ICubRequestStatus.DONE){
+                    this.asyncRequestsStatus[requestID] = ICubRequestStatus.DONE;
+                    doneCallback(response.retval);
+                  }
                   break;
                 case ICubRequestStatus.FAILED:
+                  this.asyncRequestsStatus[requestID] = ICubRequestStatus.FAILED;
                   failedCallback();
                   break;
                 default:
@@ -93,5 +94,22 @@ export class ApiService {
       }
     )
   }
+
+  getRobotActions(robotName:string){
+    return this.runService(robotName,"helper","actions.getActions")
+  }
+
+  playAction(robotName:string,actionID:string,sync:boolean = true,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
+    if(sync) {
+      return this.runService(robotName,"helper","actions.playAction",{action_id:actionID})
+    } else {
+      return this.runServiceAsync(robotName,"helper","actions.playAction",{action_id:actionID,initCallback,runningCallback,doneCallback,failedCallback})
+    }
+
+  }
+
+
+
+
 
 }

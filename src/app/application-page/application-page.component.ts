@@ -9,12 +9,10 @@ import {ApiService} from "../api/api.service";
   templateUrl: './application-page.component.html',
   styleUrl: './application-page.component.css'
 })
-export class ApplicationPageComponent implements AfterViewInit,OnInit{
+export class ApplicationPageComponent implements OnInit{
 
-  @ViewChild('content', { read: ViewContainerRef })
-  content: ViewContainerRef;
-  private componentRefs = new Map<string, ComponentRef<any>>();
-  private prevComponentsRefs = new Map<string, ComponentRef<any>>();
+  //@ViewChild('content', { read: ViewContainerRef })
+  //content: ViewContainerRef;
 
   options: GridsterConfig;
   dashboard: Array<any>;
@@ -25,7 +23,7 @@ export class ApplicationPageComponent implements AfterViewInit,OnInit{
   constructor(public pluginsService:PluginService,public apiService:ApiService) {}
 
   ngOnInit(): void {
-    //this.apiService.runServiceAsync('icubSim','myRESTApp','foo',{},() => {console.log("RUNNING CALLBACK!")},() => {console.log("DONE CALLBACK!")},() => {console.log("FAILED CALLBACK!!")})
+    this.apiService.runServiceAsync('icubSim','myRESTApp','foo',{},() => {console.log("INIT CALLBACK!")},() => {console.log("RUNNING CALLBACK!")},() => {console.log("DONE CALLBACK!!")}, () => {console.log("FAILED CALLBACK!!")})
     this.options = {
       gridType: GridType.Fit,
       displayGrid: DisplayGrid.OnDragAndResize,
@@ -54,20 +52,6 @@ export class ApplicationPageComponent implements AfterViewInit,OnInit{
       // altri elementi della griglia...
     ];
 
-  }
-
-  ngAfterViewInit(): void {
-    this.options.api.optionsChanged()
-    //this.pluginsService.plugins$.subscribe(plugins => {
-
-      //this.content.clear()
-      //plugins.forEach(plugin => {
-        //if(plugin.enabled){
-          //const ref = this.content.createComponent(PluginWidgetContainerComponent)
-          //ref.setInput('widget',this.pluginsService.pluginMap[plugin.name])
-        //}
-      //})
-    //})
   }
 
 }
