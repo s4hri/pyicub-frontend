@@ -1,8 +1,19 @@
-import {Component, ViewChild, ViewContainerRef, AfterViewInit, OnInit, ComponentRef} from '@angular/core';
-import {GridsterConfig, GridType, DisplayGrid} from 'angular-gridster2';
+import {
+  Component,
+  ViewChild,
+  ViewContainerRef,
+  AfterViewInit,
+  OnInit,
+  ComponentRef,
+  ElementRef,
+  AfterContentInit
+} from '@angular/core';
+import {GridsterConfig, GridType, DisplayGrid, GridsterItem, GridsterItemComponent} from 'angular-gridster2';
 import {PluginService} from "../services/plugin.service";
-import {map} from "rxjs";
+import {map, Subject} from "rxjs";
 import {ApiService} from "../api/api.service";
+import {FSMWidgetComponent} from "../fsmwidget/fsmwidget.component";
+import {UserSessionService} from "../user-session.service";
 
 @Component({
   selector: 'app-application-page',
@@ -11,22 +22,76 @@ import {ApiService} from "../api/api.service";
 })
 export class ApplicationPageComponent implements OnInit{
 
-  //@ViewChild('content', { read: ViewContainerRef })
-  //content: ViewContainerRef;
+  @ViewChild('fsmitem', {read: ElementRef})
+  fsmItem:ElementRef
+
+  @ViewChild(FSMWidgetComponent)
+  fsm:FSMWidgetComponent
+
+  fsmObject = [
+    {
+      "stateName": "Nome primo stato",
+      "action": "foo",
+      "triggers": {
+        "a": "Nome secondo stato",
+        "b": "Nome terzo stato"
+      }
+    },
+    {
+      "stateName": "Nome secondo stato",
+      "action": "foo",
+      "triggers": {
+        "a": "Nome quarto stato"
+      }
+    },
+    {
+      "stateName": "Nome terzo stato",
+      "action": "foo",
+      "triggers": {
+        "a": "Nome quinto stato"
+      }
+    },
+    {
+      "stateName": "Nome quarto stato",
+      "action": "foo"
+    },
+    {
+      "stateName": "Nome quinto stato",
+      "action": "foo"
+    }
+  ]
 
   options: GridsterConfig;
-  dashboard: Array<any>;
   enabledPlugins$ = this.pluginsService.plugins$.pipe(
     map(plugins => plugins.filter(plugin => plugin.enabled))
   )
 
-  constructor(public pluginsService:PluginService,public apiService:ApiService) {}
+  appName = this.userSession.selectedApplication.name
+  robotName = this.userSession.selectedRobot.name
+
+  constructor(public pluginsService:PluginService,private userSession:UserSessionService,public apiService:ApiService) {}
+
+  onItemResize(item, itemComponent) {
+    if (item.id === 'fsm') {
+      console.log("Resize fsm!")
+      console.log("width:",this.fsmItem.nativeElement.clientWidth)
+      console.log("height:",this.fsmItem.nativeElement.clientHeight)
+      this.fsm.width = this.fsmItem.nativeElement.clientWidth;
+      this.fsm.height = this.fsmItem.nativeElement.clientHeight;
+      //this.fsm.fitGraph()
+      //this.fsm.centerGraph()
+    }
+  }
+
+
 
   ngOnInit(): void {
-    this.apiService.runServiceAsync('icubSim','myRESTApp','foo',{},() => {console.log("INIT CALLBACK!")},() => {console.log("RUNNING CALLBACK!")},() => {console.log("DONE CALLBACK!!")}, () => {console.log("FAILED CALLBACK!!")})
+
+    //this.apiService.runServiceAsync('icubSim','myRESTApp','foo',{},() => {console.log("INIT CALLBACK!")},() => {console.log("RUNNING CALLBACK!")},() => {console.log("DONE CALLBACK!!")}, () => {console.log("FAILED CALLBACK!!")})
     this.options = {
       gridType: GridType.Fit,
       displayGrid: DisplayGrid.OnDragAndResize,
+      itemResizeCallback: this.onItemResize.bind(this),
       draggable: {
         enabled: true,
         ignoreContent:true,
@@ -46,12 +111,10 @@ export class ApplicationPageComponent implements OnInit{
       maxItemArea:100000
     };
 
-    this.dashboard = [
-      { cols: 30, rows: 15, y: 0, x: 0 },
-      { cols: 30, rows: 30, y: 0, x: 2 }
-      // altri elementi della griglia...
-    ];
+  }
 
+  onStateClick(){
+    console.log("state click")
   }
 
 }

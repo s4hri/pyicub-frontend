@@ -26,7 +26,8 @@ import { PluginWidgetContainerComponent } from './plugin-widget-container/plugin
 import { WidgetBaseComponent } from './widget-base/widget-base.component';
 import { ServicesListPluginComponent } from './plugins/services-list-plugin/services-list-plugin.component';
 import { ServiceListItemComponent } from './plugins/services-list-plugin/service-list-item/service-list-item.component';
-
+import {NgxGraphModule} from "@swimlane/ngx-graph";
+import { FSMWidgetComponent } from './fsmwidget/fsmwidget.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +43,8 @@ import { ServiceListItemComponent } from './plugins/services-list-plugin/service
     PluginWidgetContainerComponent,
     WidgetBaseComponent,
     ServicesListPluginComponent,
-    ServiceListItemComponent
+    ServiceListItemComponent,
+    FSMWidgetComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +59,8 @@ import { ServiceListItemComponent } from './plugins/services-list-plugin/service
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
-    GridsterModule
+    GridsterModule,
+    NgxGraphModule
   ],
   providers: [],
   bootstrap: [AppComponent]

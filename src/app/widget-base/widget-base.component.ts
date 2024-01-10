@@ -19,6 +19,14 @@ export class WidgetBaseComponent {
 
   protected apiService = inject(ApiService);
 
+  runService(serviceName:string,body:any){
+    return this.apiService.runService(this.robotName,this.appName,serviceName,body)
+  }
+
+  runServiceAsync(serviceName:string,body:any = {},initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
+    return this.apiService.runServiceAsync(this.robotName, this.appName,serviceName,body,initCallback,runningCallback,doneCallback,failedCallback)
+  }
+
   getRobotActions(){
     return this.apiService.runService(this.robotName,"helper","actions.getActions")
   }

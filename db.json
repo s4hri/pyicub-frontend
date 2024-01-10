@@ -39,6 +39,38 @@
       "url": "http://0.0.0.0:9001/pyicub/icub3"
     }
   ],
+  "fsm":[
+    {
+      "stateName": "Nome primo stato",
+      "action": "foo",
+      "triggers": {
+        "a": "Nome secondo stato",
+        "b": "Nome terzo stato"
+      }
+    },
+    {
+      "stateName": "Nome secondo stato",
+      "action": "foo",
+      "triggers": {
+        "a": "Nome quarto stato"
+      }
+    },
+    {
+      "stateName": "Nome terzo stato",
+      "action": "foo",
+      "triggers": {
+        "a": "Nome quinto stato"
+      }
+    },
+    {
+      "stateName": "Nome quarto stato",
+      "action": "foo"
+    },
+    {
+      "stateName": "Nome quinto stato",
+      "action": "foo"
+    }
+  ],
   "services": {
     "date": {
       "app_name": "myRESTApp",

@@ -1,0 +1,19 @@
+<ngx-graph
+  class="chart-container"
+  [links]="links"
+  [view]="[width,height]"
+  [nodes]="nodes"
+  [zoomToFit$]="zoomToFit$"
+  [center$]="center$"
+  [update$]="update$"
+  [panToNode$]="panToNode$"
+  [draggingEnabled]="false"
+>
+  <ng-template #nodeTemplate let-node>
+    <svg (click)="activeNodes.includes(node.id) && onNodeClick(node)">
+      <rect rx="10" ry="10" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [style.fill]="activeNodes.includes(node.id) || runningNode === node.id ? node.color : 'gray'" stroke="black" stroke-width="2"></rect>
+      <text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{ node.label }}</text>
+    </svg>
+  </ng-template>
+
+</ngx-graph>

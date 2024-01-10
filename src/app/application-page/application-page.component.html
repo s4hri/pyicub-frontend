@@ -2,9 +2,14 @@
   <app-plugin-manager></app-plugin-manager>
   <div  class="plugins-grid-container">
     <gridster [options]="options">
+      <gridster-item [item]="{x:0,y:0,cols:30,rows:30, id:'fsm'}">
+        <div #fsmitem class="gridster-item-content" style="background-color: black">
+          <app-fsmwidget [appName]="appName" [robotName]="robotName" [fsm]="fsmObject"/>
+        </div>
+      </gridster-item>
       <gridster-item *ngFor="let plugin of (enabledPlugins$ | async)" [item]="{x:0,y:0,cols:10,rows:10}">
         <div class="gridster-item-content drag-handler" >
-          <ng-container *ngComponentOutlet="pluginsService.getPluginComponent(plugin.name)"></ng-container>
+          <ng-container *ngComponentOutlet="pluginsService.getPluginComponent(plugin.name); inputs:{appName:appName,robotName:robotName}"></ng-container>
         </div>
       </gridster-item>
     </gridster>
