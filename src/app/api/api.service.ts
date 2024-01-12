@@ -7,6 +7,7 @@ import {interval, map, switchMap, takeWhile, tap} from "rxjs";
 import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../types/ICubRequestStatus";
+import {Application} from "../types/Application";
 
 
 @Injectable({
@@ -30,7 +31,12 @@ export class ApiService {
     //const path = `pyicub/${robotName}`;
     const path = `/api/pyicub/${robotName}`;
     //return this.http.get<GetApplicationsResponse>(`/applications/${robotName}`);
-    return this.http.get<GetApplicationsResponse>(path);
+    return this.http.get<GetApplicationsResponse>(path).pipe(
+      map(response => {
+        return response.map(applicationObject => new Application(applicationObject.name,applicationObject.url)
+        )
+      })
+    );
   }
 
   getServices(robotName:string="", appName:string=""){

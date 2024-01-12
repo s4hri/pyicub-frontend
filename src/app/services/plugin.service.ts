@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Plugin} from "../plugin";
+import {Plugin} from "../types/Plugin";
 import {BehaviorSubject, Observable} from "rxjs";
 import {pluginIndex} from "../plugins";
 
@@ -7,6 +7,7 @@ import {pluginIndex} from "../plugins";
   providedIn: 'root'
 })
 export class PluginService {
+  /*
   pluginMap = pluginIndex;
   private readonly _plugins:BehaviorSubject<Plugin[]>;
   readonly plugins$:Observable<Plugin[]>;
@@ -70,4 +71,6 @@ export class PluginService {
     this._plugins = new BehaviorSubject<Plugin[]>(initialPluginsList);
     this.plugins$ = this._plugins.asObservable();
   }
+
+   */
 }

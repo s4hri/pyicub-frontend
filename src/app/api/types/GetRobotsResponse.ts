@@ -1,3 +1,3 @@
-import {Robot} from "../../robotInterface";
+import {Robot} from "../../types/Robot";
 
 export type GetRobotsResponse = Robot[]

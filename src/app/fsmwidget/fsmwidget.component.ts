@@ -139,7 +139,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit{
   onNodeClick(node){
     //console.log(node)
     //console.log(this.graph)
-    //this.graph.panTo(node.position.x + this.graph.width/3,node.position.y)
+    this.graph.panTo(node.position.x + this.graph.width/3,node.position.y)
     this.activeNodes = [];
     this.runningNode = node.id;
     let triggers = this.fsm.find(state => state.stateName === node.id)['triggers']

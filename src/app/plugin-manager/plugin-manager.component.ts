@@ -1,6 +1,7 @@
 import {Compiler, Component, ComponentFactoryResolver} from '@angular/core';
 import {PluginService} from "../services/plugin.service";
-import {Plugin} from "../plugin";
+import {Plugin} from "../types/Plugin";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'app-plugin-manager',
@@ -9,10 +10,11 @@ import {Plugin} from "../plugin";
 })
 export class PluginManagerComponent {
 
-  plugins$ = this.pluginService.plugins$;
+  plugins$ = new BehaviorSubject(undefined)
+  //plugins$ = this.pluginService.plugins$;
 
   onToggleClick(plugin:Plugin){
-    this.pluginService.togglePlugin(plugin.name);
+    //this.pluginService.togglePlugin(plugin.name);
   }
   constructor(private pluginService:PluginService,private compiler:Compiler) {
   }

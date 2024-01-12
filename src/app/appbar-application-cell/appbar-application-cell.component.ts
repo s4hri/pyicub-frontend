@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Application} from "../application";
+import {Application} from "../types/Application";
 
 @Component({
   selector: 'appbar-application-cell',

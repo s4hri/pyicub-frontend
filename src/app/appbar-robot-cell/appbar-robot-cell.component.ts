@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Robot} from "../robotInterface";
+import {Robot} from "../types/Robot";
 
 @Component({
   selector: 'appbar-robot-cell',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from "rxjs";
-import {Application} from "../application";
+import {Application} from "../types/Application";
 import {ApiService} from "../api/api.service";
 
 interface RobotApps{

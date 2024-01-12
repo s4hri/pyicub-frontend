@@ -13,7 +13,9 @@ import {PluginService} from "../services/plugin.service";
 import {map, Subject} from "rxjs";
 import {ApiService} from "../api/api.service";
 import {FSMWidgetComponent} from "../fsmwidget/fsmwidget.component";
-import {UserSessionService} from "../user-session.service";
+import {UserSessionService} from "../services/user-session.service";
+import {AppStateService} from "../services/app-state.service";
+import {Plugin} from "../types/Plugin";
 
 @Component({
   selector: 'app-application-page',
@@ -62,14 +64,15 @@ export class ApplicationPageComponent implements OnInit{
   ]
 
   options: GridsterConfig;
-  enabledPlugins$ = this.pluginsService.plugins$.pipe(
-    map(plugins => plugins.filter(plugin => plugin.enabled))
-  )
 
-  appName = this.userSession.selectedApplication.name
-  robotName = this.userSession.selectedRobot.name
+  enabledPlugins$ = this.appState.selectedRobot.selectedApplication.enabledPlugins$;
+  plugins$ = this.appState.selectedRobot.selectedApplication.plugins$;
 
-  constructor(public pluginsService:PluginService,private userSession:UserSessionService,public apiService:ApiService) {}
+  appName = this.appState.selectedRobot.selectedApplication.name
+  robotName = this.appState.selectedRobot.name
+
+  constructor(public pluginsService:PluginService,public appState:AppStateService,public apiService:ApiService) {}
+  ///constructor(public pluginsService:PluginService,private userSession:UserSessionService,public apiService:ApiService) {}
 
   onItemResize(item, itemComponent) {
     if (item.id === 'fsm') {
@@ -81,6 +84,10 @@ export class ApplicationPageComponent implements OnInit{
       //this.fsm.fitGraph()
       //this.fsm.centerGraph()
     }
+  }
+
+  onPluginToggle(plugin:Plugin){
+    this.appState.selectedRobot.selectedApplication.togglePlugin(plugin)
   }
 
 

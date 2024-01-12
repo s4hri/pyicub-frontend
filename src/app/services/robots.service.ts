@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from "../api/api.service";
 import {BehaviorSubject} from "rxjs";
-import {Robot} from "../robotInterface";
+import {Robot} from "../types/Robot";
 
 @Injectable({
   providedIn: 'root'

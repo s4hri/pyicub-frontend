@@ -1,9 +1,10 @@
 import { Component,OnInit } from '@angular/core';
 import {RobotsService} from "./services/robots.service";
-import {UserSessionService} from "./user-session.service";
-import {Robot} from "./robotInterface";
+import {UserSessionService} from "./services/user-session.service";
+import {Robot} from "./types/Robot";
 import {Router} from "@angular/router";
-import {Application} from "./application";
+import {Application} from "./types/Application";
+import {AppStateService} from "./services/app-state.service";
 
 @Component({
   selector: 'app-root',
@@ -12,18 +13,23 @@ import {Application} from "./application";
 })
 export class AppComponent implements OnInit{
   isDrawerOpened:boolean = true;
-  robots$ = this.robotsService.robots$;
-  isLoadingRobots$ = this.robotsService.isLoadingRobots$;
-  selectedRobot$ = this.userSessionService.selectedRobot$;
-  selectedApplication$ = this.userSessionService.selectedApplication$;
-  constructor(private robotsService:RobotsService, private userSessionService: UserSessionService, private router:Router){}
+  robots$ = this.appState.availableRobots$;
+  //robots$ = this.robotsService.robots$;
+  isLoadingRobots$ = this.appState.isLoadingRobots$;
+  //isLoadingRobots$ = this.robotsService.isLoadingRobots$;
+  selectedRobot$ = this.appState.selectedRobot$;
+  //selectedRobot$ = this.userSessionService.selectedRobot$;
+  //selectedApplication$ = this.userSessionService.selectedApplication$;
+  //constructor(private robotsService:RobotsService, private userSessionService: UserSessionService, private router:Router){}
+  constructor(private appState:AppStateService, private router:Router){}
 
   onReloadButtonClick(){
-    this.robotsService.updateRobots();
+    this.appState.updateRobots();
+    //this.robotsService.updateRobots();
   }
 
   onDrawerCellClick(robot:Robot){
-    this.userSessionService.selectRobot(robot);
+    this.appState.selectRobot(robot);
     this.router.navigate(['icub']);
     this.isDrawerOpened = false;
   }
@@ -33,7 +39,7 @@ export class AppComponent implements OnInit{
   }
 
   onAppBarApplicationCellClick(application:Application){
-    this.userSessionService.selectApplication(null);
+    //this.userSessionService.selectApplication(null);
     this.router.navigate(['icub']);
   }
 
@@ -42,7 +48,7 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.robotsService.updateRobots();
+    this.appState.updateRobots();
   }
 
 }
