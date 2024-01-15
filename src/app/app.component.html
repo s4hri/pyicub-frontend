@@ -3,12 +3,22 @@
     <mat-icon>menu</mat-icon>
   </button>
 
-    <div *ngIf="selectedRobot$ | async" class="app-bar-CellContainer">
-      <appbar-robot-cell (cellClicked)="onAppBarRobotCellClick($event)" [robot]="selectedRobot$ | async"/>
-    </div>
-    <div  *ngIf="(selectedRobot$ | async) && (selectedRobot$ | async).selectedApplication" class="app-bar-CellContainer">
-      <appbar-application-cell (cellClicked)="onAppBarApplicationCellClick($event)" [application]="(selectedRobot$ | async).selectedApplication"/>
-    </div>
+  <div *ngIf="selectedRobot$ | async" class="app-bar-CellContainer">
+    <appbar-robot-cell (cellClicked)="onAppBarRobotCellClick($event)" [robot]="selectedRobot$ | async"/>
+  </div>
+  <div  *ngIf="(selectedRobot$ | async) && (selectedRobot$ | async).selectedApplication" class="app-bar-CellContainer">
+    <appbar-application-cell (cellClicked)="onAppBarApplicationCellClick($event)" [application]="(selectedRobot$ | async).selectedApplication"/>
+  </div>
+
+  <mat-form-field>
+    <mat-label>Toppings</mat-label>
+    <mat-select [formControl]="toppings" multiple>
+      <ng-container *ngFor="let topping of toppingList">
+        <mat-option [value]="topping">{{topping}}</mat-option>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+
 </mat-toolbar>
 <mat-sidenav-container class="drawer-container">
   <mat-sidenav mode="over" [(opened)]="isDrawerOpened" class="drawer" >

@@ -28,6 +28,9 @@ import { ServicesListPluginComponent } from './plugins/services-list-plugin/serv
 import { ServiceListItemComponent } from './plugins/services-list-plugin/service-list-item/service-list-item.component';
 import {NgxGraphModule} from "@swimlane/ngx-graph";
 import { FSMWidgetComponent } from './fsmwidget/fsmwidget.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,7 +63,12 @@ import { FSMWidgetComponent } from './fsmwidget/fsmwidget.component';
     MatCardModule,
     MatMenuModule,
     GridsterModule,
-    NgxGraphModule
+    NgxGraphModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatFormFieldModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

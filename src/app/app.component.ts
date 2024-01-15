@@ -5,6 +5,7 @@ import {Robot} from "./types/Robot";
 import {Router} from "@angular/router";
 import {Application} from "./types/Application";
 import {AppStateService} from "./services/app-state.service";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,8 @@ import {AppStateService} from "./services/app-state.service";
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
+  toppings = new FormControl('');
+  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   isDrawerOpened:boolean = true;
   robots$ = this.appState.availableRobots$;
   //robots$ = this.robotsService.robots$;
