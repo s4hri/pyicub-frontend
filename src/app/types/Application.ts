@@ -40,5 +40,19 @@ export class Application{
     this.plugins = plugins;
     this.fsm = fsm;
   }
+
+  exportToJSON():string{
+    let json:{[key:string]:string} = {};
+    json["robotName"] = this.robotName;
+    json["name"] = this.name;
+    json["url"] = this.url;
+    json["description"] = this.description;
+    let plugins = []
+    for(let plugin of this.plugins){
+      plugins.push(plugin.exportToJSON())
+    }
+    return JSON.stringify(json)
+
+  }
 }
 

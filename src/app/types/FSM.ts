@@ -28,4 +28,9 @@ export class FSM implements DashboardItem{
     this.id = 'fsm'
   }
 
+  exportToJSON():string{
+    let json:{[key:string]:string} = {};
+    return "fsm"
+  }
+
 }

@@ -26,4 +26,17 @@ export class Plugin implements DashboardItem{
   y: number;
   id:string;
 
+  exportToJSON():string{
+    let json:{[key:string]:any} = {};
+    json["name"] = this.name
+    json["enabled"] = this.enabled
+    json["cols"] = this.cols
+    json["rows"] = this.rows
+    json["x"] = this.x
+    json["y"] = this.y
+    json["id"] = this.id
+
+    return JSON.stringify(json)
+  }
+
 }

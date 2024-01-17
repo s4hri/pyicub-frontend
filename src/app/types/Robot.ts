@@ -1,5 +1,5 @@
 import {Application} from "./Application";
-export interface Robot{
+export class Robot{
   name:string
   url:string
   applications:Application[]

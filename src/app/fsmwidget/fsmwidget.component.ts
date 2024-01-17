@@ -3,6 +3,7 @@ import {WidgetBaseComponent} from "../widget-base/widget-base.component";
 import {Subject} from "rxjs";
 import {GraphComponent} from "@swimlane/ngx-graph";
 import {FSM} from "../types/FSM";
+import {AppStateService} from "../services/app-state.service";
 
 @Component({
   selector: 'app-fsmwidget',
@@ -11,7 +12,7 @@ import {FSM} from "../types/FSM";
 })
 export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,AfterViewInit{
 
-  constructor(private changeDec:ChangeDetectorRef) {
+  constructor(private changeDec:ChangeDetectorRef,private appData:AppStateService) {
     super();
   }
 
@@ -171,6 +172,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
     //this.center();
     console.log("GRAPH",this.graph)
     console.log(node.position)
+    this.appData.saveData();
     //console.log(node)
     //console.log(this.graph)
     /*

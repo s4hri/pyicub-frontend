@@ -5,6 +5,7 @@ import {BehaviorSubject} from "rxjs";
 import {Application} from "../types/Application";
 import {pluginIndex} from "../plugins";
 import {Plugin} from "../types/Plugin";
+import {LocalStorageService} from "./local-storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class AppStateService {
     this._selectedRobot.next(val);
   }
 
-  constructor(public apiService:ApiService) {
+  constructor(public apiService:ApiService, private localStorageService:LocalStorageService) {
 
     this.apiService.getRobots().subscribe(robots => {
       this.availableRobots = robots
@@ -62,6 +63,12 @@ export class AppStateService {
       }
 
     })
+  }
+
+  saveData(){
+    let appData:{[key:string]:any}
+    //appData["availableRobots"] = JSON.stringify(this.availableRobots)
+
   }
 
   updateRobots() {
