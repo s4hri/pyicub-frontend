@@ -9,7 +9,7 @@ import {FSM} from "../types/FSM";
   templateUrl: './fsmwidget.component.html',
   styleUrl: './fsmwidget.component.css'
 })
-export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit{
+export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,AfterViewInit{
 
   @ViewChild(GraphComponent)
   graph:GraphComponent
@@ -19,9 +19,6 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit{
 
   activeNodes:string[] = [];
   runningNode:string = '';
-
-  width:number
-  height:number
 
   zoomToFit$: Subject<boolean> = new Subject();
   center$: Subject<boolean> = new Subject();
@@ -34,7 +31,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit{
   ngOnInit() {
     let nodes = []
     let links = []
-    this.fsm.forEach(state => {
+    this.fsm.states.forEach(state => {
       nodes.push({
         id:state.stateName,
         label:state.stateName,
@@ -56,6 +53,13 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit{
     this.nodes = nodes;
     this.links = links;
     this.activeNodes.push('Nome primo stato')
+
+  }
+
+  ngAfterViewInit() {
+    console.log(this.graph)
+    //let initNode = this.nodes.find(node => node.id === 'Nome primo stato')
+    //this.graph.panTo(initNode.position.x + this.graph.width/3,initNode.position.y)
   }
 
   /*
@@ -128,6 +132,24 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit{
     this.center$.next(true)
   }
 
+  center(){
+    let minX = 100000000000;
+    let minY = 100000000000;
+    let maxX = 0;
+    let maxY = 0;
+    for (let i = 0; i < this.graph.nodes.length; i++) {
+      const node = this.graph.nodes[i];
+      let halfWidth = node.dimension.width / 2;
+      let halfHeight = node.dimension.height / 2;
+      minX = node.position.x - halfWidth < minX ? node.position.x - halfWidth : minX;
+      minY = node.position.y - halfHeight < minY ? node.position.y - halfHeight : minY;
+      maxX = node.position.x + halfWidth > maxX ? node.position.x + halfWidth : maxX;
+      maxY = node.position.y + halfHeight > maxY ? node.position.y + halfHeight : maxY;
+    }
+
+    this.graph.panTo(minX + this.graph.graphDims.width / 2, minY + this.graph.graphDims.height / 2);
+  }
+
   updateGraph() {
     this.update$.next(true)
   }
@@ -137,19 +159,22 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit{
   }
 
   onNodeClick(node){
+    this.center();
+    console.log(this.graph)
     //console.log(node)
     //console.log(this.graph)
+    /*
     this.graph.panTo(node.position.x + this.graph.width/3,node.position.y)
     this.activeNodes = [];
     this.runningNode = node.id;
-    let triggers = this.fsm.find(state => state.stateName === node.id)['triggers']
+    let triggers = this.fsm.states.find(state => state.stateName === node.id)['triggers']
     let nodesToActivate:string[] = [];
     for(let trigger in triggers){
       nodesToActivate.push(triggers[trigger])
     }
 
     this.runServiceAsync(node.action,{},() =>{},() => {node.color = 'yellow'},() => {node.color = 'green'; this.activeNodes = nodesToActivate})
-
+    */
   }
 
 

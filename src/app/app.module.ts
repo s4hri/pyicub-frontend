@@ -31,6 +31,7 @@ import { FSMWidgetComponent } from './fsmwidget/fsmwidget.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { DashboardComponent } from './dashboard/dashboard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +48,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     WidgetBaseComponent,
     ServicesListPluginComponent,
     ServiceListItemComponent,
-    FSMWidgetComponent
+    FSMWidgetComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

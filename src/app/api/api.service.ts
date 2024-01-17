@@ -8,6 +8,7 @@ import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../types/ICubRequestStatus";
 import {Application} from "../types/Application";
+import {FSM} from "../types/FSM";
 
 
 @Injectable({
@@ -33,7 +34,39 @@ export class ApiService {
     //return this.http.get<GetApplicationsResponse>(`/applications/${robotName}`);
     return this.http.get<GetApplicationsResponse>(path).pipe(
       map(response => {
-        return response.map(applicationObject => new Application(applicationObject.name,applicationObject.url)
+        let states = [
+          {
+            "stateName": "Nome primo stato",
+            "action": "foo",
+            "triggers": {
+              "a": "Nome secondo stato",
+              "b": "Nome terzo stato"
+            }
+          },
+          {
+            "stateName": "Nome secondo stato",
+            "action": "foo",
+            "triggers": {
+              "a": "Nome quarto stato"
+            }
+          },
+          {
+            "stateName": "Nome terzo stato",
+            "action": "foo",
+            "triggers": {
+              "a": "Nome quinto stato"
+            }
+          },
+          {
+            "stateName": "Nome quarto stato",
+            "action": "foo"
+          },
+          {
+            "stateName": "Nome quinto stato",
+            "action": "foo"
+          }
+        ]
+        return response.map(applicationObject => new Application(robotName,applicationObject.name,applicationObject.url,new FSM(states))
         )
       })
     );

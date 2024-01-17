@@ -53,7 +53,7 @@ export class AppStateService {
 
           for(let application of applications){
             for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
-              application.plugins.push(new Plugin(pluginName,componentName,false))
+              application.plugins.push(new Plugin(pluginName,componentName,false,20,20))
             }
           }
 
@@ -78,7 +78,7 @@ export class AppStateService {
           for(let application of applications){
             console.log(application)
             for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
-              application.plugins.push(new Plugin(pluginName,componentName,false))
+              application.plugins.push(new Plugin(pluginName,componentName,false,20,20))
             }
           }
 
