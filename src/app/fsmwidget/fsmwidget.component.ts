@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {WidgetBaseComponent} from "../widget-base/widget-base.component";
 import {Subject} from "rxjs";
 import {GraphComponent} from "@swimlane/ngx-graph";
@@ -10,6 +10,10 @@ import {FSM} from "../types/FSM";
   styleUrl: './fsmwidget.component.css'
 })
 export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,AfterViewInit{
+
+  constructor(private changeDec:ChangeDetectorRef) {
+    super();
+  }
 
   @ViewChild(GraphComponent)
   graph:GraphComponent
@@ -57,10 +61,15 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   }
 
   ngAfterViewInit() {
-    console.log(this.graph)
-    //let initNode = this.nodes.find(node => node.id === 'Nome primo stato')
-    //this.graph.panTo(initNode.position.x + this.graph.width/3,initNode.position.y)
+    let initNode = this.nodes.find(node => node.id === 'Nome primo stato')
+    setTimeout(() => {
+      console.log(initNode.dimension)
+      this.graph.panTo(initNode.position.x + initNode.dimension.width ,initNode.position.y)
+    },100)
+
   }
+
+
 
   /*
     links = [
@@ -159,8 +168,9 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   }
 
   onNodeClick(node){
-    this.center();
-    console.log(this.graph)
+    //this.center();
+    console.log("GRAPH",this.graph)
+    console.log(node.position)
     //console.log(node)
     //console.log(this.graph)
     /*

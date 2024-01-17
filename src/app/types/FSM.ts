@@ -17,7 +17,7 @@ export class FSM implements DashboardItem{
 
   states:State[]
 
-  constructor(states:State[],cols:number = 30,rows:number = 30,width:number=0,height:number=0, x:number = 0, y:number = 0) {
+  constructor(states:State[],cols:number = 50,rows:number = 50,width:number=0,height:number=0, x:number = 0, y:number = 0) {
     this.states = states;
     this.cols = cols;
     this.rows = rows;
