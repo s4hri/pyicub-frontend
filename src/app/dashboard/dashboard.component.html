@@ -1,6 +1,6 @@
 <div  class="plugins-grid-container">
   <gridster [options]="options">
-    <gridster-item [item]="{x:application.fsm.x,y:application.fsm.y,cols:application.fsm.cols,rows:application.fsm.rows, id:'fsm'}">
+    <gridster-item *ngIf="application.fsm" [item]="{x:application.fsm.x,y:application.fsm.y,cols:application.fsm.cols,rows:application.fsm.rows, id:'fsm'}">
       <div #fsmitem class="gridster-item-content" style="background-color: black">
         <app-fsmwidget [appName]="application.name" [robotName]="application.robotName" [fsm]="application.fsm"/>
       </div>

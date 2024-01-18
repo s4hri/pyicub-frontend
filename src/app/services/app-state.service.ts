@@ -53,12 +53,22 @@ export class AppStateService {
         this.apiService.getApplications(robot.name).subscribe(applications => {
 
           for(let application of applications){
+
+            if(application.name !== "helper"){
+              this.apiService.getApplicationFSM(robot.name,application.name).subscribe(fsm => {
+                application.fsm = fsm;
+              })
+            }
+
+
             for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
               application.plugins.push(new Plugin(pluginName,componentName,false,20,20))
             }
           }
 
           robot.applications = applications
+          console.log("Robot Applications")
+          console.log(robot.applications)
         })
       }
 
@@ -83,13 +93,22 @@ export class AppStateService {
         this.apiService.getApplications(robot.name).subscribe(applications => {
 
           for(let application of applications){
-            console.log(application)
+
+            if(application.name !== "helper"){
+              this.apiService.getApplicationFSM(robot.name,application.name).subscribe(fsm => {
+                application.fsm = fsm;
+              })
+            }
+
+
             for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
               application.plugins.push(new Plugin(pluginName,componentName,false,20,20))
             }
           }
 
           robot.applications = applications
+          console.log("Robot Applications")
+          console.log(robot.applications)
         })
       }
 

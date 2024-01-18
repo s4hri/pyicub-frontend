@@ -1,9 +1,22 @@
 import {DashboardItem} from "./DashboardItem";
 
-interface State {
+export enum NodeStatus{
+  INACTIVE,
+  ACTIVE,
+  RUNNING,
+  DONE,
+  FAILED
+}
+
+export class State {
   stateName: string;
   action: string;
-  triggers?: { [key: string]: string };
+  triggers: { [key: string]: string };
+
+  constructor(stateName:string,triggers:{ [key: string]: string },action:string = "") {
+    this.stateName = stateName;
+    this.triggers = triggers
+  }
 }
 
 export class FSM implements DashboardItem{

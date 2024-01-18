@@ -19,12 +19,24 @@ export class WidgetBaseComponent {
 
   protected apiService = inject(ApiService);
 
+  getApplicationFSM(){
+    return this.apiService.getApplicationFSM(this.robotName,this.appName)
+  }
+
+  checkAsyncRequestStatus(requestID:string,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
+    return this.apiService.checkAsyncRequestStatus(requestID,initCallback,runningCallback,doneCallback,failedCallback)
+  }
+
   runService(serviceName:string,body:any){
     return this.apiService.runService(this.robotName,this.appName,serviceName,body)
   }
 
   runServiceAsync(serviceName:string,body:any = {},initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
-    return this.apiService.runServiceAsync(this.robotName, this.appName,serviceName,body,initCallback,runningCallback,doneCallback,failedCallback)
+    return this.apiService.runServiceAsync(this.robotName, this.appName,serviceName,body)
+  }
+
+  fsmRunStep(trigger:string){
+    return this.apiService.runServiceAsync(this.robotName,this.appName,"fsm.runStep",{trigger:trigger})
   }
 
   getRobotActions(){
@@ -35,7 +47,7 @@ export class WidgetBaseComponent {
     if(sync) {
       return this.apiService.runService(this.robotName,"helper","actions.playAction",{action_id:actionID})
     } else {
-      return this.apiService.runServiceAsync(this.robotName,"helper","actions.playAction",{action_id:actionID},initCallback,runningCallback,doneCallback,failedCallback)
+      return this.apiService.runServiceAsync(this.robotName,"helper","actions.playAction",{action_id:actionID})
     }
 
   }

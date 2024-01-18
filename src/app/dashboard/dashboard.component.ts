@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit,AfterViewInit{
 
   itemChange(item,itemComponent){
     if (item.id === 'fsm') {
-
+      console.log("FSM CHANGE")
       this.application.fsm.width = itemComponent.width;
       this.application.fsm.height = itemComponent.height;
       this.application.fsm.x = itemComponent.$item.x;
@@ -47,6 +47,20 @@ export class DashboardComponent implements OnInit,AfterViewInit{
     this.cdRef.detectChanges()
   }
 
+  itemInit(item,itemComponent){
+    if(item.id === 'fsm'){
+      console.log("FSM INIT")
+      //console.log(JSON.parse(JSON.stringify(itemComponent)))
+      setTimeout(() => {
+        //console.log(JSON.parse(JSON.stringify(itemComponent)))
+        this.application.fsm.width = itemComponent.width;
+        this.application.fsm.height = itemComponent.height;
+      },100)
+
+    }
+    this.cdRef.detectChanges()
+  }
+
   options: GridsterConfig;
 
   ngOnInit(): void {
@@ -55,6 +69,7 @@ export class DashboardComponent implements OnInit,AfterViewInit{
       gridType: GridType.Fit,
       displayGrid: DisplayGrid.OnDragAndResize,
       itemChangeCallback: this.itemChange.bind(this),
+      itemInitCallback: this.itemInit.bind(this),
       draggable: {
         enabled: true,
         ignoreContent:true,

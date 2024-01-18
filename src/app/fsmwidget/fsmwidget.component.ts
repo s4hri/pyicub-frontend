@@ -2,7 +2,7 @@ import {AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, Input, On
 import {WidgetBaseComponent} from "../widget-base/widget-base.component";
 import {Subject} from "rxjs";
 import {GraphComponent} from "@swimlane/ngx-graph";
-import {FSM} from "../types/FSM";
+import {FSM, NodeStatus} from "../types/FSM";
 import {AppStateService} from "../services/app-state.service";
 
 @Component({
@@ -23,7 +23,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   fsm:FSM
 
   activeNodes:string[] = [];
-  runningNode:string = '';
+  runningNodeID:string = '';
 
   zoomToFit$: Subject<boolean> = new Subject();
   center$: Subject<boolean> = new Subject();
@@ -36,11 +36,14 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   ngOnInit() {
     let nodes = []
     let links = []
+
+    let currentNode:any;
     this.fsm.states.forEach(state => {
       nodes.push({
         id:state.stateName,
         label:state.stateName,
         color:'white',
+        state:NodeStatus.INACTIVE,
         action:state.action
       })
 
@@ -57,12 +60,20 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
 
     this.nodes = nodes;
     this.links = links;
-    this.activeNodes.push('Nome primo stato')
+
+    const runningState = this.fsm.states.find(state => state.stateName === "init")
+    const triggers = runningState.triggers
+    const nodesToActivate:string[] = [];
+    for(let trigger in triggers){
+      nodesToActivate.push(triggers[trigger])
+    }
+    this.activeNodes = nodesToActivate
+    this.runningNodeID = "init";
 
   }
 
   ngAfterViewInit() {
-    let initNode = this.nodes.find(node => node.id === 'Nome primo stato')
+    let initNode = this.nodes.find(node => node.id === 'init')
     setTimeout(() => {
       console.log(initNode.dimension)
       this.graph.panTo(initNode.position.x + initNode.dimension.width ,initNode.position.y)
@@ -169,10 +180,27 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   }
 
   onNodeClick(node){
-    //this.center();
-    console.log("GRAPH",this.graph)
-    console.log(node.position)
-    this.appData.saveData();
+
+    if(node.id === "init"){
+
+    }
+
+    console.log(node)
+    const runningState = this.fsm.states.find(state => state.stateName === this.runningNodeID)
+    const [trigger,destination] = Object.entries(runningState.triggers).find(([key,value]) => value === node.id)
+
+    this.fsmRunStep(trigger).subscribe(requestID => {
+      console.log(requestID);
+      this.activeNodes = [];
+      let nodesToActivate:string[] = [];
+      this.runningNodeID = node.id;
+      let triggers = this.fsm.states.find(state => state.stateName === node.id).triggers;
+      for(let trigger in triggers){
+        nodesToActivate.push(triggers[trigger])
+      }
+
+      this.checkAsyncRequestStatus(requestID,() => {}, () => {node.color = 'yellow'},() => {node.color = 'green'; this.activeNodes = nodesToActivate})
+    })
     //console.log(node)
     //console.log(this.graph)
     /*

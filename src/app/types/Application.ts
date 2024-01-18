@@ -32,7 +32,7 @@ export class Application{
     this.plugins = newPlugins;
   }
 
-  constructor(robotName:string,name:string,url:string,fsm:FSM,description:string = "",plugins:Plugin[] = []) {
+  constructor(robotName:string,name:string,url:string,fsm:FSM = undefined,description:string = "",plugins:Plugin[] = []) {
     this.robotName = robotName;
     this.name = name;
     this.url = url;

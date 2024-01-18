@@ -8,7 +8,7 @@ import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../types/ICubRequestStatus";
 import {Application} from "../types/Application";
-import {FSM} from "../types/FSM";
+import {FSM, State} from "../types/FSM";
 
 
 @Injectable({
@@ -34,6 +34,8 @@ export class ApiService {
     //return this.http.get<GetApplicationsResponse>(`/applications/${robotName}`);
     return this.http.get<GetApplicationsResponse>(path).pipe(
       map(response => {
+
+        /*
         let states = [
           {
             "stateName": "Nome primo stato",
@@ -66,10 +68,52 @@ export class ApiService {
             "action": "foo"
           }
         ]
-        return response.map(applicationObject => new Application(robotName,applicationObject.name,applicationObject.url,new FSM(states))
+
+         */
+        return response.map(applicationObject => new Application(robotName,applicationObject.name,applicationObject.url)
         )
       })
     );
+  }
+
+
+
+  getApplicationFSM(robotName:string,appName:string){
+
+    return this.runService<getApplicationFSMResponse>(robotName,appName,"fsm.getTransitions").pipe(
+      map(response => {
+        let stateNames:string[] = [];
+        let states:State[] = [];
+
+        for (let responseItem of response){
+          if (!stateNames.includes(responseItem.dest)){
+            stateNames.push(responseItem.dest)
+          }
+          if (!stateNames.includes(responseItem.source)){
+            stateNames.push(responseItem.source)
+          }
+        }
+
+        states = stateNames.map(stateName => {
+          let triggers:{[key:string]:string} = {};
+          for (let responseItem of response){
+            if(responseItem.source === stateName){
+              triggers[responseItem.trigger] = responseItem.dest;
+            }
+          }
+
+          return new State(stateName,triggers)
+        })
+
+        let initIndex = states.findIndex(state => state.stateName === "init");
+        let initState = states.find(state => state.stateName === "init");
+        let tempState = states[0];
+        states[0] = initState;
+        states[initIndex] = tempState;
+
+        return new FSM(states)
+      })
+    )
   }
 
   getServices(robotName:string="", appName:string=""){
@@ -81,57 +125,54 @@ export class ApiService {
     )
   }
 
-  runService(robotName:string, appName:string,serviceName:string,body:any = {}){
+  checkAsyncRequestStatus(requestID:string,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
+    const url = new URL(requestID).pathname;
+    const requestStatusPath = `/api${url}`;
+    this.asyncRequestsStatus[requestID] = ICubRequestStatus.INIT
+    initCallback()
+
+    interval(100).pipe(
+      switchMap(() => {
+        return this.http.get<GetRequestStatusResponse>(requestStatusPath).pipe(
+          tap(response => {
+            switch (response.status) {
+              case ICubRequestStatus.RUNNING:
+                if(this.asyncRequestsStatus[requestID] !== ICubRequestStatus.RUNNING){
+                  this.asyncRequestsStatus[requestID] = ICubRequestStatus.RUNNING;
+                  runningCallback();
+                }
+                break;
+              case ICubRequestStatus.DONE:
+                if(this.asyncRequestsStatus[requestID] !== ICubRequestStatus.DONE){
+                  this.asyncRequestsStatus[requestID] = ICubRequestStatus.DONE;
+                  doneCallback(response.retval);
+                }
+                break;
+              case ICubRequestStatus.FAILED:
+                this.asyncRequestsStatus[requestID] = ICubRequestStatus.FAILED;
+                failedCallback();
+                break;
+              default:
+                console.log("unknown response status.")
+            }
+          })
+        )
+      }),
+      takeWhile(response => response.status !== ICubRequestStatus.DONE && response.status !== ICubRequestStatus.FAILED && response.status !== ICubRequestStatus.TIMEOUT,true)
+    ).subscribe()
+
+  }
+
+  runService<T>(robotName:string, appName:string,serviceName:string,body:any = {}){
     let params = new HttpParams().set('sync','');
     const path = `/api/pyicub/${robotName}/${appName}/${serviceName}`
 
-    return this.http.post(path,body, {params:params})
+    return this.http.post<T>(path,body, {params:params})
   }
 
-  runServiceAsync(robotName:string, appName:string,serviceName:string,body:any = {},initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
+  runServiceAsync(robotName:string, appName:string,serviceName:string,body:any = {}){
     const path = `/api/pyicub/${robotName}/${appName}/${serviceName}`;
-
-    //effettuo la chiamata al servizio
-    this.http.post<string>(path,body).subscribe(requestID => {
-      const url = new URL(requestID).pathname;
-      const requestStatusPath = `/api${url}`;
-
-      this.asyncRequestsStatus[requestID] = ICubRequestStatus.INIT
-      initCallback()
-
-      //ogni 100ms controllo lo stato della richiesta.
-      interval(100).pipe(
-        switchMap(() => {
-          return this.http.get<GetRequestStatusResponse>(requestStatusPath).pipe(
-            tap(response => {
-              switch (response.status) {
-                case ICubRequestStatus.RUNNING:
-                  if(this.asyncRequestsStatus[requestID] !== ICubRequestStatus.RUNNING){
-                    this.asyncRequestsStatus[requestID] = ICubRequestStatus.RUNNING;
-                    runningCallback();
-                  }
-                  break;
-                case ICubRequestStatus.DONE:
-                  if(this.asyncRequestsStatus[requestID] !== ICubRequestStatus.DONE){
-                    this.asyncRequestsStatus[requestID] = ICubRequestStatus.DONE;
-                    doneCallback(response.retval);
-                  }
-                  break;
-                case ICubRequestStatus.FAILED:
-                  this.asyncRequestsStatus[requestID] = ICubRequestStatus.FAILED;
-                  failedCallback();
-                  break;
-                default:
-                  console.log("unknown response status.")
-              }
-            })
-          )
-        }),
-        takeWhile(response => response.status !== ICubRequestStatus.DONE && response.status !== ICubRequestStatus.FAILED && response.status !== ICubRequestStatus.TIMEOUT,true)
-      ).subscribe()
-
-      }
-    )
+    return this.http.post<string>(path,body);
   }
 
   getRobotActions(robotName:string){
@@ -151,4 +192,11 @@ export class ApiService {
 
 
 
+}
+
+type getApplicationFSMResponse = getApplicationFSMResponseElement[]
+interface getApplicationFSMResponseElement{
+  dest: string,
+  source: string,
+  trigger: string
 }

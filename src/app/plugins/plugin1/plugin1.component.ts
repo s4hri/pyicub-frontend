@@ -9,6 +9,9 @@ import {WidgetBaseComponent} from "../../widget-base/widget-base.component";
 export class Plugin1Component extends WidgetBaseComponent implements OnInit{
   ngOnInit(): void {
     console.log("plugin1, appName: ",this.appName," robotName: ",this.robotName)
+    this.getApplicationFSM().subscribe(response => {
+      console.log(response)
+    })
   }
 
 }
