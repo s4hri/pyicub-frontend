@@ -13,8 +13,7 @@ import {FormControl} from "@angular/forms";
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
-  toppings = new FormControl('');
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+
   isDrawerOpened:boolean = true;
   robots$ = this.appState.availableRobots$;
   //robots$ = this.robotsService.robots$;

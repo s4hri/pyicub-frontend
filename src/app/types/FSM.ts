@@ -1,11 +1,12 @@
 import {DashboardItem} from "./DashboardItem";
 
 export enum NodeStatus{
-  INACTIVE,
-  ACTIVE,
-  RUNNING,
-  DONE,
-  FAILED
+  INACTIVE = "INACTIVE",
+  ACTIVE = "ACTIVE",
+  CURRENT = "CURRENT",
+  RUNNING = "RUNNING",
+  DONE = "DONE" ,
+  FAILED = "FAILED"
 }
 
 export class State {
@@ -30,7 +31,7 @@ export class FSM implements DashboardItem{
 
   states:State[]
 
-  constructor(states:State[],cols:number = 50,rows:number = 50,width:number=0,height:number=0, x:number = 0, y:number = 0) {
+  constructor(states:State[],cols:number = 50,rows:number = 25,width:number=0,height:number=0, x:number = 0, y:number = 0) {
     this.states = states;
     this.cols = cols;
     this.rows = rows;

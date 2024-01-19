@@ -13,6 +13,7 @@ import {Plugin} from "../types/Plugin";
 import {FSM} from "../types/FSM";
 import {FSMWidgetComponent} from "../fsmwidget/fsmwidget.component";
 import {Application} from "../types/Application";
+import {interval} from "rxjs";
 
 @Component({
   selector: 'app-dashboard',
@@ -50,12 +51,18 @@ export class DashboardComponent implements OnInit,AfterViewInit{
   itemInit(item,itemComponent){
     if(item.id === 'fsm'){
       console.log("FSM INIT")
-      //console.log(JSON.parse(JSON.stringify(itemComponent)))
+
+      //attendo,fino a un massimo di 2 secondi, che width ed height dell'item siano stati inizializzati dal framework, che purtoppo non fornisce callback a tale scopo.
+      let intervalID = setInterval(() =>{
+        if(itemComponent.width && itemComponent.height){
+          this.application.fsm.width = itemComponent.width;
+          this.application.fsm.height = itemComponent.height;
+          clearInterval(intervalID);
+        }
+      },50)
       setTimeout(() => {
-        //console.log(JSON.parse(JSON.stringify(itemComponent)))
-        this.application.fsm.width = itemComponent.width;
-        this.application.fsm.height = itemComponent.height;
-      },100)
+        clearInterval(intervalID);
+      },2000)
 
     }
     this.cdRef.detectChanges()
@@ -66,7 +73,7 @@ export class DashboardComponent implements OnInit,AfterViewInit{
   ngOnInit(): void {
     console.log(this.application)
     this.options = {
-      gridType: GridType.Fit,
+      gridType: GridType.ScrollVertical,
       displayGrid: DisplayGrid.OnDragAndResize,
       itemChangeCallback: this.itemChange.bind(this),
       itemInitCallback: this.itemInit.bind(this),

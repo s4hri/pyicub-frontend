@@ -16,20 +16,26 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
     super();
   }
 
+  nodeColors = {
+    INACTIVE:'gray',
+    ACTIVE:'white',
+    RUNNING:'yellow',
+    FAILED:'red',
+    CURRENT:'white',
+    DONE:'green'
+  }
+
+  initNodePosition={x:0,y:0}
+
   @ViewChild(GraphComponent)
   graph:GraphComponent
 
   @Input()
   fsm:FSM
 
-  activeNodes:string[] = [];
-  runningNodeID:string = '';
-
-  zoomToFit$: Subject<boolean> = new Subject();
-  center$: Subject<boolean> = new Subject();
   update$: Subject<boolean> = new Subject();
-  panToNode$:Subject<string> = new Subject();
 
+  currentNode:any;
   links = [];
   nodes = [];
 
@@ -37,14 +43,12 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
     let nodes = []
     let links = []
 
-    let currentNode:any;
     this.fsm.states.forEach(state => {
       nodes.push({
         id:state.stateName,
         label:state.stateName,
         color:'white',
         state:NodeStatus.INACTIVE,
-        action:state.action
       })
 
       for (let triggerName in state.triggers){
@@ -58,165 +62,88 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
 
     })
 
+
+
     this.nodes = nodes;
     this.links = links;
 
+    this.currentNode = this.nodes.find(node => node.id === "init")
+    this.currentNode.state = NodeStatus.CURRENT
+
     const runningState = this.fsm.states.find(state => state.stateName === "init")
     const triggers = runningState.triggers
-    const nodesToActivate:string[] = [];
     for(let trigger in triggers){
-      nodesToActivate.push(triggers[trigger])
+      let node = this.nodes.find(node => node.id === triggers[trigger])
+      node.state = NodeStatus.ACTIVE
     }
-    this.activeNodes = nodesToActivate
-    this.runningNodeID = "init";
 
+  }
+
+  updateGraph(){
+    this.update$.next(true)
   }
 
   ngAfterViewInit() {
     let initNode = this.nodes.find(node => node.id === 'init')
-    setTimeout(() => {
-      console.log(initNode.dimension)
-      this.graph.panTo(initNode.position.x + initNode.dimension.width ,initNode.position.y)
-    },100)
 
-  }
-
-
-
-  /*
-    links = [
-      {
-        id: 'a',
-        source: 'init',
-        target: 'second',
-        label: 'is parent of'
-      }, {
-        id: 'b',
-        source: 'init',
-        target: 'third',
-        label: 'custom label'
-      },
-      {
-        id: 'c',
-        source: 'second',
-        target: 'fourth',
-        label: 'is parent of'
-      }, {
-        id: 'd',
-        source: 'third',
-        target: 'fifth',
-        label: 'custom label'
-      },
-    ]
-
-    nodes = [
-      {
-        id: 'init',
-        label: 'Nome primo stato',
-        color:"white",
-        action: ""
-      }, {
-        id: 'second',
-        label: 'Nome secondo stato',
-        color:"white",
-        action: ""
-      }, {
-        id: 'third',
-        label: 'Nome terzo stato',
-        color:"white",
-        action: ""
-      }, {
-        id: 'fourth',
-        label: 'Nome quarto stato',
-        color:"white",
-        action: ""
-      }, {
-        id: 'fifth',
-        label: 'Nome quinto stato',
-        color:"white",
-        action: ""
-      }, {
-        id: 'sixth',
-        label: 'Nome sesto stato',
-        color:"white",
-        action: ""
+    //Attendo,fino a un massimo di 2 secondi, che il framework abbia inizializzato la posizione dei nodi, in modo da trascinare il grafico sul nodo iniziale.
+    let intervalID = setInterval(() =>{
+      if(initNode.position.x !== 0 && initNode.position.x !== 0){
+        this.graph.panTo(initNode.position.x + this.graph.graphDims.width / 2,initNode.position.y)
+        this.initNodePosition.x = initNode.position.x;
+        this.initNodePosition.y = initNode.position.y;
+        clearInterval(intervalID);
       }
-    ]
+    },50)
+    setTimeout(() => {
+      clearInterval(intervalID);
+    },2000)
 
-   */
-
-  fitGraph() {
-    this.zoomToFit$.next(true)
   }
 
-  centerGraph(){
-    this.center$.next(true)
-  }
-
-  center(){
-    let minX = 100000000000;
-    let minY = 100000000000;
-    let maxX = 0;
-    let maxY = 0;
-    for (let i = 0; i < this.graph.nodes.length; i++) {
-      const node = this.graph.nodes[i];
-      let halfWidth = node.dimension.width / 2;
-      let halfHeight = node.dimension.height / 2;
-      minX = node.position.x - halfWidth < minX ? node.position.x - halfWidth : minX;
-      minY = node.position.y - halfHeight < minY ? node.position.y - halfHeight : minY;
-      maxX = node.position.x + halfWidth > maxX ? node.position.x + halfWidth : maxX;
-      maxY = node.position.y + halfHeight > maxY ? node.position.y + halfHeight : maxY;
-    }
-
-    this.graph.panTo(minX + this.graph.graphDims.width / 2, minY + this.graph.graphDims.height / 2);
-  }
-
-  updateGraph() {
-    this.update$.next(true)
-  }
-
-  panToNode(nodeID:string){
-    this.panToNode$.next(nodeID)
+  //trascina il grafico orizzontalmente in modo che sia centrato sul nodo
+  private panToNodeX(node){
+    this.graph.panTo(node.position.x,this.initNodePosition.y)
+    this.updateGraph()
   }
 
   onNodeClick(node){
-
-    if(node.id === "init"){
-
-    }
-
-    console.log(node)
-    const runningState = this.fsm.states.find(state => state.stateName === this.runningNodeID)
+    const runningState = this.fsm.states.find(state => state.stateName === this.currentNode.id)
     const [trigger,destination] = Object.entries(runningState.triggers).find(([key,value]) => value === node.id)
+    this.currentNode.state = NodeStatus.INACTIVE
+    this.currentNode = node
+    this.currentNode.state = NodeStatus.CURRENT
+
+    this.panToNodeX(node)
+
 
     this.fsmRunStep(trigger).subscribe(requestID => {
-      console.log(requestID);
-      this.activeNodes = [];
-      let nodesToActivate:string[] = [];
-      this.runningNodeID = node.id;
-      let triggers = this.fsm.states.find(state => state.stateName === node.id).triggers;
-      for(let trigger in triggers){
-        nodesToActivate.push(triggers[trigger])
+
+      const onDoneCallback = () => {
+        node.state = NodeStatus.DONE
+        let triggers = this.fsm.states.find(state => state.stateName === node.id).triggers;
+        for(let trigger in triggers){
+          let node = this.nodes.find(node => node.id === triggers[trigger])
+          if(node.id === "init"){
+            this.panToNodeX(node)
+          }
+          node.state = NodeStatus.ACTIVE
+        }
       }
 
-      this.checkAsyncRequestStatus(requestID,() => {}, () => {node.color = 'yellow'},() => {node.color = 'green'; this.activeNodes = nodesToActivate})
-    })
-    //console.log(node)
-    //console.log(this.graph)
-    /*
-    this.graph.panTo(node.position.x + this.graph.width/3,node.position.y)
-    this.activeNodes = [];
-    this.runningNode = node.id;
-    let triggers = this.fsm.states.find(state => state.stateName === node.id)['triggers']
-    let nodesToActivate:string[] = [];
-    for(let trigger in triggers){
-      nodesToActivate.push(triggers[trigger])
-    }
+      const onFailedCallback = () => {
+        node.state = NodeStatus.FAILED
+        let triggers = this.fsm.states.find(state => state.stateName === node.id).triggers;
+        for(let trigger in triggers){
+          let node = this.nodes.find(node => node.id === triggers[trigger])
+          node.state = NodeStatus.ACTIVE
+        }
+      }
 
-    this.runServiceAsync(node.action,{},() =>{},() => {node.color = 'yellow'},() => {node.color = 'green'; this.activeNodes = nodesToActivate})
-    */
+      this.checkAsyncRequestStatus(requestID,() => {}, () => {node.color = 'yellow'; node.state = NodeStatus.RUNNING},onDoneCallback,onFailedCallback)
+    })
+
   }
 
-
-
+  protected readonly NodeStatus = NodeStatus;
 }

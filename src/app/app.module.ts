@@ -32,6 +32,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { PluginDialogComponent } from './plugin-dialog/plugin-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +54,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     ServicesListPluginComponent,
     ServiceListItemComponent,
     FSMWidgetComponent,
-    DashboardComponent
+    DashboardComponent,
+    PluginDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +75,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatDialogModule,
+    MatCheckboxModule
 
   ],
   providers: [],
