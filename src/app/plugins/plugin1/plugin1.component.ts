@@ -8,7 +8,7 @@ import {WidgetBaseComponent} from "../../widget-base/widget-base.component";
 })
 export class Plugin1Component extends WidgetBaseComponent implements OnInit{
   ngOnInit(): void {
-    console.log("plugin1, appName: ",this.appName," robotName: ",this.robotName)
+    console.log("plugin1, appName: ",this.application.name," robotName: ",this.application.robotName)
   }
 
 }

@@ -30,9 +30,6 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   @ViewChild(GraphComponent)
   graph:GraphComponent
 
-  @Input()
-  fsm:FSM
-
   update$: Subject<boolean> = new Subject();
 
   currentNode:any;
@@ -43,7 +40,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
     let nodes = []
     let links = []
 
-    this.fsm.states.forEach(state => {
+    this.application.fsm.states.forEach(state => {
       nodes.push({
         id:state.stateName,
         label:state.stateName,
@@ -70,7 +67,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
     this.currentNode = this.nodes.find(node => node.id === "init")
     this.currentNode.state = NodeStatus.CURRENT
 
-    const runningState = this.fsm.states.find(state => state.stateName === "init")
+    const runningState = this.application.fsm.states.find(state => state.stateName === "init")
     const triggers = runningState.triggers
     for(let trigger in triggers){
       let node = this.nodes.find(node => node.id === triggers[trigger])
@@ -108,7 +105,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   }
 
   onNodeClick(node){
-    const runningState = this.fsm.states.find(state => state.stateName === this.currentNode.id)
+    const runningState = this.application.fsm.states.find(state => state.stateName === this.currentNode.id)
     const [trigger,destination] = Object.entries(runningState.triggers).find(([key,value]) => value === node.id)
     this.currentNode.state = NodeStatus.INACTIVE
     this.currentNode = node
@@ -121,7 +118,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
 
       const onDoneCallback = () => {
         node.state = NodeStatus.DONE
-        let triggers = this.fsm.states.find(state => state.stateName === node.id).triggers;
+        let triggers = this.application.fsm.states.find(state => state.stateName === node.id).triggers;
         for(let trigger in triggers){
           let node = this.nodes.find(node => node.id === triggers[trigger])
           if(node.id === "init"){
@@ -133,7 +130,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
 
       const onFailedCallback = () => {
         node.state = NodeStatus.FAILED
-        let triggers = this.fsm.states.find(state => state.stateName === node.id).triggers;
+        let triggers = this.application.fsm.states.find(state => state.stateName === node.id).triggers;
         for(let trigger in triggers){
           let node = this.nodes.find(node => node.id === triggers[trigger])
           node.state = NodeStatus.ACTIVE

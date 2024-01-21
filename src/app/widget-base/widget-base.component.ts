@@ -4,6 +4,7 @@ import {ICubEmoPart} from "../types/ICubEmoPart";
 import {ICubEmoEmotion} from "../types/ICubEmoEmotion";
 import {ICubEmoColor} from "../types/ICubEmoColor";
 import {timeout} from "rxjs";
+import {Application} from "../types/Application";
 
 @Component({
   selector: 'app-widget-base',
@@ -12,160 +13,152 @@ import {timeout} from "rxjs";
 })
 export class WidgetBaseComponent {
   @Input()
-  appName:string;
-
-  @Input()
-  robotName:string;
+  application:Application
 
   protected apiService = inject(ApiService);
 
   getApplicationFSM(){
-    return this.apiService.getApplicationFSM(this.robotName,this.appName)
+    return this.apiService.getApplicationFSM(this.application.robotName,this.application.name,this.application.url.port)
   }
 
   checkAsyncRequestStatus(requestID:string,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
     return this.apiService.checkAsyncRequestStatus(requestID,initCallback,runningCallback,doneCallback,failedCallback)
   }
-
+ 
   runService(serviceName:string,body:any){
-    return this.apiService.runService(this.robotName,this.appName,serviceName,body)
+    return this.apiService.runService(this.application.robotName,this.application.name,this.application.url.port,serviceName,body)
   }
 
   runServiceAsync(serviceName:string,body:any = {},initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
-    return this.apiService.runServiceAsync(this.robotName, this.appName,serviceName,body)
+    return this.apiService.runServiceAsync(this.application.robotName,this.application.name,this.application.url.port,serviceName,body)
   }
 
   fsmRunStep(trigger:string){
-    return this.apiService.runServiceAsync(this.robotName,this.appName,"fsm.runStep",{trigger:trigger})
+    return this.apiService.runServiceAsync(this.application.robotName,this.application.name,this.application.url.port,"fsm.runStep",{trigger:trigger})
   }
 
   getRobotActions(){
-    return this.apiService.runService(this.robotName,"helper","actions.getActions")
+    return this.apiService.getRobotActions(this.application.robotName)
   }
 
   playAction(actionID:string,sync:boolean = true,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
-    if(sync) {
-      return this.apiService.runService(this.robotName,"helper","actions.playAction",{action_id:actionID})
-    } else {
-      return this.apiService.runServiceAsync(this.robotName,"helper","actions.playAction",{action_id:actionID})
-    }
-
+    return this.apiService.playAction(this.application.robotName,actionID,sync,initCallback,runningCallback,doneCallback,failedCallback)
   }
 
   emoAngry(){
-    return this.apiService.runService(this.robotName,"helper","emo.angry")
+    return this.apiService.emoAngry(this.application.robotName)
   }
 
   emoClosingEyes(){
-    return this.apiService.runService(this.robotName,"helper","emo.closingEyes")
+    return this.apiService.emoClosingEyes(this.application.robotName)
   }
 
   emoCun(){
-    return this.apiService.runService(this.robotName,"helper","emo.cun")
+    return this.apiService.emoCun(this.application.robotName)
   }
 
   emoEbSmile(){
-    return this.apiService.runService(this.robotName,"helper","emo.eb_smile")
+    return this.apiService.emoEbSmile(this.application.robotName)
   }
 
   emoEbSurprised(){
-    return this.apiService.runService(this.robotName,"helper","emo.eb_surprised")
+    return this.apiService.emoEbSurprised(this.application.robotName)
   }
 
   emoEvil(){
-    return this.apiService.runService(this.robotName,"helper","emo.evil")
+    return this.apiService.emoEvil(this.application.robotName)
   }
 
   emoNeutral(){
-    return this.apiService.runService(this.robotName,"helper","emo.neutral")
+    return this.apiService.emoNeutral(this.application.robotName)
   }
 
   emoOpeningEyes(){
-    return this.apiService.runService(this.robotName,"helper","emo.openingEyes")
+    return this.apiService.emoOpeningEyes(this.application.robotName)
   }
 
   emoSad() {
-    return this.apiService.runService(this.robotName, "helper", "emo.sad")
+    return this.apiService.emoSad(this.application.robotName)
   }
 
   emoSendCmd(part:ICubEmoPart,emotion:ICubEmoEmotion){
-    return this.apiService.runService(this.robotName, "helper", "emo.sendCmd",{part:part,emo:emotion})
+    return this.apiService.emoSendCmd(this.application.robotName,part,emotion)
   }
 
   emoSetBrightness(brightness: 0 | 1 | 2 | 3 | 4 | 5){
-    return this.apiService.runService(this.robotName, "helper", "emo.setBrightness",{brightness:brightness})
+    return this.apiService.emoSetBrightness(this.application.robotName,brightness)
   }
 
   emoSetColor(color:ICubEmoColor){
-    return this.apiService.runService(this.robotName, "helper", "emo.setColor",{color:color})
+    return this.apiService.emoSetColor(this.application.robotName,color)
   }
 
   emoSmile(){
-    return this.apiService.runService(this.robotName, "helper", "emo.smile")
+    return this.apiService.emoSmile(this.application.robotName)
   }
 
   emoSurprised(){
-    return this.apiService.runService(this.robotName, "helper", "emo.surprised")
+    return this.apiService.emoSurprised(this.application.robotName)
   }
 
   gazeBlockEyes(vergence:number){
-    return this.apiService.runService(this.robotName, "helper", "gaze.blockEyes",{vergence:vergence})
+    return this.apiService.gazeBlockEyes(this.application.robotName,vergence)
   }
 
   gazeBlockNeck(){
-    return this.apiService.runService(this.robotName, "helper", "gaze.blockNeck")
+    return this.apiService.gazeBlockNeck(this.application.robotName)
   }
 
   gazeClearEyes(){
-    return this.apiService.runService(this.robotName, "helper", "gaze.clearEyes")
+    return this.apiService.gazeClearEyes(this.application.robotName)
   }
 
   gazeClearNeck(){
-    return this.apiService.runService(this.robotName, "helper", "gaze.clearNeck")
+    return this.apiService.gazeClearNeck(this.application.robotName)
   }
 
   gazeInit(){
-    return this.apiService.runService(this.robotName, "helper", "gaze.init")
+    return this.apiService.gazeInit(this.application.robotName)
   }
 
   gazeLookAtAbsAngles(azimuth:number, elevation:number, vergence:number, waitMotionDone:boolean = true, timeout:number = 0.0){
-    return this.apiService.runService(this.robotName, "helper", "gaze.lookAtAbsAngles",{azi:azimuth,ele:elevation,ver:vergence,waitMotionDone:waitMotionDone,timeout:timeout})
+    return this.apiService.gazeLookAtAbsAngles(this.application.robotName,azimuth,elevation,vergence,waitMotionDone,timeout)
   }
 
   gazeLookAtFixationPoint(x:number, y:number, z:number, waitMotionDone:boolean = true, timeout:number = 0.0){
-    return this.apiService.runService(this.robotName, "helper", "gaze.lookAtFixationPoint",{x:x,y:y,z:z,waitMotionDone:waitMotionDone,timeout:timeout})
+    return this.apiService.gazeLookAtFixationPoint(this.application.robotName,x,y,z,waitMotionDone,timeout)
   }
 
   gazeLookAtRelAngles(azimuth:number, elevation:number, vergence:number, waitMotionDone:boolean = true, timeout:number = 0.0){
-    return this.apiService.runService(this.robotName, "helper", "gaze.lookAtRelAngles",{azi:azimuth,ele:elevation,ver:vergence,waitMotionDone:waitMotionDone,timeout:timeout})
+    return this.apiService.gazeLookAtRelAngles(this.application.robotName,azimuth,elevation,vergence,waitMotionDone,timeout)
   }
 
   gazeReset(){
-    return this.apiService.runService(this.robotName, "helper", "gaze.reset")
+    return this.apiService.gazeReset(this.application.robotName)
   }
 
   gazeSetParams(neck_tt:number, eyes_tt:number){
-    return this.apiService.runService(this.robotName, "helper", "gaze.setParams",{neck_tt:neck_tt,eyes_tt:eyes_tt})
+    return this.apiService.gazeSetParams(this.application.robotName,neck_tt,eyes_tt)
   }
 
   gazeSetTrackingMode(mode:boolean){
-    return this.apiService.runService(this.robotName, "helper", "gaze.setTrackingMode",{mode:mode})
+    return this.apiService.gazeSetTrackingMode(this.application.robotName,mode)
   }
 
   gazeWaitMotionDone(period:number = 0.1 ,timeout:number = 0){
-    return this.apiService.runService(this.robotName, "helper", "gaze.waitMotionDone",{period:period, timeout:timeout})
+    return this.apiService.gazeWaitMotionDone(this.application.robotName,period,timeout)
   }
 
   gazeWaitMotionOnset(speedRef:number = 0 ,period:number = 0.1,maxAttempts:number=50){
-    return this.apiService.runService(this.robotName, "helper", "gaze.waitMotionOnset",{speed_ref:speedRef, period:period,max_attempts:maxAttempts})
+    return this.apiService.gazeWaitMotionOnset(this.application.robotName,speedRef,period,maxAttempts)
   }
 
   speechClose(){
-    return this.apiService.runService(this.robotName, "helper", "speech.close")
+    return this.apiService.speechClose(this.application.robotName)
   }
 
   speechSay(sentence:string,waitActionDone:boolean = true){
-    return this.apiService.runService(this.robotName,"helper","speech.say",{something:sentence,waitActionDone:waitActionDone})
+    return this.apiService.speechSay(this.application.robotName,sentence,waitActionDone)
   }
 
 }

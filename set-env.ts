@@ -11,6 +11,7 @@ const apiPort = process.env['PYICUB_API_PROXY_PORT'] || '9001';
 
 // `environment.ts` file structure
 const envConfigFile = `export const environment = {
+   apiScheme: 'http',
    apiHost: 'localhost',
    apiPort: '${apiPort}'
 };
@@ -18,7 +19,7 @@ const envConfigFile = `export const environment = {
 
 const proxyConfigFile = `{
 "/api": {
-    "target": "http://localhost:9001",
+    "target": "http://localhost",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {"^/api": "" }

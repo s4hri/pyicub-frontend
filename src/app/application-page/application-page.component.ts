@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AppStateService} from "../services/app-state.service";
 import {Plugin} from "../types/Plugin";
 import {MatDialog} from "@angular/material/dialog";
@@ -9,7 +9,7 @@ import {PluginDialogComponent} from "../plugin-dialog/plugin-dialog.component";
   templateUrl: './application-page.component.html',
   styleUrl: './application-page.component.css'
 })
-export class ApplicationPageComponent{
+export class ApplicationPageComponent implements OnInit{
 
   plugins$ = this.appState.selectedRobot.selectedApplication.plugins$;
   application = this.appState.selectedRobot.selectedApplication
@@ -33,6 +33,10 @@ export class ApplicationPageComponent{
 
   onPluginToggle(plugin:Plugin){
     this.appState.selectedRobot.selectedApplication.togglePlugin(plugin)
+  }
+
+  ngOnInit() {
+    console.log(this.application.argsTemplate)
   }
 
 }

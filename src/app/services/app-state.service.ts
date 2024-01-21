@@ -45,34 +45,7 @@ export class AppStateService {
 
   constructor(public apiService:ApiService, private localStorageService:LocalStorageService) {
 
-    this.apiService.getRobots().subscribe(robots => {
-      this.availableRobots = robots
-
-      for(let robot of robots){
-        robot.selectedApplication = undefined;
-        this.apiService.getApplications(robot.name).subscribe(applications => {
-
-          for(let application of applications){
-
-            if(application.name !== "helper"){
-              this.apiService.getApplicationFSM(robot.name,application.name).subscribe(fsm => {
-                application.fsm = fsm;
-              })
-            }
-
-
-            for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
-              application.plugins.push(new Plugin(pluginName,componentName,false,20,20))
-            }
-          }
-
-          robot.applications = applications
-          console.log("Robot Applications")
-          console.log(robot.applications)
-        })
-      }
-
-    })
+   this.updateRobots()
   }
 
   saveData(){
@@ -94,11 +67,25 @@ export class AppStateService {
 
           for(let application of applications){
 
-            if(application.name !== "helper"){
-              this.apiService.getApplicationFSM(robot.name,application.name).subscribe(fsm => {
+            this.apiService.getApplicationFSM(robot.name,application.name,application.url.port).subscribe({
+              next: fsm => {
                 application.fsm = fsm;
-              })
-            }
+              },
+              error: err => {
+                console.log(application,err)
+                application.fsm = undefined;
+              }
+            })
+
+            this.apiService.getApplicationArgsTemplate(robot.name,application.name,application.url.port).subscribe({
+              next: argsTemplate => {
+                application.argsTemplate = argsTemplate;
+              },
+              error: err => {
+                console.log(application,err)
+                application.argsTemplate = {};
+              }
+            })
 
 
             for (const [pluginName, componentName] of Object.entries(pluginIndex)) {

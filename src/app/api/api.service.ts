@@ -4,11 +4,17 @@ import {GetRobotsResponse} from "./types/GetRobotsResponse";
 import {GetApplicationsResponse} from "./types/GetApplicationsResponse";
 import {GetApplicationsServicesResponse} from "./types/GetApplicationServicesResponse";
 import {interval, map, switchMap, takeWhile, tap} from "rxjs";
-import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../types/ICubRequestStatus";
 import {Application} from "../types/Application";
 import {FSM, State} from "../types/FSM";
+import {GetApplicationArgsTemplateResponse} from "./types/GetApplicationArgsTemplateResponse";
+import {ApplicationArgsTemplate} from "../types/ApplicationArgsTemplate";
+import {ApplicationArgType} from "../types/ApplicationArgType";
+import {environment} from "../../environments/environment";
+import {ICubEmoPart} from "../types/ICubEmoPart";
+import {ICubEmoEmotion} from "../types/ICubEmoEmotion";
+import {ICubEmoColor} from "../types/ICubEmoColor";
 
 
 @Injectable({
@@ -16,71 +22,74 @@ import {FSM, State} from "../types/FSM";
 })
 export class ApiService {
 
+  private port = environment.apiPort
+  private hostname = environment.apiHost
+  private scheme = environment.apiScheme
+
   //I path simbolici utilizzati saranno sostituiti da quelli veri tramite la configurazione presente in proxy.conf.json
 
   private asyncRequestsStatus:{ [key:string]:ICubRequestStatus } = {}
   constructor(private http: HttpClient) { }
 
   getRobots(){
-    //const path = "pyicub";
-    const path = "/api/pyicub";
-    //return this.http.get<GetRobotsResponse>(`/robots`);
+    const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub`;
     return this.http.get<GetRobotsResponse>(path);
 
   }
   getApplications(robotName:string){
-    //const path = `pyicub/${robotName}`;
-    const path = `/api/pyicub/${robotName}`;
-    //return this.http.get<GetApplicationsResponse>(`/applications/${robotName}`);
+    const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub/${robotName}`;
     return this.http.get<GetApplicationsResponse>(path).pipe(
       map(response => {
-
-        /*
-        let states = [
-          {
-            "stateName": "Nome primo stato",
-            "action": "foo",
-            "triggers": {
-              "a": "Nome secondo stato",
-              "b": "Nome terzo stato"
-            }
-          },
-          {
-            "stateName": "Nome secondo stato",
-            "action": "foo",
-            "triggers": {
-              "a": "Nome quarto stato"
-            }
-          },
-          {
-            "stateName": "Nome terzo stato",
-            "action": "foo",
-            "triggers": {
-              "a": "Nome quinto stato"
-            }
-          },
-          {
-            "stateName": "Nome quarto stato",
-            "action": "foo"
-          },
-          {
-            "stateName": "Nome quinto stato",
-            "action": "foo"
-          }
-        ]
-
-         */
         return response.map(applicationObject => new Application(robotName,applicationObject.name,applicationObject.url)
         )
       })
     );
   }
 
+  private getArgsTemplate(args):ApplicationArgsTemplate{
+    const templateTypes:ApplicationArgsTemplate = {}
+    for (const [key, value] of Object.entries(args)) {
+      templateTypes[key] = this.getArgType(value)
+    }
 
+    return templateTypes;
+  }
 
-  getApplicationFSM(robotName:string,appName:string){
+  private getArgType(value:any):ApplicationArgType{
+    if(typeof(value) === "string"){
+      return ApplicationArgType.STRING
+    } else if (typeof(value) === "boolean"){
+      return ApplicationArgType.BOOLEAN
+    } else if (typeof(value) === "number"){
+      return ApplicationArgType.NUMBER
+    } else if (Array.isArray(value)){
+      if(value.length === 0){
+        return ApplicationArgType.ARRAY_STRING
+      }else{
+        let elem = value[0];
+        if(typeof(elem) == "string"){
+          return ApplicationArgType.ARRAY_STRING
+        }else if (typeof(elem) == "number"){
+          return ApplicationArgType.ARRAY_NUMBER
+        }
+      }
+    }
 
-    return this.runService<getApplicationFSMResponse>(robotName,appName,"fsm.getTransitions").pipe(
+    return ApplicationArgType.STRING;
+  }
+
+  getApplicationArgsTemplate(robotName:string,appName:string,appPort:string){
+    return this.runService<GetApplicationArgsTemplateResponse>(robotName,appName,appPort,"getArgsTemplate").pipe(
+      map(response => {
+        return this.getArgsTemplate(response)
+      })
+    )
+
+}
+
+  getApplicationFSM(robotName:string,appName:string,appPort:string){
+
+    return this.runService<getApplicationFSMResponse>(robotName,appName,appPort,"fsm.getTransitions").pipe(
       map(response => {
         let stateNames:string[] = [];
         let states:State[] = [];
@@ -117,7 +126,7 @@ export class ApiService {
   }
 
   getServices(robotName:string="", appName:string=""){
-    const path = `/api/pyicub/${robotName}/${appName}`;
+    const path =`${this.scheme}://${this.hostname}:${this.port}/pyicub/${robotName}/${appName}`;
     return this.http.get<GetApplicationsServicesResponse>(path).pipe(
       map(response => {
         return Object.entries(response).map(([key, value]) => value)
@@ -127,7 +136,7 @@ export class ApiService {
 
   checkAsyncRequestStatus(requestID:string,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
     const url = new URL(requestID).pathname;
-    const requestStatusPath = `/api${url}`;
+    const requestStatusPath = `${this.scheme}://${this.hostname}:${this.port}${url}`;
     this.asyncRequestsStatus[requestID] = ICubRequestStatus.INIT
     initCallback()
 
@@ -163,34 +172,146 @@ export class ApiService {
 
   }
 
-  runService<T>(robotName:string, appName:string,serviceName:string,body:any = {}){
+  runService<T>(robotName:string, appName:string,appPort:string,serviceName:string,body:any = {}){
     let params = new HttpParams().set('sync','');
-    const path = `/api/pyicub/${robotName}/${appName}/${serviceName}`
+    const path = `${this.scheme}://${this.hostname}:${appPort}/pyicub/${robotName}/${appName}/${serviceName}`
 
     return this.http.post<T>(path,body, {params:params})
   }
 
-  runServiceAsync(robotName:string, appName:string,serviceName:string,body:any = {}){
-    const path = `/api/pyicub/${robotName}/${appName}/${serviceName}`;
+  runServiceAsync(robotName:string, appName:string,appPort:string,serviceName:string,body:any = {}){
+    const path = `${this.scheme}://${this.hostname}:${appPort}/pyicub/${robotName}/${appName}/${serviceName}`;
     return this.http.post<string>(path,body);
   }
 
+  emoAngry(robotName:string){
+    return this.runService(robotName,"helper",this.port,"emo.angry")
+  }
+
+  emoClosingEyes(robotName:string){
+    return this.runService(robotName,"helper",this.port,"emo.closingEyes")
+  }
+
+  emoCun(robotName:string){
+    return this.runService(robotName,"helper",this.port,"emo.cun")
+  }
+
+  emoEbSmile(robotName:string){
+    return this.runService(robotName,"helper",this.port,"emo.eb_smile")
+  }
+
+  emoEbSurprised(robotName:string){
+    return this.runService(robotName,"helper",this.port,"emo.eb_surprised")
+  }
+
+  emoEvil(robotName:string){
+    return this.runService(robotName,"helper",this.port,"helper","emo.evil")
+  }
+
+  emoNeutral(robotName:string){
+    return this.runService(robotName,"helper",this.port,"emo.neutral")
+  }
+
+  emoOpeningEyes(robotName:string){
+    return this.runService(robotName,"helper",this.port,"emo.openingEyes")
+  }
+
+  emoSad(robotName:string) {
+    return this.runService(robotName,"helper",this.port, "emo.sad")
+  }
+
+  emoSendCmd(robotName:string,part:ICubEmoPart,emotion:ICubEmoEmotion){
+    return this.runService(robotName,"helper",this.port, "emo.sendCmd",{part:part,emo:emotion})
+  }
+
+  emoSetBrightness(robotName:string,brightness: 0 | 1 | 2 | 3 | 4 | 5){
+    return this.runService(robotName,"helper",this.port, "emo.setBrightness",{brightness:brightness})
+  }
+
+  emoSetColor(robotName:string,color:ICubEmoColor){
+    return this.runService(robotName,"helper",this.port, "emo.setColor",{color:color})
+  }
+
+  emoSmile(robotName:string){
+    return this.runService(robotName,"helper",this.port, "emo.smile")
+  }
+
+  emoSurprised(robotName:string){
+    return this.runService(robotName,"helper",this.port, "emo.surprised")
+  }
+
+  gazeBlockEyes(robotName:string,vergence:number){
+    return this.runService(robotName,"helper",this.port, "gaze.blockEyes",{vergence:vergence})
+  }
+
+  gazeBlockNeck(robotName:string){
+    return this.runService(robotName,"helper",this.port, "gaze.blockNeck")
+  }
+
+  gazeClearEyes(robotName:string){
+    return this.runService(robotName,"helper",this.port, "gaze.clearEyes")
+  }
+
+  gazeClearNeck(robotName:string){
+    return this.runService(robotName,"helper",this.port, "gaze.clearNeck")
+  }
+
+  gazeInit(robotName:string){
+    return this.runService(robotName,"helper",this.port, "gaze.init")
+  }
+
+  gazeLookAtAbsAngles(robotName:string,azimuth:number, elevation:number, vergence:number, waitMotionDone:boolean = true, timeout:number = 0.0){
+    return this.runService(robotName,"helper",this.port, "gaze.lookAtAbsAngles",{azi:azimuth,ele:elevation,ver:vergence,waitMotionDone:waitMotionDone,timeout:timeout})
+  }
+
+  gazeLookAtFixationPoint(robotName:string,x:number, y:number, z:number, waitMotionDone:boolean = true, timeout:number = 0.0){
+    return this.runService(robotName,"helper",this.port, "gaze.lookAtFixationPoint",{x:x,y:y,z:z,waitMotionDone:waitMotionDone,timeout:timeout})
+  }
+
+  gazeLookAtRelAngles(robotName:string,azimuth:number, elevation:number, vergence:number, waitMotionDone:boolean = true, timeout:number = 0.0){
+    return this.runService(robotName,"helper",this.port, "gaze.lookAtRelAngles",{azi:azimuth,ele:elevation,ver:vergence,waitMotionDone:waitMotionDone,timeout:timeout})
+  }
+
+  gazeReset(robotName:string){
+    return this.runService(robotName,"helper",this.port, "gaze.reset")
+  }
+
+  gazeSetParams(robotName:string,neck_tt:number, eyes_tt:number){
+    return this.runService(robotName,"helper",this.port, "gaze.setParams",{neck_tt:neck_tt,eyes_tt:eyes_tt})
+  }
+
+  gazeSetTrackingMode(robotName:string,mode:boolean){
+    return this.runService(robotName,"helper",this.port, "gaze.setTrackingMode",{mode:mode})
+  }
+
+  gazeWaitMotionDone(robotName:string,period:number = 0.1 ,timeout:number = 0){
+    return this.runService(robotName,"helper",this.port, "gaze.waitMotionDone",{period:period, timeout:timeout})
+  }
+
+  gazeWaitMotionOnset(robotName:string,speedRef:number = 0 ,period:number = 0.1,maxAttempts:number=50){
+    return this.runService(robotName,"helper",this.port, "gaze.waitMotionOnset",{speed_ref:speedRef, period:period,max_attempts:maxAttempts})
+  }
+
+  speechClose(robotName:string){
+    return this.runService(robotName,"helper",this.port, "speech.close")
+  }
+
+  speechSay(robotName:string,sentence:string,waitActionDone:boolean = true){
+    return this.runService(robotName,"helper",this.port,"speech.say",{something:sentence,waitActionDone:waitActionDone})
+  }
+
   getRobotActions(robotName:string){
-    return this.runService(robotName,"helper","actions.getActions")
+    return this.runService(robotName,"helper",this.port,"actions.getActions")
   }
 
   playAction(robotName:string,actionID:string,sync:boolean = true,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
     if(sync) {
-      return this.runService(robotName,"helper","actions.playAction",{action_id:actionID})
+      return this.runService(robotName,"helper",this.port,"actions.playAction",{action_id:actionID})
     } else {
-      return this.runServiceAsync(robotName,"helper","actions.playAction",{action_id:actionID,initCallback,runningCallback,doneCallback,failedCallback})
+      return this.runServiceAsync(robotName,"helper",this.port,"actions.playAction",{action_id:actionID,initCallback,runningCallback,doneCallback,failedCallback})
     }
 
   }
-
-
-
-
 
 }
 

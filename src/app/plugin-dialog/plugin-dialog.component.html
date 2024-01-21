@@ -1,11 +1,12 @@
-<h1 mat-dialog-title>Delete file</h1>
+<h1 mat-dialog-title>Impostazioni</h1>
 <div mat-dialog-content>
-
-    <mat-checkbox  *ngFor="let plugin of data.plugins" class="example-margin" [checked]="plugin.enabled" (click)="onCheckboxChange(plugin)" >{{plugin.name}}</mat-checkbox>
-
+  <ul style="list-style-type: none;">
+    <li *ngFor="let plugin of data.plugins">
+      <mat-checkbox   class="example-margin" [checked]="plugin.enabled" (click)="onCheckboxChange(plugin)" >{{plugin.name}}</mat-checkbox>
+    </li>
+  </ul>
 </div>
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close>No</button>
+<div mat-dialog-actions align="center">
   <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
-  <button mat-button>Terzo bottone</button>
 </div>
+
