@@ -3,6 +3,7 @@ import {AppStateService} from "../services/app-state.service";
 import {Plugin} from "../types/Plugin";
 import {MatDialog} from "@angular/material/dialog";
 import {PluginDialogComponent} from "../plugin-dialog/plugin-dialog.component";
+import {ApplicationArgsDialogComponent} from "../application-args-dialog/application-args-dialog.component";
 
 @Component({
   selector: 'app-application-page',
@@ -14,11 +15,14 @@ export class ApplicationPageComponent implements OnInit{
   plugins$ = this.appState.selectedRobot.selectedApplication.plugins$;
   application = this.appState.selectedRobot.selectedApplication
 
+  areApplicationArgsSet = false;
+
   constructor(public appState:AppStateService,public dialog: MatDialog) {}
 
-  openDialog() {
+  openSettingsDialog() {
     const dialogRef = this.dialog.open(PluginDialogComponent, {
-      data: this.appState.selectedRobot.selectedApplication
+      data: this.appState.selectedRobot.selectedApplication,
+      disableClose: true //evita che il dialog si chiuda cliccando all'esterno del suo frame
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -26,9 +30,20 @@ export class ApplicationPageComponent implements OnInit{
     });
   }
 
+  openArgsDialog(){
+    const dialogRef = this.dialog.open(ApplicationArgsDialogComponent,{
+      data: this.appState.selectedRobot.selectedApplication,
+      disableClose: true
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(this.application)
+    })
+  }
+
   onClick(){
     console.log("CLIIIIIICK")
-    this.openDialog()
+    this.openSettingsDialog()
   }
 
   onPluginToggle(plugin:Plugin){
@@ -36,7 +51,16 @@ export class ApplicationPageComponent implements OnInit{
   }
 
   ngOnInit() {
-    console.log(this.application.argsTemplate)
+    //Se gli argomenti non sono stati gia impostati dall'utente, mostro il dialog per settarli
+    //quindi se argsTemplate non è vuoto e args lo è
+    const argsTemplateExists = Object.keys(this.application.argsTemplate).length !== 0
+    const areArgsSet = this.application.args && Object.keys(this.application.args).length !== 0
+    if( argsTemplateExists && !areArgsSet ){
+      this.openArgsDialog()
+    } else {
+      this.areApplicationArgsSet = true
+    }
+
   }
 
 }

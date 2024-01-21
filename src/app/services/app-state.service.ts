@@ -69,6 +69,7 @@ export class AppStateService {
 
             this.apiService.getApplicationFSM(robot.name,application.name,application.url.port).subscribe({
               next: fsm => {
+                console.log("FSM",fsm)
                 application.fsm = fsm;
               },
               error: err => {

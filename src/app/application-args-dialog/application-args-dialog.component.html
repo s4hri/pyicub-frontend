@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>Selezione argomenti</h1>
+<div mat-dialog-content>
+  <form>
+    <div *ngFor="let arg of Object.keys(data.argsTemplate)">
+      <div [ngSwitch]="data.argsTemplate[arg].type">
+        <mat-form-field [ngSwitch]="data.argsTemplate[arg].type" appearance="outline">
+          <mat-label>{{arg}}</mat-label>
+          <ng-container  >
+            <input *ngSwitchCase="ApplicationArgType.STRING" matInput type="string" [(ngModel)]="args[arg]" name="{{arg}}_InputString">
+          </ng-container>
+          <ng-container *ngSwitchCase="ApplicationArgType.NUMBER" >
+            <input matInput type="number" [(ngModel)]="args[arg]" name="{{arg}}_InputNumber" placeholder="0">
+          </ng-container>
+          <ng-container *ngSwitchCase="ApplicationArgType.BOOLEAN" >
+            <mat-checkbox [(ngModel)]="args[arg]" name="{{arg}}_checkbox">{{arg}}</mat-checkbox>
+          </ng-container>
+          <ng-container *ngSwitchCase="ApplicationArgType.ARRAY_NUMBER" >
+            <mat-select [(ngModel)]="args[arg]" name="{{arg}}_ArrayNumber">
+              <mat-option *ngFor="let option of data.argsTemplate[arg].value" [value]="option">{{option}}</mat-option>
+            </mat-select>
+          </ng-container>
+          <ng-container *ngSwitchCase="ApplicationArgType.ARRAY_STRING" >
+            <mat-select [(ngModel)]="args[arg]" name="{{arg}}_ArrayString">
+              <mat-option *ngFor="let option of data.argsTemplate[arg].value" [value]="option">{{option}}</mat-option>
+            </mat-select>
+          </ng-container>
+        </mat-form-field>
+
+      </div>
+    </div>
+  </form>
+
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+</div>

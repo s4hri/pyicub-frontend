@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {GetRobotsResponse} from "./types/GetRobotsResponse";
 import {GetApplicationsResponse} from "./types/GetApplicationsResponse";
 import {GetApplicationsServicesResponse} from "./types/GetApplicationServicesResponse";
-import {interval, map, switchMap, takeWhile, tap} from "rxjs";
+import {interval, map, switchMap, takeWhile, tap, throwError} from "rxjs";
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../types/ICubRequestStatus";
 import {Application} from "../types/Application";
@@ -49,7 +49,10 @@ export class ApiService {
   private getArgsTemplate(args):ApplicationArgsTemplate{
     const templateTypes:ApplicationArgsTemplate = {}
     for (const [key, value] of Object.entries(args)) {
-      templateTypes[key] = this.getArgType(value)
+      templateTypes[key] = {
+        type: this.getArgType(value),
+        value:value
+      }
     }
 
     return templateTypes;
@@ -101,6 +104,10 @@ export class ApiService {
           if (!stateNames.includes(responseItem.source)){
             stateNames.push(responseItem.source)
           }
+        }
+
+        if(stateNames.length === 0){
+          throw(new Error("Non ci sono FSM associate a questa applicazione"))
         }
 
         states = stateNames.map(stateName => {

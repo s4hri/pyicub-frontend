@@ -35,6 +35,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { PluginDialogComponent } from './plugin-dialog/plugin-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { ApplicationArgsDialogComponent } from './application-args-dialog/application-args-dialog.component';
+import {MatInputModule} from "@angular/material/input";
 
 
 @NgModule({
@@ -55,7 +57,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ServiceListItemComponent,
     FSMWidgetComponent,
     DashboardComponent,
-    PluginDialogComponent
+    PluginDialogComponent,
+    ApplicationArgsDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -77,7 +80,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MatSelectModule,
     MatFormFieldModule,
     MatDialogModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatInputModule
 
   ],
   providers: [],

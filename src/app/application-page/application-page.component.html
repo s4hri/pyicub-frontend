@@ -2,5 +2,5 @@
   <button mat-fab class="settings-button" (click)="onClick()" color="white">
     <mat-icon>settings</mat-icon>
   </button>
-  <app-dashboard [application]="application"></app-dashboard>
+  <app-dashboard *ngIf="areApplicationArgsSet" [application]="application"></app-dashboard>
 </div>
