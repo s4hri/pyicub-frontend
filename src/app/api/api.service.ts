@@ -1,9 +1,8 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {GetRobotsResponse} from "./types/GetRobotsResponse";
 import {GetApplicationsResponse} from "./types/GetApplicationsResponse";
 import {GetApplicationsServicesResponse} from "./types/GetApplicationServicesResponse";
-import {catchError, forkJoin, interval, map, mergeMap, of, switchMap, takeWhile, tap, throwError} from "rxjs";
+import {catchError, forkJoin, interval, map, mergeMap, of, switchMap, takeWhile, tap} from "rxjs";
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../types/ICubRequestStatus";
 import {Application} from "../types/Application";
@@ -16,6 +15,8 @@ import {ICubEmoPart} from "../types/ICubEmoPart";
 import {ICubEmoEmotion} from "../types/ICubEmoEmotion";
 import {ICubEmoColor} from "../types/ICubEmoColor";
 import {Robot} from "../types/Robot";
+import {pluginIndex} from "../plugins";
+import {Plugin} from "../types/Plugin";
 
 
 @Injectable({
@@ -59,16 +60,31 @@ export class ApiService {
         )
       }),
       mergeMap(applications => {
-        const applicationsObservables = applications.map(application => this.getApplicationFSM(robotName,application.name,application.url.port).pipe(
-          catchError(error => {
-            console.error('Errore nel caricamento dell\'FSM:', error);
-            return of(undefined);
-          }),
-          map(fsm => {
-            application.fsm = fsm;
-            return application
-          })
-        ));
+        const applicationsObservables = applications.map(application =>
+
+          forkJoin({
+            fsm: this.getApplicationFSM(robotName,application.name,application.url.port).pipe(
+              catchError(error => {
+                console.error('Errore nel caricamento dell\'FSM:', error);
+                return of(undefined);
+              })
+            ),
+            argsTemplate: this.getApplicationArgsTemplate(robotName,application.name,application.url.port).pipe(
+              catchError(() => {
+                return of({})
+              })
+            )
+          }).pipe(
+            map(results => {
+              application.fsm = results.fsm;
+              application.argsTemplate = results.argsTemplate;
+              for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
+                application.plugins.push(new Plugin(pluginName,componentName,false,20,20))
+              }
+              return application
+            })
+          )
+          );
         return forkJoin(applicationsObservables);
       })
     );

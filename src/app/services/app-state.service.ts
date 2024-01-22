@@ -3,8 +3,6 @@ import {Robot} from "../types/Robot";
 import {ApiService} from "../api/api.service";
 import {BehaviorSubject} from "rxjs";
 import {Application} from "../types/Application";
-import {pluginIndex} from "../plugins";
-import {Plugin} from "../types/Plugin";
 import {LocalStorageService} from "./local-storage.service";
 
 @Injectable({
@@ -61,45 +59,6 @@ export class AppStateService {
       console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
       this.availableRobots = robots
       this.isLoadingRobots = false;
-
-      for(let robot of robots){
-        robot.selectedApplication = undefined;
-        this.apiService.getApplications(robot.name).subscribe(applications => {
-
-          for(let application of applications){
-
-            this.apiService.getApplicationFSM(robot.name,application.name,application.url.port).subscribe({
-              next: fsm => {
-                console.log("FSM",fsm)
-                application.fsm = fsm;
-              },
-              error: err => {
-                console.log(application,err)
-                application.fsm = undefined;
-              }
-            })
-
-            this.apiService.getApplicationArgsTemplate(robot.name,application.name,application.url.port).subscribe({
-              next: argsTemplate => {
-                application.argsTemplate = argsTemplate;
-              },
-              error: err => {
-                console.log(application,err)
-                application.argsTemplate = {};
-              }
-            })
-
-
-            for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
-              application.plugins.push(new Plugin(pluginName,componentName,false,20,20))
-            }
-          }
-
-          robot.applications = applications
-          console.log("Robot Applications")
-          console.log(robot.applications)
-        })
-      }
 
     })
 
