@@ -58,6 +58,7 @@ export class AppStateService {
     this.isLoadingRobots = true;
 
     this.apiService.getRobots().subscribe(robots => {
+      console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
       this.availableRobots = robots
       this.isLoadingRobots = false;
 
@@ -110,6 +111,11 @@ export class AppStateService {
 
   selectApplication(application:Application){
     this.selectedRobot.selectedApplication = application;
+  }
+
+  setApplicationArgs(application:Application,args){
+    application.args = args;
+    return this.apiService.setApplicationArgs(application.robotName,application.name,application.url.port,args)
   }
 
 

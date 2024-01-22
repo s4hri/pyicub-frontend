@@ -24,10 +24,6 @@ export class ApplicationPageComponent implements OnInit{
       data: this.appState.selectedRobot.selectedApplication,
       disableClose: true //evita che il dialog si chiuda cliccando all'esterno del suo frame
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
   }
 
   openArgsDialog(){
@@ -36,8 +32,10 @@ export class ApplicationPageComponent implements OnInit{
       disableClose: true
     })
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(this.application)
+    dialogRef.afterClosed().subscribe(args => {
+      this.appState.setApplicationArgs(this.application,args).subscribe(() => {
+        this.areApplicationArgsSet = true;
+      })
     })
   }
 

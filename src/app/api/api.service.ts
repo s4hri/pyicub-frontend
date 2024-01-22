@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {GetRobotsResponse} from "./types/GetRobotsResponse";
 import {GetApplicationsResponse} from "./types/GetApplicationsResponse";
 import {GetApplicationsServicesResponse} from "./types/GetApplicationServicesResponse";
-import {interval, map, switchMap, takeWhile, tap, throwError} from "rxjs";
+import {catchError, forkJoin, interval, map, mergeMap, of, switchMap, takeWhile, tap, throwError} from "rxjs";
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../types/ICubRequestStatus";
 import {Application} from "../types/Application";
@@ -15,6 +15,7 @@ import {environment} from "../../environments/environment";
 import {ICubEmoPart} from "../types/ICubEmoPart";
 import {ICubEmoEmotion} from "../types/ICubEmoEmotion";
 import {ICubEmoColor} from "../types/ICubEmoColor";
+import {Robot} from "../types/Robot";
 
 
 @Injectable({
@@ -33,15 +34,42 @@ export class ApiService {
 
   getRobots(){
     const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub`;
-    return this.http.get<GetRobotsResponse>(path);
+    return this.http.get<Robot[]>(path).pipe(
+      mergeMap(robots => {
+        const robotsObservables = robots.map(robot => this.getApplications(robot.name).pipe(
+          map(applications => {
+            robot.applications = applications
+            return robot
+          })
+        ));
+
+        return (forkJoin(robotsObservables))
+
+      })
+    )
 
   }
+
+
   getApplications(robotName:string){
     const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub/${robotName}`;
     return this.http.get<GetApplicationsResponse>(path).pipe(
       map(response => {
         return response.map(applicationObject => new Application(robotName,applicationObject.name,applicationObject.url)
         )
+      }),
+      mergeMap(applications => {
+        const applicationsObservables = applications.map(application => this.getApplicationFSM(robotName,application.name,application.url.port).pipe(
+          catchError(error => {
+            console.error('Errore nel caricamento dell\'FSM:', error);
+            return of(undefined);
+          }),
+          map(fsm => {
+            application.fsm = fsm;
+            return application
+          })
+        ));
+        return forkJoin(applicationsObservables);
       })
     );
   }
@@ -87,8 +115,12 @@ export class ApiService {
         return this.getArgsTemplate(response)
       })
     )
+  }
 
-}
+  setApplicationArgs(robotName:string,appName:string,appPort:string,args){
+    return this.runService(robotName,appName,appPort,"setArgs", {"input_args":args})
+  }
+
 
   getApplicationFSM(robotName:string,appName:string,appPort:string){
 
