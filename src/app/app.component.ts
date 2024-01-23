@@ -16,13 +16,9 @@ export class AppComponent implements OnInit{
 
   isDrawerOpened:boolean = true;
   robots$ = this.appState.availableRobots$;
-  //robots$ = this.robotsService.robots$;
   isLoadingRobots$ = this.appState.isLoadingRobots$;
-  //isLoadingRobots$ = this.robotsService.isLoadingRobots$;
   selectedRobot$ = this.appState.selectedRobot$;
-  //selectedRobot$ = this.userSessionService.selectedRobot$;
-  //selectedApplication$ = this.userSessionService.selectedApplication$;
-  //constructor(private robotsService:RobotsService, private userSessionService: UserSessionService, private router:Router){}
+
   constructor(private appState:AppStateService, private router:Router){}
 
   onReloadButtonClick(){

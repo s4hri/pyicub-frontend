@@ -37,8 +37,10 @@ exec(`ng generate component plugins/${componentName}`, (error, stdout, stderr) =
   // Creazione del file config.json
   const configFilePath = join(__dirname,'..', `src/app/plugins/${componentFolderName}/config.json`);
   const componentFilePath = join(__dirname,'..', `src/app/plugins/${componentFolderName}/${componentFolderName}.component.ts`);
+  const componentCSSFilePath = join(__dirname,'..', `src/app/plugins/${componentFolderName}/${componentFolderName}.component.css`);
   const configData = { name: pluginName };
 
+  //Scrivo il file json contenente la configurazione del plugin.
   writeFile(configFilePath, JSON.stringify(configData, null, 2), 'utf8', (err) => {
     if (err) {
       console.error(`Errore durante la scrittura del file config.json: ${err.message}`);
@@ -46,6 +48,22 @@ exec(`ng generate component plugins/${componentName}`, (error, stdout, stderr) =
     }
     console.log(`File config.json creato con successo in ${configFilePath}`);
   });
+
+  //Inserisco elementi di default nel css del plugin
+  const initCSS = `:host{
+    height:100%;
+    width:100%;
+  }
+`;
+
+  writeFile(componentCSSFilePath,initCSS, 'utf8', (err) => {
+    if (err) {
+      console.error(`Errore durante la scrittura del file config.json: ${err.message}`);
+      return;
+    }
+    console.log(`File css del componente creato con successo in ${componentCSSFilePath}`);
+  });
+
 
   readFile(componentFilePath, 'utf8', (err, data) => {
     if (err) {

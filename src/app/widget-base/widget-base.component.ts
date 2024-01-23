@@ -165,8 +165,16 @@ export class WidgetBaseComponent {
     return this.apiService.camLeftGetURI(this.application.robotName)
   }
 
+  camRightGetURI(){
+    return this.apiService.camRightGetURI(this.application.robotName)
+  }
+
   camLeftGetImgRes(){
     return this.apiService.camLeftGetImgRes(this.application.robotName)
+  }
+
+  camRightGetImgRes(){
+    return this.apiService.camRightGetImgRes(this.application.robotName)
   }
 
 }

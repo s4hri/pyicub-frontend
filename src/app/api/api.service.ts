@@ -392,6 +392,32 @@ export class ApiService {
     )
   }
 
+  camRightGetImgRes(robotName:string){
+    return this.runService<number[]>(robotName,"helper", this.port,"cam_right.getImgRes").pipe(
+      map(arrayRes => {
+        let imgFrameSize = {
+          width:0,
+          height:0
+        }
+
+        if(arrayRes){
+
+          if(arrayRes.length >= 1){
+            imgFrameSize.width = arrayRes[0];
+          }
+
+          if(arrayRes.length >= 2){
+            imgFrameSize.height = arrayRes[1];
+          }
+
+        }
+
+        return imgFrameSize;
+
+      })
+    )
+  }
+
   camRightGetURI(robotName:string){
     return this.runService<string>(robotName,"helper",this.port,"cam_right.getURI").pipe(
       map(stringURL => new URL(stringURL))

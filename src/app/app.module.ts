@@ -37,7 +37,8 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { ApplicationArgsDialogComponent } from './application-args-dialog/application-args-dialog.component';
 import {MatInputModule} from "@angular/material/input";
-import { PlugindiprovaComponent } from './plugins/plugindiprova/plugindiprova.component';
+import { RobotCamViewerComponent } from './plugins/robot-cam-viewer/robot-cam-viewer.component';
+import { RobotSpeechComponent } from './plugins/robot-speech/robot-speech.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { PlugindiprovaComponent } from './plugins/plugindiprova/plugindiprova.co
     DashboardComponent,
     PluginDialogComponent,
     ApplicationArgsDialogComponent,
-    PlugindiprovaComponent
+    RobotCamViewerComponent,
+    RobotSpeechComponent
   ],
   imports: [
     BrowserModule,

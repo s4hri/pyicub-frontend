@@ -1,0 +1,13 @@
+<div class="messages-container">
+
+  <ul>
+    <li style="list-style: none" *ngFor="let message of messages" [ngStyle]="{'background-color':messageColors[message.status]}">
+      {{message.text}}
+    </li>
+  </ul>
+
+
+</div>
+<mat-form-field>
+  <input matInput [(ngModel)]="newMessage">
+</mat-form-field>

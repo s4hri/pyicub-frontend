@@ -7,7 +7,8 @@ import {ApplicationPageComponent} from "./application-page/application-page.comp
 const routes: Routes = [
   {path:'', component:HomePageComponent},
   {path:'icub', component:ApplicationsPageComponent},
-  {path:'icub/application', component:ApplicationPageComponent}
+  {path:'icub/application', component:ApplicationPageComponent},
+
 ];
 
 @NgModule({

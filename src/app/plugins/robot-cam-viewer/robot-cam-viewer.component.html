@@ -1,0 +1,11 @@
+<div class="widget-container">
+  <mat-spinner *ngIf="isLoading;else elseBlock"></mat-spinner>
+  <ng-template #elseBlock>
+    <div class="cam-view-container" >
+      <iframe [src]="rightCamURI" [width]="camImgWidth"  [height]="camImgHeight"></iframe>
+    </div>
+  </ng-template>
+
+</div>
+
+
