@@ -37,7 +37,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { ApplicationArgsDialogComponent } from './application-args-dialog/application-args-dialog.component';
 import {MatInputModule} from "@angular/material/input";
-
+import { PlugindiprovaComponent } from './plugins/plugindiprova/plugindiprova.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +58,8 @@ import {MatInputModule} from "@angular/material/input";
     FSMWidgetComponent,
     DashboardComponent,
     PluginDialogComponent,
-    ApplicationArgsDialogComponent
+    ApplicationArgsDialogComponent,
+    PlugindiprovaComponent
   ],
   imports: [
     BrowserModule,

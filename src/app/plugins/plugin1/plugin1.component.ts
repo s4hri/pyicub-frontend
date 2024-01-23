@@ -12,3 +12,4 @@ export class Plugin1Component extends WidgetBaseComponent implements OnInit{
   }
 
 }
+

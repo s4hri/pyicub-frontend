@@ -24,7 +24,7 @@ export class WidgetBaseComponent {
   checkAsyncRequestStatus(requestID:string,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
     return this.apiService.checkAsyncRequestStatus(requestID,initCallback,runningCallback,doneCallback,failedCallback)
   }
- 
+
   runService(serviceName:string,body:any){
     return this.apiService.runService(this.application.robotName,this.application.name,this.application.url.port,serviceName,body)
   }
@@ -159,6 +159,14 @@ export class WidgetBaseComponent {
 
   speechSay(sentence:string,waitActionDone:boolean = true){
     return this.apiService.speechSay(this.application.robotName,sentence,waitActionDone)
+  }
+
+  camLeftGetURI(){
+    return this.apiService.camLeftGetURI(this.application.robotName)
+  }
+
+  camLeftGetImgRes(){
+    return this.apiService.camLeftGetImgRes(this.application.robotName)
   }
 
 }

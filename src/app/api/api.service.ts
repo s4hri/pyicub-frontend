@@ -36,6 +36,7 @@ export class ApiService {
   getRobots(){
     const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub`;
     return this.http.get<Robot[]>(path).pipe(
+      //Per ogni robot, vado ad effettuare una chiamata per ottenere le relative applicazioni. Quando tutte le chiamate sono terminate, restituisco i robot.
       mergeMap(robots => {
         const robotsObservables = robots.map(robot => this.getApplications(robot.name).pipe(
           map(applications => {
@@ -55,10 +56,12 @@ export class ApiService {
   getApplications(robotName:string){
     const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub/${robotName}`;
     return this.http.get<GetApplicationsResponse>(path).pipe(
+      //inizio a creare le applicazioni
       map(response => {
         return response.map(applicationObject => new Application(robotName,applicationObject.name,applicationObject.url)
         )
       }),
+      //Per ogni applicazione vado ad ottenere l'fsm e l'argsTemplate. Quando entrambe le chiamates sono completate, assegno i relativi valori all'applicazione e restituisco il valore.
       mergeMap(applications => {
         const applicationsObservables = applications.map(application =>
 
@@ -84,7 +87,9 @@ export class ApiService {
               return application
             })
           )
+
           );
+
         return forkJoin(applicationsObservables);
       })
     );
@@ -355,9 +360,48 @@ export class ApiService {
     return this.runService(robotName,"helper",this.port,"speech.say",{something:sentence,waitActionDone:waitActionDone})
   }
 
+  camLeftGetURI(robotName:string){
+    return this.runService<string>(robotName,"helper",this.port,"cam_left.getURI").pipe(
+      map(stringURL => new URL(stringURL))
+    )
+  }
+
+  camLeftGetImgRes(robotName:string){
+    return this.runService<number[]>(robotName,"helper", this.port,"cam_left.getImgRes").pipe(
+      map(arrayRes => {
+        let imgFrameSize = {
+          width:0,
+          height:0
+        }
+
+        if(arrayRes){
+
+          if(arrayRes.length >= 1){
+            imgFrameSize.width = arrayRes[0];
+          }
+
+          if(arrayRes.length >= 2){
+            imgFrameSize.height = arrayRes[1];
+          }
+
+        }
+
+        return imgFrameSize;
+
+      })
+    )
+  }
+
+  camRightGetURI(robotName:string){
+    return this.runService<string>(robotName,"helper",this.port,"cam_right.getURI").pipe(
+      map(stringURL => new URL(stringURL))
+    )
+  }
+
   getRobotActions(robotName:string){
     return this.runService(robotName,"helper",this.port,"actions.getActions")
   }
+
 
   playAction(robotName:string,actionID:string,sync:boolean = true,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
     if(sync) {

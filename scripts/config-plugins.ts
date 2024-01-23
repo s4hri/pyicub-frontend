@@ -1,5 +1,5 @@
-const fs  = require('fs');
-const path = require('path');
+import * as fs from "fs";
+import * as path from "path";
 
 function objectToString(obj) {
   const keyValuePairs = Object.entries(obj).map(([key, value]) => {
@@ -8,7 +8,7 @@ function objectToString(obj) {
   return `{ ${keyValuePairs.join(', ')} }`;
 }
 
-const pluginsDirectoryPath = path.join(__dirname, 'src','app', 'plugins');
+const pluginsDirectoryPath = path.join(__dirname, '..', 'src', 'app', 'plugins');
 const pluginsIndexPath = path.join(pluginsDirectoryPath,'index.ts');
 //La parte del file con gli import dei vari plugin
 let pluginImports = '';

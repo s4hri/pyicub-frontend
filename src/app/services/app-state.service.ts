@@ -43,13 +43,6 @@ export class AppStateService {
 
   constructor(public apiService:ApiService, private localStorageService:LocalStorageService) {
 
-   this.updateRobots()
-  }
-
-  saveData(){
-    let appData:{[key:string]:any}
-    //appData["availableRobots"] = JSON.stringify(this.availableRobots)
-
   }
 
   updateRobots() {
