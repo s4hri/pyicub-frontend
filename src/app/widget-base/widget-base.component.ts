@@ -3,7 +3,6 @@ import {ApiService} from "../api/api.service";
 import {ICubEmoPart} from "../types/ICubEmoPart";
 import {ICubEmoEmotion} from "../types/ICubEmoEmotion";
 import {ICubEmoColor} from "../types/ICubEmoColor";
-import {timeout} from "rxjs";
 import {Application} from "../types/Application";
 
 @Component({
@@ -29,7 +28,7 @@ export class WidgetBaseComponent {
     return this.apiService.runService(this.application.robotName,this.application.name,this.application.url.port,serviceName,body)
   }
 
-  runServiceAsync(serviceName:string,body:any = {},initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
+  runServiceAsync(serviceName:string,body:any = {}){
     return this.apiService.runServiceAsync(this.application.robotName,this.application.name,this.application.url.port,serviceName,body)
   }
 
@@ -160,6 +159,11 @@ export class WidgetBaseComponent {
   speechSay(sentence:string,waitActionDone:boolean = true){
     return this.apiService.speechSay(this.application.robotName,sentence,waitActionDone)
   }
+
+  speechSayAsync(sentence:string,waitActionDone:boolean = true){
+    return this.apiService.speechSayAsync(this.application.robotName,sentence,waitActionDone)
+  }
+
 
   camLeftGetURI(){
     return this.apiService.camLeftGetURI(this.application.robotName)

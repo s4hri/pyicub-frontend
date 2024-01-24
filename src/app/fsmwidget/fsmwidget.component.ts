@@ -1,8 +1,8 @@
-import {AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {WidgetBaseComponent} from "../widget-base/widget-base.component";
 import {Subject} from "rxjs";
 import {GraphComponent} from "@swimlane/ngx-graph";
-import {FSM, NodeStatus} from "../types/FSM";
+import {NodeStatus} from "../types/FSM";
 import {AppStateService} from "../services/app-state.service";
 
 @Component({
@@ -11,10 +11,6 @@ import {AppStateService} from "../services/app-state.service";
   styleUrl: './fsmwidget.component.css'
 })
 export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,AfterViewInit{
-
-  constructor(private changeDec:ChangeDetectorRef,private appData:AppStateService) {
-    super();
-  }
 
   nodeColors = {
     INACTIVE:'gray',
@@ -58,8 +54,6 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
       }
 
     })
-
-
 
     this.nodes = nodes;
     this.links = links;
@@ -116,6 +110,11 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
 
     this.fsmRunStep(trigger).subscribe(requestID => {
 
+      const onRunningCallback = () => {
+        node.color = 'yellow';
+        node.state = NodeStatus.RUNNING
+      }
+
       const onDoneCallback = () => {
         node.state = NodeStatus.DONE
         let triggers = this.application.fsm.states.find(state => state.stateName === node.id).triggers;
@@ -137,7 +136,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
         }
       }
 
-      this.checkAsyncRequestStatus(requestID,() => {}, () => {node.color = 'yellow'; node.state = NodeStatus.RUNNING},onDoneCallback,onFailedCallback)
+      this.checkAsyncRequestStatus(requestID,() => {}, onRunningCallback,onDoneCallback,onFailedCallback)
     })
 
   }

@@ -51,10 +51,9 @@ exec(`ng generate component plugins/${componentName}`, (error, stdout, stderr) =
 
   //Inserisco elementi di default nel css del plugin
   const initCSS = `:host{
-    height:100%;
-    width:100%;
-  }
-`;
+  height:100%;
+  width:100%;
+}`;
 
   writeFile(componentCSSFilePath,initCSS, 'utf8', (err) => {
     if (err) {

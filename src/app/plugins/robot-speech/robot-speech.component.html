@@ -1,13 +1,15 @@
-<div class="messages-container">
-
-  <ul>
-    <li style="list-style: none" *ngFor="let message of messages" [ngStyle]="{'background-color':messageColors[message.status]}">
+<div class="widget-container">
+  <div #scrollContainer class="messages-container">
+    <div class="message-text-container" *ngFor="let message of messages" [ngStyle]="{'background-color':messageColors[message.status]}">
       {{message.text}}
-    </li>
-  </ul>
-
-
+    </div >
+  </div>
+  <div class="input-section">
+    <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1;background-color: white">
+      <input matInput [(ngModel)]="newMessage" (keydown.enter)="onEnterPress()" placeholder="Premi invio" [disabled]="inputDisabled" >
+    </mat-form-field>
+    <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
 </div>
-<mat-form-field>
-  <input matInput [(ngModel)]="newMessage">
-</mat-form-field>

@@ -360,6 +360,10 @@ export class ApiService {
     return this.runService(robotName,"helper",this.port,"speech.say",{something:sentence,waitActionDone:waitActionDone})
   }
 
+  speechSayAsync(robotName:string,sentence:string,waitActionDone:boolean = true) {
+    return this.runServiceAsync(robotName,"helper",this.port,"speech.say",{something:sentence,waitActionDone:waitActionDone})
+  }
+
   camLeftGetURI(robotName:string){
     return this.runService<string>(robotName,"helper",this.port,"cam_left.getURI").pipe(
       map(stringURL => new URL(stringURL))
