@@ -1,5 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import { WidgetBaseComponent } from '../../widget-base/widget-base.component';
+import {MatInput} from "@angular/material/input";
 
 @Component({
   selector: 'app-robot-speech',
@@ -9,6 +10,7 @@ import { WidgetBaseComponent } from '../../widget-base/widget-base.component';
 export class RobotSpeechComponent extends WidgetBaseComponent{
 
   @ViewChild('scrollContainer') private myScrollContainer: ElementRef;
+  @ViewChild('messageInput',{read:MatInput}) messageInput: MatInput;
 
   readonly messageColors = {
     "CREATED":'lightgray',

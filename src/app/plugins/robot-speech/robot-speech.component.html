@@ -6,7 +6,7 @@
   </div>
   <div class="input-section">
     <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1;background-color: white">
-      <input matInput [(ngModel)]="newMessage" (keydown.enter)="onEnterPress()" placeholder="Premi invio" [disabled]="inputDisabled" >
+      <input matInput #messageInput [(ngModel)]="newMessage" (keydown.enter)="onEnterPress()" placeholder="Premi invio" [disabled]="inputDisabled" >
     </mat-form-field>
     <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()">
       <mat-icon>send</mat-icon>

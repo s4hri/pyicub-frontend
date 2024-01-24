@@ -49,10 +49,17 @@ exec(`ng generate component plugins/${componentName}`, (error, stdout, stderr) =
     console.log(`File config.json creato con successo in ${configFilePath}`);
   });
 
-  //Inserisco elementi di default nel css del plugin
+  /*Inserisco elementi di default nel css del plugin.
+  - Width ed height sono al 100% per occupare di default tutto lo spazio del contenitore del widget.
+  - container-type è settato ad inline-size per favorire l'uso di container queries per widget responsive in base alla dimensione del contenitore
+  - position è settato a relative, in questo modo eventuali posizionamenti absolute saranno circoscritti al container del plugin.
+   */
+
   const initCSS = `:host{
-  height:100%;
   width:100%;
+  height:100%;
+  container-type: inline-size;
+  position:relative;
 }`;
 
   writeFile(componentCSSFilePath,initCSS, 'utf8', (err) => {

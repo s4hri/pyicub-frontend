@@ -20,7 +20,7 @@ import {interval} from "rxjs";
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit,AfterViewInit{
+export class DashboardComponent implements OnInit{
 
   @Input()
   application:Application
@@ -71,9 +71,8 @@ export class DashboardComponent implements OnInit,AfterViewInit{
   options: GridsterConfig;
 
   ngOnInit(): void {
-    console.log(this.application)
     this.options = {
-      gridType: GridType.ScrollVertical,
+      gridType: GridType.Fit,
       displayGrid: DisplayGrid.OnDragAndResize,
       itemChangeCallback: this.itemChange.bind(this),
       itemInitCallback: this.itemInit.bind(this),
@@ -96,10 +95,5 @@ export class DashboardComponent implements OnInit,AfterViewInit{
       maxItemArea:100000
     };
   }
-
-  ngAfterViewInit() {
-    console.log("NG AFTERINIT")
-  }
-
 
 }
