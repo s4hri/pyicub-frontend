@@ -17,13 +17,13 @@ import {ICubEmoColor} from "../types/ICubEmoColor";
 import {Robot} from "../types/Robot";
 import {pluginIndex} from "../plugins";
 import {Plugin} from "../types/Plugin";
+import * as defaultDashboardConfig from "../defaultDashboardConfiguration.json"
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-
   private port = environment.apiPort
   private hostname = environment.apiHost
   private scheme = environment.apiScheme
@@ -82,7 +82,13 @@ export class ApiService {
               application.fsm = results.fsm;
               application.argsTemplate = results.argsTemplate;
               for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
-                application.plugins.push(new Plugin(pluginName,componentName,false,20,20))
+                const pluginDefaultData = defaultDashboardConfig[pluginName];
+                const x = pluginDefaultData.x || 0;
+                const y = pluginDefaultData.y || 0;
+                const cols = pluginDefaultData.cols || 20;
+                const rows = pluginDefaultData.rows || 20;
+                const enabled = pluginDefaultData.enabled || false;
+                application.plugins.push(new Plugin(pluginName,componentName,enabled,cols,rows,x,y))
               }
               return application
             })
@@ -180,7 +186,13 @@ export class ApiService {
         states[0] = initState;
         states[initIndex] = tempState;
 
-        return new FSM(states)
+        const fsmDefaultConfig = defaultDashboardConfig["fsm"];
+        const x = fsmDefaultConfig.x || 0;
+        const y = fsmDefaultConfig.y || 0;
+        const cols = fsmDefaultConfig.cols || 50;
+        const rows = fsmDefaultConfig.rows || 70;
+
+        return new FSM(states,cols,rows,0,0,x,y);
       })
     )
   }

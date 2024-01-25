@@ -39,6 +39,7 @@ import { ApplicationArgsDialogComponent } from './application-args-dialog/applic
 import {MatInputModule} from "@angular/material/input";
 import { RobotCamViewerComponent } from './plugins/robot-cam-viewer/robot-cam-viewer.component';
 import { RobotSpeechComponent } from './plugins/robot-speech/robot-speech.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [
@@ -63,30 +64,31 @@ import { RobotSpeechComponent } from './plugins/robot-speech/robot-speech.compon
     RobotCamViewerComponent,
     RobotSpeechComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatButtonModule,
-    HttpClientModule,
-    MatProgressSpinnerModule,
-    MatGridListModule,
-    MatCardModule,
-    MatMenuModule,
-    GridsterModule,
-    NgxGraphModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatDialogModule,
-    MatCheckboxModule,
-    MatInputModule
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatButtonModule,
+        HttpClientModule,
+        MatProgressSpinnerModule,
+        MatGridListModule,
+        MatCardModule,
+        MatMenuModule,
+        GridsterModule,
+        NgxGraphModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatSlideToggleModule
 
-  ],
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

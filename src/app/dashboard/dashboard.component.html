@@ -1,14 +1,15 @@
 <div  class="plugins-grid-container">
   <gridster [options]="options" style="background-color: white">
-    <gridster-item *ngIf="application.fsm" [item]="{x:application.fsm.x,y:application.fsm.y,cols:application.fsm.cols,rows:application.fsm.rows, id:'fsm'}">
-      <div class="gridster-item-content" style="background-color: black">
+    <gridster-item style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);box-sizing: content-box;" *ngIf="application.fsm" [item]="{x:application.fsm.x,y:application.fsm.y,cols:application.fsm.cols,rows:application.fsm.rows, id:'fsm'}">
+      <div class="gridster-item-content" style="background-color: white">
         <app-fsmwidget [application]="application"/>
       </div>
     </gridster-item>
-    <gridster-item *ngFor="let plugin of application.enabledPlugins$ | async" [item]="{x:plugin.x,y:plugin.y,cols:plugin.cols,rows:plugin.rows,id:plugin.id}">
-      <div class="gridster-item-content drag-handler" >
-        <ng-container *ngComponentOutlet="plugin.component; inputs:{application:application}"></ng-container>
-      </div>
+    <gridster-item style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);box-sizing: content-box;" *ngFor="let plugin of application.enabledPlugins$ | async" [item]="{x:plugin.x,y:plugin.y,cols:plugin.cols,rows:plugin.rows,id:plugin.id}">
+      <mat-card class="gridster-item-content drag-handler" >
+        <ng-container *ngComponentOutlet="plugin.component; inputs:{application:application,plugin:plugin}"></ng-container>
+      </mat-card>
     </gridster-item>
   </gridster>
 </div>
+

@@ -22,8 +22,17 @@ import {interval} from "rxjs";
 })
 export class DashboardComponent implements OnInit{
 
+  options: GridsterConfig;
+
   @Input()
   application:Application
+
+  @Input()
+  set editModeEnabed(value: boolean) {
+
+  }
+
+
 
   constructor(private cdRef: ChangeDetectorRef) {
   }
@@ -68,8 +77,6 @@ export class DashboardComponent implements OnInit{
     this.cdRef.detectChanges()
   }
 
-  options: GridsterConfig;
-
   ngOnInit(): void {
     this.options = {
       gridType: GridType.Fit,
@@ -84,8 +91,9 @@ export class DashboardComponent implements OnInit{
       resizable: {
         enabled: true
       },
-      swapWhileDragging:true,
-      pushItems:true,
+      swapWhileDragging:false,
+      swap:false,
+      pushItems:false,
       minCols: 100,
       maxCols: 100,
       minRows: 100,

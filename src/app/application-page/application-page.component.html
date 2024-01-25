@@ -1,6 +1,15 @@
-<div style="width:100%;height:100%;background-color: aqua;position: relative">
-  <button mat-fab class="settings-button" (click)="onClick()" color="white">
-    <mat-icon>apps</mat-icon>
-  </button>
-  <app-dashboard *ngIf="areApplicationArgsSet" [application]="application"></app-dashboard>
+<div style="width:100%;height:100%;display:flex;flex-direction: column;background-color: white">
+  <div style="display: flex;justify-content: flex-end">
+    <button mat-fab extended (click)="onClick()" color="white" style="background-color: rgb(119,161,215);margin:5px">
+      <mat-icon>edit</mat-icon>
+      Enable Edit Mode
+    </button>
+    <button mat-fab extended (click)="onClick()" color="white" style="background-color: rgb(119,161,215);margin:5px">
+      <mat-icon>apps</mat-icon>
+      Plugins
+    </button>
+  </div>
+  <div style="flex:1">
+    <app-dashboard *ngIf="areApplicationArgsSet" [application]="application"></app-dashboard>
+  </div>
 </div>

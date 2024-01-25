@@ -16,6 +16,7 @@ export class ApplicationPageComponent implements OnInit{
   application = this.appState.selectedRobot.selectedApplication
 
   areApplicationArgsSet = false;
+  editModeEnabled = false;
 
   constructor(public appState:AppStateService,public dialog: MatDialog) {}
 

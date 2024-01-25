@@ -4,8 +4,14 @@ export class Plugin implements DashboardItem{
   name:string
   enabled:boolean
   component:any
+  cols: number;
+  rows: number;
+  x: number;
+  y: number;
+  id:string;
+  data:any
 
-  constructor(name:string,component:any,enabled:boolean = false,cols:number,rows:number,x:number = 0, y:number = 0) {
+  constructor(name:string,component:any,enabled:boolean = false,cols:number,rows:number,x:number = 0, y:number = 0,data = {}) {
     this.name = name;
     this.component = component;
     this.enabled = enabled;
@@ -14,17 +20,12 @@ export class Plugin implements DashboardItem{
     this.x = x;
     this.y = y;
     this.id = name;
+    this.data = data;
   }
 
   togglePlugin(){
     this.enabled = !this.enabled
   }
-
-  cols: number;
-  rows: number;
-  x: number;
-  y: number;
-  id:string;
 
   exportToJSON():string{
     let json:{[key:string]:any} = {};

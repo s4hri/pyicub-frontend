@@ -1,20 +1,64 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, inject, Input, OnDestroy} from '@angular/core';
 import {ApiService} from "../api/api.service";
 import {ICubEmoPart} from "../types/ICubEmoPart";
 import {ICubEmoEmotion} from "../types/ICubEmoEmotion";
 import {ICubEmoColor} from "../types/ICubEmoColor";
 import {Application} from "../types/Application";
+import {AppStateService} from "../services/app-state.service";
+import {Plugin} from "../types/Plugin";
 
 @Component({
   selector: 'app-widget-base',
   templateUrl: './widget-base.component.html',
   styleUrl: './widget-base.component.css'
 })
-export class WidgetBaseComponent {
+export class WidgetBaseComponent implements OnDestroy{
+
   @Input()
-  application:Application
+  application:Application;
+
+  @Input()
+  plugin:Plugin;
 
   protected apiService = inject(ApiService);
+  protected appStateService = inject(AppStateService);
+
+  ngOnDestroy() {
+    //this._saveData()
+  }
+
+  private _saveData(){
+    const baseData = {
+        x:this.plugin.x,
+        y:this.plugin.y,
+        enabled:this.plugin.enabled,
+        cols:this.plugin.cols,
+        rows:this.plugin.rows
+    }
+    const customData = this.getDataToSave();
+    const data = {
+        ...baseData,
+        data:{...customData}
+    }
+    if(this.plugin){
+        this.plugin.data = data;
+    }
+    //TODO aggiungi persistenza con localstorage
+  }
+
+  getDataToSave():any{
+    //funzione di cui fare l'override e che deve restituire l'oggetto data da salvare.
+  }
+
+  private _loadData(){
+    //TODO aggiungi logica per caricamento dati. In teoria ogni plugin implementa la propria. Questa funzione recupera il json dall'app state e chiama la funzione loadData che sarà sovrascritta dal singolo widget
+    const data = this.plugin.data;
+    this.loadData(data)
+  }
+
+  loadData(data:any){
+
+  }
 
   getApplicationFSM(){
     return this.apiService.getApplicationFSM(this.application.robotName,this.application.name,this.application.url.port)
