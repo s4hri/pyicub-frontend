@@ -28,7 +28,31 @@ export class DashboardComponent implements OnInit{
   application:Application
 
   @Input()
-  set editModeEnabed(value: boolean) {
+  set editModeEnabled(value: boolean) {
+    if(value){
+      this.options.draggable = {
+        enabled: true,
+        ignoreContent:true,
+        dragHandleClass: 'drag-handler'
+      }
+      this.options.resizable = {
+        enabled:true
+      }
+
+    }else{
+
+      this.options.draggable = {
+        enabled:false
+      }
+      this.options.resizable = {
+        enabled:false
+      }
+
+    }
+
+    if (this.options.api && this.options.api.optionsChanged) {
+      this.options.api.optionsChanged();
+    }
 
   }
 
@@ -84,12 +108,12 @@ export class DashboardComponent implements OnInit{
       itemChangeCallback: this.itemChange.bind(this),
       itemInitCallback: this.itemInit.bind(this),
       draggable: {
-        enabled: true,
+        enabled: false,
         ignoreContent:true,
         dragHandleClass: 'drag-handler'
       },
       resizable: {
-        enabled: true
+        enabled: false
       },
       swapWhileDragging:false,
       swap:false,

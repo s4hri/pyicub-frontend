@@ -27,6 +27,10 @@ export class ApplicationPageComponent implements OnInit{
     });
   }
 
+  toggleEditMode(){
+    this.editModeEnabled = !this.editModeEnabled;
+  }
+
   openArgsDialog(){
     const dialogRef = this.dialog.open(ApplicationArgsDialogComponent,{
       data: this.appState.selectedRobot.selectedApplication,
