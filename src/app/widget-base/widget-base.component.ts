@@ -20,6 +20,12 @@ export class WidgetBaseComponent implements OnDestroy{
   @Input()
   plugin:Plugin;
 
+  @Input()
+  width?:string
+
+  @Input()
+  height?:string
+
   protected apiService = inject(ApiService);
   protected appStateService = inject(AppStateService);
 

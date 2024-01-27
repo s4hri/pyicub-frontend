@@ -90,6 +90,7 @@ export class ApiService {
                 const enabled = pluginDefaultData.enabled || false;
                 application.plugins.push(new Plugin(pluginName,componentName,enabled,cols,rows,x,y))
               }
+              console.log(application)
               return application
             })
           )

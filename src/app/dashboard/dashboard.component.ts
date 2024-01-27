@@ -24,6 +24,8 @@ export class DashboardComponent implements OnInit{
 
   options: GridsterConfig;
 
+  itemsSize:{[key:string]:{width:string,height:string}} = {};
+
   @Input()
   application:Application
 
@@ -76,6 +78,10 @@ export class DashboardComponent implements OnInit{
       this.application.plugins[pluginIndex].y = itemComponent.$item.y
       this.application.plugins[pluginIndex].cols = itemComponent.$item.cols
       this.application.plugins[pluginIndex].rows = itemComponent.$item.rows
+      this.itemsSize[item.id] = {
+        width:itemComponent.width,
+        height:itemComponent.height
+      }
       console.log("item change",item)
     }
     this.cdRef.detectChanges()
@@ -97,11 +103,26 @@ export class DashboardComponent implements OnInit{
         clearInterval(intervalID);
       },2000)
 
+    }else{
+      let intervalID = setInterval(() =>{
+        if(itemComponent.width && itemComponent.height){
+          this.itemsSize[item.id] = {
+            width:itemComponent.width,
+            height:itemComponent.height
+          }
+          clearInterval(intervalID);
+        }
+      },50)
+      setTimeout(() => {
+        clearInterval(intervalID);
+      },2000)
     }
+    console.log(this.itemsSize)
     this.cdRef.detectChanges()
   }
 
   ngOnInit(): void {
+
     this.options = {
       gridType: GridType.Fit,
       displayGrid: DisplayGrid.OnDragAndResize,

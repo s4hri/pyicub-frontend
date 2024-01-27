@@ -15,3 +15,45 @@
   }
 }
 
+.node {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 1.8rem;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  transition: border 0.2s ease;
+  font-weight: 600;
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    border: 1px solid blue;
+  }
+
+  &__content {
+    &__title {
+      display: block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    &__id {
+      display: block;
+      font-weight: 500;
+      color: lightgray;
+    }
+  }
+}
+
+.edge {
+  stroke: black;
+  stroke-width: 1;
+}
+
+.arrow {
+  fill: lightgray;
+}

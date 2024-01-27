@@ -40,6 +40,10 @@ import {MatInputModule} from "@angular/material/input";
 import { RobotCamViewerComponent } from './plugins/robot-cam-viewer/robot-cam-viewer.component';
 import { RobotSpeechComponent } from './plugins/robot-speech/robot-speech.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import { GraphyComponent } from './graphy/graphy.component';
+import { DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective } from './graphy/templates';
+import { FSMWidgetProvaComponent } from './fsmwidget-prova/fsmwidget-prova.component'
+
 
 @NgModule({
   declarations: [
@@ -62,7 +66,12 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     PluginDialogComponent,
     ApplicationArgsDialogComponent,
     RobotCamViewerComponent,
-    RobotSpeechComponent
+    RobotSpeechComponent,
+    GraphyComponent,
+      DefsTemplateDirective,
+      EdgeTemplateDirective,
+      NodeTemplateDirective,
+      FSMWidgetProvaComponent
   ],
     imports: [
         BrowserModule,
