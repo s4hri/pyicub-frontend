@@ -1,8 +1,9 @@
-import {Component, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {WidgetBaseComponent} from "../../widget-base/widget-base.component";
 import {InputNode} from "../../graphy/models/input-node.model";
 import {InputEdge} from "../../graphy/models/input-edge.model";
 import {NodeStatus} from "../../types/FSM";
+import {GraphyComponent} from "../../graphy/graphy.component";
 
 @Component({
   selector: 'app-plugin1',
@@ -10,6 +11,19 @@ import {NodeStatus} from "../../types/FSM";
   styleUrl: './plugin1.component.css'
 })
 export class Plugin1Component extends WidgetBaseComponent implements OnDestroy,OnChanges{
+
+  private _graphy: GraphyComponent<any, any>;
+  @ViewChild(GraphyComponent)
+  set graphy(value: GraphyComponent<any, any>) {
+    this._graphy = value;
+    if (this._graphy) {
+      this._graphy.center();
+    }
+  }
+
+  get graphy(): GraphyComponent<any, any> {
+    return this._graphy;
+  }
 
   nodeColors = {
     INACTIVE:'gray',
@@ -34,6 +48,8 @@ export class Plugin1Component extends WidgetBaseComponent implements OnDestroy,O
 
   onNodeClick(node:InputNode<{name:string,color:string,state:NodeStatus}>){
     console.log(node)
+    console.log(this.graphy)
+    this.graphy.center()
   }
 
   protected readonly NodeStatus = NodeStatus;
@@ -43,8 +59,10 @@ export class Plugin1Component extends WidgetBaseComponent implements OnDestroy,O
     console.log("PLUGIN DESTROY")
   }
 
-  ngOnChanges() {
-    console.log("ONCHANGES",this.width,this.height)
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes)
+    console.log(this.graphy)
   }
+
 }
 

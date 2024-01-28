@@ -244,7 +244,7 @@ export class GraphyComponent<N, E> implements AfterViewInit, OnDestroy {
         },
       };
     });
-
+    this.center()
     this.cd.detectChanges();
     this.onRender.emit();
   }
