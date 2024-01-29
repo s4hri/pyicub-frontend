@@ -2,7 +2,10 @@
   <gridster [options]="options" style="background-color: white">
     <gridster-item style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);box-sizing: content-box;" *ngIf="application.fsm" [item]="{x:application.fsm.x,y:application.fsm.y,cols:application.fsm.cols,rows:application.fsm.rows, id:'fsm'}">
       <div class="gridster-item-content" style="background-color: white">
+        <!--
         <app-fsmwidget [application]="application"/>
+        -->
+        Ciao
       </div>
     </gridster-item>
     <gridster-item style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);box-sizing: content-box;" *ngFor="let plugin of application.enabledPlugins$ | async" [item]="{x:plugin.x,y:plugin.y,cols:plugin.cols,rows:plugin.rows,id:plugin.id}">

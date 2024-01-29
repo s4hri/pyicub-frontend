@@ -66,8 +66,8 @@ export class DashboardComponent implements OnInit{
   itemChange(item,itemComponent){
     if (item.id === 'fsm') {
       console.log("FSM CHANGE")
-      this.application.fsm.width = itemComponent.width;
-      this.application.fsm.height = itemComponent.height;
+      //this.application.fsm.width = itemComponent.width;
+      //this.application.fsm.height = itemComponent.height;
       this.application.fsm.x = itemComponent.$item.x;
       this.application.fsm.y = itemComponent.$item.y;
       this.application.fsm.cols = itemComponent.$item.cols;
@@ -94,8 +94,8 @@ export class DashboardComponent implements OnInit{
       //attendo,fino a un massimo di 2 secondi, che width ed height dell'item siano stati inizializzati dal framework, che purtoppo non fornisce callback a tale scopo.
       let intervalID = setInterval(() =>{
         if(itemComponent.width && itemComponent.height){
-          this.application.fsm.width = itemComponent.width;
-          this.application.fsm.height = itemComponent.height;
+          //this.application.fsm.width = itemComponent.width;
+          //this.application.fsm.height = itemComponent.height;
           clearInterval(intervalID);
         }
       },50)

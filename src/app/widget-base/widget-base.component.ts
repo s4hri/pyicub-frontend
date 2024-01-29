@@ -33,6 +33,8 @@ export class WidgetBaseComponent implements OnDestroy{
     //this._saveData()
   }
 
+  /*
+
   private _saveData(){
     const baseData = {
         x:this.plugin.x,
@@ -65,6 +67,7 @@ export class WidgetBaseComponent implements OnDestroy{
   loadData(data:any){
 
   }
+  */
 
   getApplicationFSM(){
     return this.apiService.getApplicationFSM(this.application.robotName,this.application.name,this.application.url.port)
@@ -80,6 +83,10 @@ export class WidgetBaseComponent implements OnDestroy{
 
   runServiceAsync(serviceName:string,body:any = {}){
     return this.apiService.runServiceAsync(this.application.robotName,this.application.name,this.application.url.port,serviceName,body)
+  }
+
+  fsmGetCurrentState(){
+    return this.apiService.fsmGetCurrentState(this.application.robotName,this.application.name,this.application.url.port)
   }
 
   fsmRunStep(trigger:string){

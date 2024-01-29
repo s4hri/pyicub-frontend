@@ -33,6 +33,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   nodes = [];
 
   ngOnInit() {
+    /*
     let nodes = []
     let links = []
 
@@ -68,6 +69,8 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
       node.state = NodeStatus.ACTIVE
     }
 
+     */
+
   }
 
   updateGraph(){
@@ -99,6 +102,7 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
   }
 
   onNodeClick(node){
+    /*
     const runningState = this.application.fsm.states.find(state => state.stateName === this.currentNode.id)
     const [trigger,destination] = Object.entries(runningState.triggers).find(([key,value]) => value === node.id)
     this.currentNode.state = NodeStatus.INACTIVE
@@ -138,6 +142,8 @@ export class FSMWidgetComponent extends WidgetBaseComponent implements OnInit,Af
 
       this.checkAsyncRequestStatus(requestID,() => {}, onRunningCallback,onDoneCallback,onFailedCallback)
     })
+    
+     */
 
   }
 

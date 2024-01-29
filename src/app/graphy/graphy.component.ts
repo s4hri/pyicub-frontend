@@ -142,6 +142,8 @@ export class GraphyComponent<N, E> implements AfterViewInit, OnDestroy {
   /** Reference to the nodes container element. */
   @ViewChild('nodesContainer') private readonly _nodesContainer: ElementRef<SVGSVGElement>;
 
+  @ViewChild('edgesContainer') private readonly _edgesContainer: ElementRef<SVGSVGElement>;
+
   /** Reference to the individual node elements. */
   @ViewChildren('node') private readonly _nodeElements: QueryList<ElementRef>;
 
@@ -293,7 +295,7 @@ export class GraphyComponent<N, E> implements AfterViewInit, OnDestroy {
   /** Pan to get the center point of the nodes in the middle of the view box. */
   center(): void {
     // Get the center coordinates of the rendered nodes.
-    const boundingBox: DOMRect = this._nodesContainer.nativeElement.getBBox();
+    const boundingBox: DOMRect = this._graphContainer.nativeElement.getBBox();
     const centerX: number = (boundingBox.x + boundingBox.width) / 2;
     const centerY: number = (boundingBox.y + boundingBox.height) / 2;
 
@@ -307,6 +309,78 @@ export class GraphyComponent<N, E> implements AfterViewInit, OnDestroy {
     this.onCenter.emit();
   }
 
+  //zoomma il grafico in modo da far entrare tutti i nodi disponibili.
+  zoomToFit(){
+    const boundingBox: DOMRect = this._graphContainer.nativeElement.getBBox();
+
+    this._updateViewBox({
+      x: boundingBox.x,
+      y: boundingBox.y,
+      width:boundingBox.width * 1.2,//do un margine del 10% ad ogni lato.
+      height:boundingBox.height * 1.2
+    })
+
+    this.cd.detectChanges();
+
+  }
+
+  /** Effettua pan e zoom in modo tale da mostrare nella viewport il nodo selezionato e quelli a cui esso è direttamente collegato.*/
+  setFocusToNode(selectedNodeID:string){
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    let boundingBoxNodes: TransformedNode<N>[] = [];
+
+    //nodo su cui si vuole porre il focus.
+    const selectedNode = this.transformedNodes.find(node => node.id == selectedNodeID);
+
+    //Nodi che hanno un arco che proviene da o che va verso quello selezionato
+    const connectedNodes = this.transformedNodes.filter(node =>{
+      let isConnected = false;
+      this.transformedEdges.forEach(edge => {
+        if((edge.targetId === node.id && edge.sourceId === selectedNodeID) || (edge.targetId === selectedNodeID && edge.sourceId === node.id)){
+          isConnected = true
+        }
+      })
+      return isConnected;
+    })
+
+    boundingBoxNodes.push(selectedNode)
+    boundingBoxNodes.push(...connectedNodes)
+
+    for (let i = 0; i < boundingBoxNodes.length; i++) {
+      if (boundingBoxNodes[i]._x - boundingBoxNodes[i]._width / 2 < minX) {
+        minX = boundingBoxNodes[i]._x - boundingBoxNodes[i]._width / 2;
+      }
+      if (boundingBoxNodes[i]._x + boundingBoxNodes[i]._width / 2 > maxX) {
+        maxX = boundingBoxNodes[i]._x + boundingBoxNodes[i]._width / 2;
+      }
+      if (boundingBoxNodes[i]._y - boundingBoxNodes[i]._height / 2 < minY) {
+        minY = boundingBoxNodes[i]._y - boundingBoxNodes[i]._height / 2;
+      }
+      if (boundingBoxNodes[i]._y + boundingBoxNodes[i]._height / 2  > maxY) {
+        maxY = boundingBoxNodes[i]._y  + boundingBoxNodes[i]._height / 2;
+      }
+    }
+
+    const viewBoxWidth = (maxX - minX)
+    const viewBoxHeight = (maxY - minY)
+    const paddingX = viewBoxWidth * 0.2
+    const paddingY = viewBoxHeight * 0.2
+
+
+    this._updateViewBox({
+      x:minX - paddingX/2,
+      y:minY - paddingY/2,
+      width:viewBoxWidth + paddingX,
+      height:viewBoxHeight + paddingY
+    })
+
+    this.cd.detectChanges();
+
+  }
   /** Tracking function for nodes and edges. */
   _trackById(_index: number, object: TransformedNode<N> | TransformedEdge<E>): string {
     return object.id;
@@ -314,7 +388,7 @@ export class GraphyComponent<N, E> implements AfterViewInit, OnDestroy {
 
   /** Update the SVG container view box. */
   private _updateViewBox(viewBox: Partial<ViewBox>): void {
-    console.log("_updateViewBox:",viewBox)
+    //console.log("_updateViewBox:",viewBox)
     this._viewBox$.next({
       ...this._viewBox$.value,
       ...viewBox,

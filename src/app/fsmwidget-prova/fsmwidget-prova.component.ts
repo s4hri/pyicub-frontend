@@ -32,6 +32,7 @@ export class FSMWidgetProvaComponent extends WidgetBaseComponent implements OnIn
   nodes:InputNode<{name:string,color:string,state:NodeStatus}>[] = [];
 
   ngOnInit() {
+    /*
     let nodes = []
     let edges = []
 
@@ -66,6 +67,8 @@ export class FSMWidgetProvaComponent extends WidgetBaseComponent implements OnIn
       node.data.state = NodeStatus.ACTIVE
     }
 
+     */
+
   }
 
   ngAfterViewInit() {
@@ -93,6 +96,7 @@ export class FSMWidgetProvaComponent extends WidgetBaseComponent implements OnIn
 
 
   onNodeClick(node:InputNode<{name:string,color:string,state:NodeStatus}>){
+    /*
     const runningState = this.application.fsm.states.find(state => state.stateName === this.currentNode.id)
     const [trigger,destination] = Object.entries(runningState.triggers).find(([key,value]) => value === node.id)
     this.currentNode.data.state = NodeStatus.INACTIVE
@@ -132,6 +136,8 @@ export class FSMWidgetProvaComponent extends WidgetBaseComponent implements OnIn
 
       this.checkAsyncRequestStatus(requestID,() => {}, onRunningCallback,onDoneCallback,onFailedCallback)
     })
+
+     */
 
   }
 

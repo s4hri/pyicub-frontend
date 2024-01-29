@@ -6,7 +6,7 @@ import {catchError, forkJoin, interval, map, mergeMap, of, switchMap, takeWhile,
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../types/ICubRequestStatus";
 import {Application} from "../types/Application";
-import {FSM, State} from "../types/FSM";
+import {FSM,FSMNode,FSMEdge} from "../types/FSM";
 import {GetApplicationArgsTemplateResponse} from "./types/GetApplicationArgsTemplateResponse";
 import {ApplicationArgsTemplate} from "../types/ApplicationArgsTemplate";
 import {ApplicationArgType} from "../types/ApplicationArgType";
@@ -155,21 +155,45 @@ export class ApiService {
     return this.runService<getApplicationFSMResponse>(robotName,appName,appPort,"fsm.getTransitions").pipe(
       map(response => {
         let stateNames:string[] = [];
-        let states:State[] = [];
+        let nodes:FSMNode[] = [];
+        let edges:FSMEdge[] = [];
 
         for (let responseItem of response){
+
+          //se il nodo sorgente o destinazione non è gia stato creato, lo aggiungo alla lista.
+          if(!nodes.find(node => node.id === responseItem.dest)){
+            nodes.push({name:responseItem.dest,id:responseItem.dest})
+          }
+
+          if(!nodes.find(node => node.id === responseItem.source)){
+            nodes.push({name:responseItem.source,id:responseItem.source})
+          }
+
+          /*
           if (!stateNames.includes(responseItem.dest)){
             stateNames.push(responseItem.dest)
           }
           if (!stateNames.includes(responseItem.source)){
             stateNames.push(responseItem.source)
           }
+
+           */
+
+          //creo il collegamento
+          const edge:FSMEdge = {
+            sourceID: responseItem.source,
+            targetID: responseItem.dest,
+            trigger:responseItem.trigger
+          }
+          edges.push(edge)
+
         }
 
-        if(stateNames.length === 0){
+        if(nodes.length === 0){
           throw(new Error("Non ci sono FSM associate a questa applicazione"))
         }
 
+        /*
         states = stateNames.map(stateName => {
           let triggers:{[key:string]:string} = {};
           for (let responseItem of response){
@@ -181,11 +205,24 @@ export class ApiService {
           return new State(stateName,triggers)
         })
 
+
+
         let initIndex = states.findIndex(state => state.stateName === "init");
         let initState = states.find(state => state.stateName === "init");
         let tempState = states[0];
         states[0] = initState;
         states[initIndex] = tempState;
+
+         */
+
+        //imposto lo stato init come primo dell'array, in modo da farlo comparire a sinistra rispetto agli altri
+        const initIndex = nodes.findIndex(node => node.id === 'init')
+
+        if(initIndex !== 0){
+          const temp = nodes[0]
+          nodes[0] = nodes[initIndex]
+          nodes[initIndex] = temp
+        }
 
         const fsmDefaultConfig = defaultDashboardConfig["fsm"];
         const x = fsmDefaultConfig.x || 0;
@@ -193,7 +230,7 @@ export class ApiService {
         const cols = fsmDefaultConfig.cols || 50;
         const rows = fsmDefaultConfig.rows || 70;
 
-        return new FSM(states,cols,rows,0,0,x,y);
+        return new FSM(nodes,edges,cols,rows,x,y)
       })
     )
   }
@@ -245,7 +282,7 @@ export class ApiService {
 
   }
 
-  runService<T>(robotName:string, appName:string,appPort:string,serviceName:string,body:any = {}){
+  runService<T=void>(robotName:string, appName:string,appPort:string,serviceName:string,body:any = {}){
     let params = new HttpParams().set('sync','');
     const path = `${this.scheme}://${this.hostname}:${appPort}/pyicub/${robotName}/${appName}/${serviceName}`
 
@@ -255,6 +292,10 @@ export class ApiService {
   runServiceAsync(robotName:string, appName:string,appPort:string,serviceName:string,body:any = {}){
     const path = `${this.scheme}://${this.hostname}:${appPort}/pyicub/${robotName}/${appName}/${serviceName}`;
     return this.http.post<string>(path,body);
+  }
+
+  fsmGetCurrentState(robotName:string,appName:string,appPort:string){
+    return this.runService<string>(robotName,appName,appPort,"fsm.getCurrentState")
   }
 
   emoAngry(robotName:string){

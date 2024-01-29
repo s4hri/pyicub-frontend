@@ -9,34 +9,49 @@ export enum NodeStatus{
   FAILED = "FAILED"
 }
 
+/*
+
+ */
+
+/*
 export class State {
   stateName: string;
-  action: string;
   triggers: { [key: string]: string };
 
-  constructor(stateName:string,triggers:{ [key: string]: string },action:string = "") {
+  constructor(stateName:string,triggers:{ [key: string]: string }) {
     this.stateName = stateName;
     this.triggers = triggers
   }
 }
 
+ */
+
+export interface FSMNode {
+  id:string,
+  name:string
+}
+
+export interface FSMEdge {
+  sourceID:string,
+  targetID:string,
+  trigger:string
+}
+
 export class FSM implements DashboardItem{
   cols: number;
   rows: number;
-  width:number;
-  height:number;
   x: number;
   y: number;
   id:string;
 
-  states:State[]
+  nodes:FSMNode[]
+  edges:FSMEdge[]
 
-  constructor(states:State[],cols:number = 50,rows:number = 25,width:number=0,height:number=0, x:number = 0, y:number = 0) {
-    this.states = states;
+  constructor(nodes:FSMNode[],edges:FSMEdge[],cols:number = 50,rows:number = 25, x:number = 0, y:number = 0) {
+    this.nodes = nodes
+    this.edges = edges
     this.cols = cols;
     this.rows = rows;
-    this.height = height;
-    this.width = width;
     this.x = x;
     this.y = y;
     this.id = 'fsm'
