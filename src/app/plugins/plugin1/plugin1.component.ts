@@ -18,18 +18,13 @@ interface nodeData {
 })
 export class Plugin1Component extends WidgetBaseComponent implements OnInit {
 
-  constructor(private cdr:ChangeDetectorRef){
-    super();
-  }
-
   private _graphy: GraphyComponent<any, any>;
   @ViewChild(GraphyComponent)
   set graphy(value: GraphyComponent<any, any>) {
     this._graphy = value;
     if(this._graphy && this.currentNodeID) {
-      console.log("SETFOCUS")
-      this._graphy.setFocusToNode(this.currentNodeID);
-
+      const nodeID = this.currentNodeID == "init" ? this.startingNode.nodeID : this.currentNodeID
+      this._graphy.setFocusToNode(nodeID);
     }
   }
 
@@ -55,9 +50,9 @@ export class Plugin1Component extends WidgetBaseComponent implements OnInit {
 
   //il nodo con id init non effettua azioni vere e proprie ed è presente solo per compatibilità col framework utilizzato dal backend.
   //questa variabile contiene il vero nodo iniziale
-  startingNodeID: string = undefined
+  startingNode: {nodeID:string,startTrigger:string} = undefined;
   //conterrà gli ID di tutti i nodi collegati ad init. Questi nodi dovranno inviare in automatico il trigger di reset e start per far ripartire l'fsm.
-  terminalNodesID: string[] = []
+  terminalNodes: { nodeID:string,restartTrigger:string }[] = []
 
   ngOnInit() {
 
@@ -68,6 +63,7 @@ export class Plugin1Component extends WidgetBaseComponent implements OnInit {
 
       let inputEdges = fsm.edges.map(edge => {
         const inputEdge: InputEdge = {
+          id:edge.trigger,
           sourceId: edge.sourceID,
           targetId: edge.targetID
         }
@@ -90,6 +86,7 @@ export class Plugin1Component extends WidgetBaseComponent implements OnInit {
       const startingEdge = inputEdges.find(edge => edge.sourceId === "init");
       const startingNodeIndex = inputNodes.findIndex(node => node.id === startingEdge.targetId)
       const startingNode = inputNodes[startingNodeIndex]
+      const startTrigger = startingEdge.id;
       const temp = inputNodes[0]
       inputNodes[0] = startingNode;
       inputNodes[startingNodeIndex] = temp;
@@ -99,63 +96,140 @@ export class Plugin1Component extends WidgetBaseComponent implements OnInit {
       inputEdges.forEach(edge => {
         if (edge.targetId === "init") {
           edge.targetId = startingNode.id;
-          this.terminalNodesID.push(edge.sourceId);
+          const terminalNode = {nodeID:edge.sourceId,restartTrigger:edge.id}
+          this.terminalNodes.push(terminalNode);
         }
       })
 
       this.nodes = inputNodes;
       this.edges = inputEdges;
-      this.startingNodeID = startingNode.id;
+      this.startingNode = {nodeID:startingNode.id,startTrigger:startTrigger}
 
+      const terminalNode = this.terminalNodes.find(node => node.nodeID === currentStateName)
       if(currentStateName === "init"){
-        let startingNode = this.getNodeByID(this.startingNodeID);
+
+        let startingNode = this.getNodeByID(this.startingNode.nodeID);
         startingNode.data.state = NodeStatus.ACTIVE;
-        this.currentNodeID = this.startingNodeID;
+        this.currentNodeID = "init";
+        this.isLoading = false
+
+      } else if(terminalNode){
+        this.fsmRunStep(terminalNode.restartTrigger).subscribe(reqID => {
+          const onDoneRestart = () => {
+            this.isLoading = false;
+            this.currentNodeID = "init";
+            const startingNode = this.getNodeByID(this.startingNode.nodeID)
+            this.updateNodeState(startingNode,NodeStatus.ACTIVE)
+          }
+          this.checkAsyncRequestStatus(reqID,undefined,undefined,onDoneRestart)
+        })
       } else {
+
         this.currentNodeID = currentStateName;
         const reachableNodes = this.findReachableNodes(currentStateName);
         for(let node of reachableNodes){
           node.data.state = NodeStatus.ACTIVE;
         }
+        this.isLoading = false;
       }
-
-      this.isLoading = false;
 
     })
 
   }
 
-  onNodeClick(node: InputNode<nodeData>) {
-    this.nodes = this.nodes.map(thisNode => {
-      if(thisNode.id === node.id){
-        return {id:thisNode.id,data:{...thisNode.data,state:NodeStatus.RUNNING}}
+  onNodeClick(selectedNode: InputNode<nodeData>) {
+    if(selectedNode.data.state === NodeStatus.ACTIVE){
+      this.runStep(selectedNode)
+    }
+  }
+
+  private runStep(selectedNode:InputNode<nodeData>){
+
+    let trigger:string
+
+    if(selectedNode.id === this.startingNode.nodeID){
+      trigger = this.startingNode.startTrigger;
+    }else{
+      const selectedEdge = this.edges.find(edge => edge.sourceId === this.currentNodeID && edge.targetId === selectedNode.id)
+      trigger = selectedEdge.id;
+    }
+
+    if(this.currentNodeID !== "init"){
+      const currentNode = this.getNodeByID(this.currentNodeID);
+      this.updateNodeState(currentNode,NodeStatus.INACTIVE);
+      const reachableNodes = this.findReachableNodes(currentNode.id);
+      for(let reachableNode of reachableNodes){
+        if(reachableNode.id !== selectedNode.id){
+          this.updateNodeState(reachableNode,NodeStatus.INACTIVE);
+        }
       }
-      return thisNode
+    }
+
+    this.currentNodeID = selectedNode.id
+    this.graphy.setFocusToNode(selectedNode.id);
+
+    this.fsmRunStep(trigger).subscribe(reqID => {
+
+      const onRunning = () => {
+        this.updateNodeState(selectedNode,NodeStatus.RUNNING)
+      }
+
+      const onDone = () => {
+        //se è un nodo collegato ad "init" invia il trigger di restart
+        const terminalNode = this.terminalNodes.find(node => node.nodeID === selectedNode.id)
+        if(terminalNode){
+          this.fsmRunStep(terminalNode.restartTrigger).subscribe(reqID => {
+
+            const onRestartDone = () => {
+              this.updateNodeState(selectedNode,NodeStatus.DONE)
+              const reachableNodes = this.findReachableNodes(selectedNode.id)
+              for(let reachableNode of reachableNodes){
+                this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
+              }
+            }
+            this.checkAsyncRequestStatus(reqID,undefined,undefined,onRestartDone)
+          })
+
+        } else {
+
+          this.updateNodeState(selectedNode,NodeStatus.DONE)
+          const reachableNodes = this.findReachableNodes(selectedNode.id)
+          console.log(`Reachable nodes from ${selectedNode.id}:`)
+          console.log(reachableNodes)
+          for(let reachableNode of reachableNodes){
+            console.log(reachableNode.id, " ATTIVATO")
+            this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
+          }
+          this.graphy.setFocusToNode(selectedNode.id)
+        }
+
+      }
+
+      const onFailed = () => {
+        this.updateNodeState(selectedNode,NodeStatus.FAILED)
+      }
+
+      this.checkAsyncRequestStatus(reqID,undefined,onRunning,onDone,onFailed)
+
     })
 
-    setTimeout(() => {
-      const reachableNodes = this.findReachableNodes(node.id).map(node => node.id)
-      this.nodes = this.nodes.map(thisnode => {
-        if(thisnode.id === node.id){
-          return {id:thisnode.id,data:{...thisnode.data,state:NodeStatus.DONE}}
-        }else if(reachableNodes.includes(thisnode.id)){
-          return {id:thisnode.id,data:{...thisnode.data,state:NodeStatus.ACTIVE}}
-        }
-        return thisnode
+  }
 
-      })
-    },3000)
-
-
-    console.log("SECOND SET FOCUS")
-    this.graphy.setFocusToNode(node.id)
-
+  /**Effettua un aggiornamento di stato immutabile modificando lo stato del nodo selezionato*/
+  private updateNodeState(nodeToUpdate:InputNode<nodeData>,updatedState:NodeStatus){
+    this.nodes = this.nodes.map(node => {
+      if(node.id === nodeToUpdate.id){
+        return {id:node.id,data:{...node.data,state:updatedState}}
+      }
+      return node
+    })
   }
 
   private getNodeByID(nodeID: string): InputNode<nodeData> {
     return this.nodes.find(node => node.id === nodeID)
   }
 
+  /**Restituisce un'array contenente tutti i nodi raggiungibili dal nodo avente id nodeID*/
   private findReachableNodes(nodeID: string): InputNode<nodeData>[] {
     let reachableNodes = [];
     this.edges.forEach(edge => {
@@ -166,7 +240,6 @@ export class Plugin1Component extends WidgetBaseComponent implements OnInit {
     })
     return reachableNodes;
   }
-
 
   protected readonly NodeStatus = NodeStatus;
 

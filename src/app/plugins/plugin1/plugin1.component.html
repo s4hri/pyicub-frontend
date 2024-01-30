@@ -1,7 +1,16 @@
 <!-- il controllo su width ed height serve per attendere che le dimensioni del container nella griglia siano state definite prima di procedere col rendering dei nodi-->
 <graphy-ng *ngIf="width && height && !isLoading; else elseBlock">
+
+  <ng-container *defsTemplate>
+    <svg>
+      <marker id="arrow" viewBox="0 -5 10 10" refX="9" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,-5L10,0L0,5 z"></path>
+      </marker>
+    </svg>
+  </ng-container>
+
   <ng-container *nodeTemplate="let node; nodes: nodes">
-    <svg (click)="node.data.state === NodeStatus.ACTIVE && onNodeClick(node)" overflow="visible">
+    <svg (click)="onNodeClick(node)" overflow="visible">
       <rect rx="10" ry="10" [attr.width]="node._width" [attr.height]="node._height" [style.fill]="nodeColors[node.data.state]" stroke="black" stroke-width="2"></rect>
       <!-- Centra il testo sia orizzontalmente che verticalmente -->
       <text text-anchor="middle" dominant-baseline="central" [attr.x]="node._width / 2" [attr.y]="node._height / 2">{{ node.data.name }}</text>
@@ -9,12 +18,15 @@
   </ng-container>
 
   <ng-container *edgeTemplate="let edge; edges: edges">
-    <svg:g class="edge">
-      <svg:path
-              class="edge__line"
-              [attr.d]="edge.pathDefinition"
-      ></svg:path>
-    </svg:g>
+    <svg overflow="visible">
+      <g class="edge">
+        <path
+          class="edge__line"
+          [attr.d]="edge.pathDefinition"
+          marker-end="url(#arrow)"
+        />
+      </g>
+    </svg>
   </ng-container>
 </graphy-ng>
 

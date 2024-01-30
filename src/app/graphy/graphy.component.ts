@@ -1,6 +1,5 @@
 import {
   Component,
-  ChangeDetectionStrategy,
   Input,
   ContentChild,
   ElementRef,
@@ -388,7 +387,6 @@ export class GraphyComponent<N, E> implements AfterViewInit, OnDestroy {
 
   /** Update the SVG container view box. */
   private _updateViewBox(viewBox: Partial<ViewBox>): void {
-    console.log("_updateViewBox:",viewBox)
     this._viewBox$.next({
       ...this._viewBox$.value,
       ...viewBox,
