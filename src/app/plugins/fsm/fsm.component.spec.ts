@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FSMWidgetComponent } from './fsmwidget.component';
+import { FsmComponent } from './fsm.component';
 
-describe('FSMWidgetComponent', () => {
-  let component: FSMWidgetComponent;
-  let fixture: ComponentFixture<FSMWidgetComponent>;
+describe('Plugin1Component', () => {
+  let component: FsmComponent;
+  let fixture: ComponentFixture<FsmComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FSMWidgetComponent]
+      declarations: [FsmComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(FSMWidgetComponent);
+
+    fixture = TestBed.createComponent(FsmComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

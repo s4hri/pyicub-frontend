@@ -1,4 +1,4 @@
-import {ICubRequestStatus} from "../../types/ICubRequestStatus";
+import {ICubRequestStatus} from "../../../types/ICubRequestStatus";
 export interface GetRequestStatusResponse{
   "creation_time":number,
   "duration":number,

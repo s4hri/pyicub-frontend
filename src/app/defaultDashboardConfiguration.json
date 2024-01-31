@@ -1,17 +1,10 @@
 {
   "fsm": {
-    "enabled": false,
+    "enabled": true,
     "x": 0,
     "y":0,
     "rows": 50,
     "cols": 70
-  },
-  "Plugin 1":{
-    "enabled": true,
-    "x": 0,
-    "y":50,
-    "rows": 50,
-    "cols": 100
   },
   "Plugin 2":{
     "enabled": false
@@ -24,14 +17,14 @@
     "cols": 30
   },
   "Robot Cam Viewer": {
-    "enabled": false,
+    "enabled": true,
     "x": 0,
     "y":50,
     "rows": 50,
     "cols": 50
   },
   "Lista Servizi": {
-    "enabled": false,
+    "enabled": true,
     "x": 50,
     "y": 50,
     "rows": 50,

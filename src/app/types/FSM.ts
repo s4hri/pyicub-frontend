@@ -3,28 +3,10 @@ import {DashboardItem} from "./DashboardItem";
 export enum NodeStatus{
   INACTIVE = "INACTIVE",
   ACTIVE = "ACTIVE",
-  CURRENT = "CURRENT",
   RUNNING = "RUNNING",
   DONE = "DONE" ,
   FAILED = "FAILED"
 }
-
-/*
-
- */
-
-/*
-export class State {
-  stateName: string;
-  triggers: { [key: string]: string };
-
-  constructor(stateName:string,triggers:{ [key: string]: string }) {
-    this.stateName = stateName;
-    this.triggers = triggers
-  }
-}
-
- */
 
 export interface FSMNode {
   id:string,

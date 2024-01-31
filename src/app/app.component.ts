@@ -1,11 +1,8 @@
 import { Component,OnInit } from '@angular/core';
-import {RobotsService} from "./services/robots.service";
-import {UserSessionService} from "./services/user-session.service";
 import {Robot} from "./types/Robot";
 import {Router} from "@angular/router";
 import {Application} from "./types/Application";
 import {AppStateService} from "./services/app-state.service";
-import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-root',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Robot} from "../types/Robot";
-import {ApiService} from "../api/api.service";
+import {ApiService} from "./api/api.service";
 import {BehaviorSubject} from "rxjs";
 import {Application} from "../types/Application";
 import {LocalStorageService} from "./local-storage.service";

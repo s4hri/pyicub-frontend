@@ -1,4 +1,4 @@
-import {Application} from "../../types/Application";
+import {Application} from "../../../types/Application";
 
 export type GetApplicationsResponse = applicationResponse[]
 

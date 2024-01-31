@@ -9,8 +9,8 @@
   <div  *ngIf="(selectedRobot$ | async) && (selectedRobot$ | async).selectedApplication" class="app-bar-CellContainer">
     <appbar-application-cell (cellClicked)="onAppBarApplicationCellClick($event)" [application]="(selectedRobot$ | async).selectedApplication"/>
   </div>
-
 </mat-toolbar>
+
 <mat-sidenav-container class="drawer-container">
   <mat-sidenav mode="over" [(opened)]="isDrawerOpened" class="drawer" >
     <div *ngIf="isLoadingRobots$ | async; else notLoading" class="spinner-container">

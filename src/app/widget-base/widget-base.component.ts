@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnDestroy} from '@angular/core';
-import {ApiService} from "../api/api.service";
+import {ApiService} from "../services/api/api.service";
 import {ICubEmoPart} from "../types/ICubEmoPart";
 import {ICubEmoEmotion} from "../types/ICubEmoEmotion";
 import {ICubEmoColor} from "../types/ICubEmoColor";

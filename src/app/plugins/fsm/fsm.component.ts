@@ -13,10 +13,10 @@ interface nodeData {
 
 @Component({
   selector: 'app-plugin1',
-  templateUrl: './plugin1.component.html',
-  styleUrl: './plugin1.component.css'
+  templateUrl: './fsm.component.html',
+  styleUrl: './fsm.component.css'
 })
-export class Plugin1Component extends WidgetBaseComponent implements OnInit {
+export class FsmComponent extends WidgetBaseComponent implements OnInit {
 
   private _graphy: GraphyComponent<any, any>;
   @ViewChild(GraphyComponent)
@@ -46,7 +46,6 @@ export class Plugin1Component extends WidgetBaseComponent implements OnInit {
   nodes: InputNode<nodeData>[] = []
   edges: InputEdge[] = []
   currentNodeID: string
-
 
   //il nodo con id init non effettua azioni vere e proprie ed è presente solo per compatibilità col framework utilizzato dal backend.
   //questa variabile contiene il vero nodo iniziale
