@@ -26,9 +26,9 @@
 
 .drawer-robotCellContainer{
   margin:0%;
-  width:16vw;
-  margin-left:1vw;
-  margin-top:1vw;
+  aspect-ratio: 181/52;
+  width:100%;
+  box-sizing: border-box;
 }
 
 .app-bar{
