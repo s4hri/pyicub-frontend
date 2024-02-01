@@ -239,8 +239,8 @@ export class ApiService implements IApiService {
   }, doneCallback: (retval: any) => void = () => {
   }, failedCallback: () => void = () => {
   }) {
-    const url = new URL(requestID).pathname;
-    const requestStatusPath = `${this.scheme}://${this.hostname}:${this.port}${url}`;
+    const url = new URL(requestID);
+    const requestStatusPath = `${this.scheme}://${this.hostname}:${url.port}${url.pathname}`;
     this.asyncRequestsStatus[requestID] = ICubRequestStatus.INIT
     initCallback()
 
@@ -248,6 +248,7 @@ export class ApiService implements IApiService {
       switchMap(() => {
         return this.http.get<GetRequestStatusResponse>(requestStatusPath).pipe(
           tap(response => {
+            console.log(response)
             switch (response.status) {
               case ICubRequestStatus.RUNNING:
                 if (this.asyncRequestsStatus[requestID] !== ICubRequestStatus.RUNNING) {
@@ -266,7 +267,9 @@ export class ApiService implements IApiService {
                 failedCallback();
                 break;
               default:
-                console.log("unknown response status.")
+                console.log("unknown response status:")
+                console.log(response.status)
+                console.log(response)
             }
           })
         )

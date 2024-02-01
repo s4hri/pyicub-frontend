@@ -1,4 +1,5 @@
 import {DashboardItem} from "./DashboardItem";
+import * as string_decoder from "string_decoder";
 
 export enum NodeStatus{
   INACTIVE = "INACTIVE",
