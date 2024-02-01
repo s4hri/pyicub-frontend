@@ -4,11 +4,11 @@
   "scripts": {
     "ng": "ng",
     "server": "json-server -p 3000 --watch db.json",
-    "config": "ts-node scripts/set-env.js",
-    "create-plugin": "ts-node scripts/create-plugin.js",
-    "build-plugins": "ts-node scripts/config-plugins.js",
-    "start": "npm run build-plugins && (npm run server & ng serve)",
-    "production": "npm run config && npm run build-plugins && ng serve --configuration=production --host=0.0.0.0",
+    "config-environment": "node scripts/set-env.js",
+    "create-plugin": "node scripts/create-plugin.js",
+    "build-plugins": "node scripts/config-plugins.js",
+    "start": "npm run build-plugins && ng serve",
+    "production": "npm run config-environment && npm run build-plugins && ng serve --configuration=production --host=0.0.0.0",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
