@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {Robot} from "../types/Robot";
 import {ApiService} from "./api/api.service";
 import {BehaviorSubject} from "rxjs";
@@ -69,6 +69,5 @@ export class AppStateService {
     application.args = args;
     return this.apiService.setApplicationArgs(application.robotName,application.name,application.url.port,args)
   }
-
 
 }

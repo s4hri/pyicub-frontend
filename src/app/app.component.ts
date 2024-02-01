@@ -20,7 +20,6 @@ export class AppComponent implements OnInit{
 
   onReloadButtonClick(){
     this.appState.updateRobots();
-    //this.robotsService.updateRobots();
   }
 
   onDrawerCellClick(robot:Robot){
@@ -34,7 +33,6 @@ export class AppComponent implements OnInit{
   }
 
   onAppBarApplicationCellClick(application:Application){
-    //this.userSessionService.selectApplication(null);
     this.router.navigate(['icub']);
   }
 

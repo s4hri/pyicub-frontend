@@ -1,8 +1,13 @@
 import {exec} from "child_process"
 import {readFile,writeFile} from "fs";
 import {join} from "path";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-function removeSpaces(str: string): string {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function removeSpaces(str) {
   return str.replace(/\s+/g, '');
 }
 
@@ -19,10 +24,6 @@ if (!pluginName) {
 exec(`ng generate component plugins/${componentName}`, (error, stdout, stderr) => {
   if (error) {
     console.error(`Errore durante la creazione del componente: ${error.message}`);
-    return;
-  }
-  if (stderr) {
-    console.error(`Errore di esecuzione: ${stderr}`);
     return;
   }
 

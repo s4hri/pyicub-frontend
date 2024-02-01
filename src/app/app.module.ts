@@ -40,7 +40,6 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {GraphyComponent} from './graphy/graphy.component';
 import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} from './graphy/templates';
 
-
 @NgModule({
   declarations: [
     AppComponent,

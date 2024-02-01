@@ -1,5 +1,9 @@
 import * as fs from "fs";
-import * as path from "path";
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function objectToString(obj) {
   const keyValuePairs = Object.entries(obj).map(([key, value]) => {
@@ -14,7 +18,7 @@ const pluginsIndexPath = path.join(pluginsDirectoryPath,'index.ts');
 let pluginImports = '';
 
 //La lista di cartelle presente nella directory plugins
-const plugins:string[] = fs.readdirSync(pluginsDirectoryPath).filter( file => {
+const plugins = fs.readdirSync(pluginsDirectoryPath).filter( file => {
   return fs.statSync(path.join(pluginsDirectoryPath,file)).isDirectory()
 })
 
@@ -23,7 +27,7 @@ plugins.forEach(pluginFolder => {
 
   const pluginFolderPath = path.join(pluginsDirectoryPath,pluginFolder)
   let pluginName = pluginFolder
-  let className: string = ""
+  let className = ""
 
   fs.readdirSync(pluginFolderPath).forEach(file => {
     const filePath = path.join(pluginFolderPath, file);

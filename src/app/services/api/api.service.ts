@@ -18,12 +18,12 @@ import {Robot} from "../../types/Robot";
 import {pluginIndex} from "../../plugins";
 import {Plugin} from "../../types/Plugin";
 import * as defaultDashboardConfig from "../../defaultDashboardConfiguration.json"
-
+import {IApiService} from "./api.service.interface";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
+export class ApiService implements IApiService {
   private port = environment.apiPort
   private hostname = environment.apiHost
   private scheme = environment.apiScheme
@@ -43,6 +43,7 @@ export class ApiService {
         const robotsObservables = robots.map(robot => this.getApplications(robot.name).pipe(
           map(applications => {
             robot.applications = applications
+            console.log(robot)
             return robot
           })
         ));
