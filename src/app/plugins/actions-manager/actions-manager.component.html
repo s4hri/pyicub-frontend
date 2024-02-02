@@ -1,12 +1,24 @@
-<div *ngIf="!isLoading; else elseBlock" style="width: 100%;height:100%;box-sizing: border-box;padding:5%;background-color: white;display:flex;flex-direction: column;justify-content: flex-start;align-items: center;overflow:auto">
-  <ng-container *ngFor="let action of actions">
-    <button mat-button (click)="onActionClick(action)" [style.background-color]="nodeColors[action.actionState]" style="padding:30px;border:black solid 2px; border-radius: 3px;margin:10px">
-      {{action.actionID}}
-    </button>
-  </ng-container>
-</div>
+<ng-container *ngIf="!isLoading;else elseBlock">
+  <div style="width:100%;height:100%;display:flex;flex-direction: column">
+    <mat-form-field subscriptSizing="dynamic" appearance="outline" style="width:100%;background-color: white">
+      <input matInput [(ngModel)]="search" placeholder="Search action..." >
+      <span matSuffix><mat-icon style="margin-right:10px">search</mat-icon></span>
+    </mat-form-field>
+    <div class="widget-container">
+      <div style="display:flex;flex-direction: column;align-items: flex-start;justify-content: center;">
+        <ng-container *ngFor="let action of filteredActions">
+          <button mat-button class="action-button" (click)="onActionClick(action)"
+                  [style.background-color]="nodeColors[action.actionState]">
+            <p class="action-text">{{action.actionID}}</p>
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
 <ng-template #elseBlock>
-  <div  style="display:flex;height:100%;width:100%;align-items: center;justify-content: center">
+  <div style="display:flex;height:100%;width:100%;align-items: center;justify-content: center">
     <mat-spinner/>
   </div>
 </ng-template>

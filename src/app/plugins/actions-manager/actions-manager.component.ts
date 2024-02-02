@@ -11,6 +11,7 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
 
   actions:Action[] = []
   isLoading = true;
+  search:string
 
   nodeColors = {
     INACTIVE: 'gray',
@@ -18,6 +19,16 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
     RUNNING: 'yellow',
     FAILED: 'red',
     DONE: 'green'
+  }
+
+  get filteredActions():Action[]{
+
+    if(!this.search){
+      return this.actions
+    }else{
+      return this.actions.filter(action => action.actionID.toLowerCase().includes(this.search.toLowerCase()))
+    }
+
   }
 
   ngOnInit() {
@@ -71,8 +82,6 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
         this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed)
 
       })
-    } else {
-      console.log("INATTIVO")
     }
   }
 
@@ -83,6 +92,10 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
       }
       return action
     })
+  }
+
+  onSearch(){
+
   }
 
 }
