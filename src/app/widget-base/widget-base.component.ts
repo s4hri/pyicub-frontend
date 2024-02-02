@@ -97,8 +97,12 @@ export class WidgetBaseComponent implements OnDestroy{
     return this.apiService.getRobotActions(this.application.robotName)
   }
 
-  playAction(actionID:string,sync:boolean = true,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
-    return this.apiService.playAction(this.application.robotName,actionID,sync,initCallback,runningCallback,doneCallback,failedCallback)
+  playActionSync(actionID:string){
+    return this.apiService.playActionSync(this.application.robotName,actionID)
+  }
+
+  playActionAsync(actionID:string){
+    return this.apiService.playActionAsync(this.application.robotName,actionID)
   }
 
   emoAngry(){

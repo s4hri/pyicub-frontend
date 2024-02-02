@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ServiceListItemComponent } from './service-list-item.component';
+import { ActionsManagerComponent } from './actions-manager.component';
 
-describe('ServiceListItemComponent', () => {
-  let component: ServiceListItemComponent;
-  let fixture: ComponentFixture<ServiceListItemComponent>;
+describe('ActionsManagerComponent', () => {
+  let component: ActionsManagerComponent;
+  let fixture: ComponentFixture<ActionsManagerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ServiceListItemComponent]
+      declarations: [ActionsManagerComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ServiceListItemComponent);
+    fixture = TestBed.createComponent(ActionsManagerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

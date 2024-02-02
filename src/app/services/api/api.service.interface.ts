@@ -53,5 +53,6 @@ export interface IApiService {
   camRightGetImgRes(robotName: string): Observable<{ width: number, height: number }>;
   camRightGetURI(robotName: string): Observable<URL>;
   getRobotActions(robotName: string): Observable<any>;
-  playAction(robotName: string, actionID: string, sync: boolean, initCallback: () => void, runningCallback: () => void, doneCallback: (retval: any) => void, failedCallback: () => void): Observable<any>;
+  playActionSync(robotName: string, actionID: string): Observable<any>;
+  playActionAsync(robotName:string, actionID: string): Observable<any>
 }

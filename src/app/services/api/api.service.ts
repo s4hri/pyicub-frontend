@@ -19,6 +19,7 @@ import {pluginIndex} from "../../plugins";
 import {Plugin} from "../../types/Plugin";
 import * as defaultDashboardConfig from "../../defaultDashboardConfiguration.json"
 import {IApiService} from "./api.service.interface";
+import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -76,11 +77,11 @@ export class ApiService implements IApiService {
               application.argsTemplate = argsTemplate;
               for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
                 const pluginDefaultData = defaultDashboardConfig[pluginName];
-                const x = pluginDefaultData.x || 0;
-                const y = pluginDefaultData.y || 0;
-                const cols = pluginDefaultData.cols || 20;
-                const rows = pluginDefaultData.rows || 20;
-                const enabled = pluginDefaultData.enabled || false;
+                const x = pluginDefaultData?.x || 0;
+                const y = pluginDefaultData?.y || 0;
+                const cols = pluginDefaultData?.cols || 20;
+                const rows = pluginDefaultData?.rows || 20;
+                const enabled = pluginDefaultData?.enabled || false;
                 application.plugins.push(new Plugin(pluginName, componentName, enabled, cols, rows, x, y))
               }
               return application
@@ -248,7 +249,6 @@ export class ApiService implements IApiService {
       switchMap(() => {
         return this.http.get<GetRequestStatusResponse>(requestStatusPath).pipe(
           tap(response => {
-            console.log(response)
             switch (response.status) {
               case ICubRequestStatus.RUNNING:
                 if (this.asyncRequestsStatus[requestID] !== ICubRequestStatus.RUNNING) {
@@ -508,27 +508,15 @@ export class ApiService implements IApiService {
   }
 
   getRobotActions(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "actions.getActions")
+    return this.runService<GetRobotActionsResponse>(robotName, "helper", this.port, "actions.getActions")
   }
 
+  playActionSync(robotName:string,actionID:string){
+    return this.runService<void>(robotName,"helper",this.port,"actions.playAction",{action_id:actionID})
+  }
 
-  playAction(robotName: string, actionID: string, sync: boolean = true, initCallback: () => void = () => {
-  }, runningCallback: () => void = () => {
-  }, doneCallback: (retval: any) => void = () => {
-  }, failedCallback: () => void = () => {
-  }) {
-    if (sync) {
-      return this.runService(robotName, "helper", this.port, "actions.playAction", {action_id: actionID})
-    } else {
-      return this.runServiceAsync(robotName, "helper", this.port, "actions.playAction", {
-        action_id: actionID,
-        initCallback,
-        runningCallback,
-        doneCallback,
-        failedCallback
-      })
-    }
-
+  playActionAsync(robotName:string,actionID:string){
+    return this.runServiceAsync(robotName,"helper",this.port,"actions.playAction",{action_id:actionID})
   }
 
 }

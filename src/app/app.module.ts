@@ -20,10 +20,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatMenuModule} from '@angular/material/menu';
 import {AppbarApplicationCellComponent} from './appbar-application-cell/appbar-application-cell.component';
 import {FsmComponent} from './plugins/fsm/fsm.component';
-import {Plugin2Component} from './plugins/plugin2/plugin2.component';
 import {WidgetBaseComponent} from './widget-base/widget-base.component';
-import {ServicesListPluginComponent} from './plugins/services-list-plugin/services-list-plugin.component';
-import {ServiceListItemComponent} from './plugins/services-list-plugin/service-list-item/service-list-item.component';
 import {NgxGraphModule} from "@swimlane/ngx-graph";
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
@@ -39,6 +36,7 @@ import {RobotSpeechComponent} from './plugins/robot-speech/robot-speech.componen
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {GraphyComponent} from './graphy/graphy.component';
 import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} from './graphy/templates';
+import { ActionsManagerComponent } from './plugins/actions-manager/actions-manager.component';
 
 @NgModule({
   declarations: [
@@ -50,10 +48,7 @@ import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} fro
     ApplicationPageComponent,
     AppbarApplicationCellComponent,
     FsmComponent,
-    Plugin2Component,
     WidgetBaseComponent,
-    ServicesListPluginComponent,
-    ServiceListItemComponent,
     DashboardComponent,
     PluginDialogComponent,
     ApplicationArgsDialogComponent,
@@ -63,6 +58,7 @@ import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} fro
     DefsTemplateDirective,
     EdgeTemplateDirective,
     NodeTemplateDirective,
+    ActionsManagerComponent,
   ],
   imports: [
     BrowserModule,
