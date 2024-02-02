@@ -44,5 +44,5 @@
 
 </div>
 <div mat-dialog-actions align="center">
-  <button mat-button cdkFocusInitia (click)="onButtonClick()" l>Ok</button>
+  <button mat-button cdkFocusInitial (click)="onButtonClick()" [disabled]="!buttonEnabled" >Ok</button>
 </div>

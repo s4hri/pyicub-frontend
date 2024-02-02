@@ -11,6 +11,17 @@ import {ApplicationArgType} from "../types/ApplicationArgType";
 export class ApplicationArgsDialogComponent{
 
   args:any = {}
+
+  get buttonEnabled(){
+    let enabled = true;
+    for(let arg of Object.keys(this.data.argsTemplate)){
+      if(!this.args[arg]){
+        enabled = false;
+      }
+    }
+    return enabled
+  }
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: Application, public dialogRef:MatDialogRef<ApplicationArgsDialogComponent>) {}
 
   onButtonClick(): void {

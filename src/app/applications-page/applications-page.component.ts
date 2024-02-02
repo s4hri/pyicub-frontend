@@ -19,7 +19,6 @@ export class ApplicationsPageComponent{
   gridColsNumber = 2;
 
 
-
   onApplicationClick(application:Application){
     this.appState.selectApplication(application);
     this.router.navigate(['icub/application']);
