@@ -33,16 +33,22 @@
 }
 
 .app-bar{
+  position:relative;
   box-sizing: border-box;
   display: flex;
   background-color: rgb(119,161,215);
 }
 
 .app-bar-CellContainer{
-  box-sizing: border-box;
   aspect-ratio: 181/52;
-  margin-inline:0.5vw;
   height:80%;
+  margin-right:20px;
+}
+
+@media (max-width: 640px){
+  .app-bar-CellContainer{
+    height:60%;
+  }
 }
 
 .page-container{
