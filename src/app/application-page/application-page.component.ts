@@ -18,6 +18,8 @@ export class ApplicationPageComponent implements OnInit{
   areApplicationArgsSet = false;
   editModeEnabled = false;
 
+
+
   constructor(public appState:AppStateService,public dialog: MatDialog) {}
 
   openSettingsDialog() {

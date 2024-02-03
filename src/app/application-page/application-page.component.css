@@ -18,3 +18,18 @@
   height: 100%;
   overflow: auto;
 }
+
+.application-action-button{
+  box-shadow:none;
+  background-color: rgb(119,161,215);
+  margin:5px;
+}
+
+.optional-xs-button{
+}
+
+@media(max-width:599.98px){
+  .optional-xs-button{
+    display:none;
+  }
+}

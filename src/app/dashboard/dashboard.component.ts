@@ -103,6 +103,7 @@ export class DashboardComponent implements OnInit {
       swapWhileDragging: false,
       swap: false,
       pushItems: false,
+      mobileBreakpoint:599.98,
       minCols: 100,
       maxCols: 100,
       minRows: 100,
