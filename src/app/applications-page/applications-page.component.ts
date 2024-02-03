@@ -18,13 +18,12 @@ export class ApplicationsPageComponent{
   selectedRobot$ = this.appState.selectedRobot$;
   gridColsNumber = 2;
 
-
   onApplicationClick(application:Application){
     this.appState.selectApplication(application);
     this.router.navigate(['icub/application']);
   }
 
-  constructor(private appState:AppStateService,private router:Router,private breakpointObserver: BreakpointObserver) {
+  constructor(public appState:AppStateService,private router:Router,private breakpointObserver: BreakpointObserver) {
     breakpointObserver
       .observe([
         Breakpoints.XSmall,

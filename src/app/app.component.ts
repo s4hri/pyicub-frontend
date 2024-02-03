@@ -9,14 +9,14 @@ import {AppStateService} from "./services/app-state.service";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
+export class AppComponent{
 
-  isDrawerOpened:boolean = true;
+  isDrawerOpened:boolean = false;
   robots$ = this.appState.availableRobots$;
   isLoadingRobots$ = this.appState.isLoadingRobots$;
   selectedRobot$ = this.appState.selectedRobot$;
 
-  constructor(private appState:AppStateService, private router:Router){}
+  constructor(private appState:AppStateService, public router:Router){}
 
   onReloadButtonClick(){
     this.appState.updateRobots();
@@ -26,6 +26,9 @@ export class AppComponent implements OnInit{
 
     if(!this.appState.selectedRobot || this.appState.selectedRobot.name !== robot.name){
       this.appState.selectRobot(robot);
+    }
+
+    if(this.router.url !== '/icub'){
       this.router.navigate(['icub']);
     }
 
@@ -43,10 +46,6 @@ export class AppComponent implements OnInit{
 
   onAppBarButtonClick(){
     this.isDrawerOpened = !this.isDrawerOpened;
-  }
-
-  ngOnInit(): void {
-    this.appState.updateRobots();
   }
 
 }

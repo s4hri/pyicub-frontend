@@ -20,6 +20,7 @@ import {Plugin} from "../../types/Plugin";
 import * as defaultDashboardConfig from "../../defaultDashboardConfiguration.json"
 import {IApiService} from "./api.service.interface";
 import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
+import {LocalStorageService} from "../local-storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class ApiService implements IApiService {
 
   private asyncRequestsStatus: { [key: string]: ICubRequestStatus } = {}
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private localStorageService:LocalStorageService) {
   }
 
   getRobots() {
@@ -75,8 +76,9 @@ export class ApiService implements IApiService {
             }),
             map(argsTemplate => {
               application.argsTemplate = argsTemplate;
+              const savedDashboard = this.localStorageService.getDashboardConfig(application)
               for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
-                const pluginDefaultData = defaultDashboardConfig[pluginName];
+                const pluginDefaultData = (savedDashboard && savedDashboard[pluginName]) ? savedDashboard[pluginName] : defaultDashboardConfig[pluginName];
                 const x = pluginDefaultData?.x || 0;
                 const y = pluginDefaultData?.y || 0;
                 const cols = pluginDefaultData?.cols || 20;

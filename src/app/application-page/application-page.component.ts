@@ -49,6 +49,11 @@ export class ApplicationPageComponent implements OnInit{
     this.openSettingsDialog()
   }
 
+  onSaveClick(){
+    this.appState.saveDashboardConfig(this.application)
+    console.log("Dashboard salvata")
+  }
+
   onPluginToggle(plugin:Plugin){
     this.appState.selectedRobot.selectedApplication.togglePlugin(plugin)
   }
