@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { WidgetBaseComponent } from '../../widget-base/widget-base.component';
-import {InputNode} from "../../graphy/models/input-node.model";
+import {WidgetBaseComponent} from '../../widget-base/widget-base.component';
 
 @Component({
   selector: 'app-actions-manager',
@@ -9,9 +8,12 @@ import {InputNode} from "../../graphy/models/input-node.model";
 })
 export class ActionsManagerComponent extends WidgetBaseComponent implements OnInit {
 
-  actions:Action[] = []
+  actions: Action[] = []
   isLoading = true;
-  search:string
+  search: string
+
+  showErrorDialog: boolean = false;
+  errorMessage: string;
 
   nodeColors = {
     INACTIVE: 'gray',
@@ -21,62 +23,70 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
     DONE: 'green'
   }
 
-  get filteredActions():Action[]{
+  get filteredActions(): Action[] {
 
-    if(!this.search){
+    if (!this.search) {
       return this.actions
-    }else{
+    } else {
       return this.actions.filter(action => action.actionID.toLowerCase().includes(this.search.toLowerCase()))
     }
 
   }
 
   ngOnInit() {
-    this.getRobotActions().subscribe(actions => {
-      const newActions:Action[] = actions.map(action => {
-        return {actionID:action,actionState:ActionState.ACTIVE}
-      })
-      this.actions = newActions;
-      this.isLoading = false;
-      console.log(this.actions)
-    })
+    this.getRobotActions().subscribe({
+        next: actions => {
+          const newActions: Action[] = actions.map(action => {
+            return {actionID: action, actionState: ActionState.ACTIVE}
+          })
+          this.actions = newActions;
+          this.isLoading = false;
+          console.log(this.actions)
+        },
+        error: err => {
+          console.log(err)
+          this.isLoading = false;
+          this.openErrorDialog("Impossibile caricare le azioni del robot.")
+        }
+      }
+    )
   }
 
-  onActionClick(selectedAction:Action){
+  onActionClick(selectedAction: Action) {
 
-    if(selectedAction.actionState === ActionState.ACTIVE) {
+    if (selectedAction.actionState === ActionState.ACTIVE) {
 
       this.actions.forEach(action => {
-        if(selectedAction.actionID !== action.actionID){
-          this.updateActionState(action,ActionState.INACTIVE)
+        if (selectedAction.actionID !== action.actionID) {
+          this.updateActionState(action, ActionState.INACTIVE)
         }
       })
 
       this.playActionAsync(selectedAction.actionID).subscribe(reqID => {
 
         const onRunning = () => {
-          this.updateActionState(selectedAction,ActionState.RUNNING)
+          this.updateActionState(selectedAction, ActionState.RUNNING)
         }
 
         const onDone = () => {
 
-          this.updateActionState(selectedAction,ActionState.DONE)
+          this.updateActionState(selectedAction, ActionState.DONE)
           setTimeout(() => {
             this.actions.forEach(action => {
-              this.updateActionState(action,ActionState.ACTIVE)
+              this.updateActionState(action, ActionState.ACTIVE)
             })
-          },2000)
+          }, 2000)
 
         }
 
         const onFailed = () => {
 
-          this.updateActionState(selectedAction,ActionState.FAILED)
+          this.updateActionState(selectedAction, ActionState.FAILED)
           setTimeout(() => {
             this.actions.forEach(action => {
-              this.updateActionState(action,ActionState.ACTIVE)
+              this.updateActionState(action, ActionState.ACTIVE)
             })
-          },2000)
+          }, 2000)
         }
 
         this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed)
@@ -85,27 +95,33 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
     }
   }
 
-  private updateActionState(actionToUpdate:Action,updatedState:ActionState){
+  private updateActionState(actionToUpdate: Action, updatedState: ActionState) {
     this.actions = this.actions.map(action => {
-      if(action.actionID === actionToUpdate.actionID){
-        return {actionID:action.actionID,actionState:updatedState}
+      if (action.actionID === actionToUpdate.actionID) {
+        return {actionID: action.actionID, actionState: updatedState}
       }
       return action
     })
   }
 
-  onSearch(){
+  openErrorDialog(errorMessage: string) {
+    this.errorMessage = errorMessage;
+    this.showErrorDialog = true;
+  }
 
+  closeErrorDialog() {
+    this.errorMessage = "";
+    this.showErrorDialog = false;
   }
 
 }
 
-interface Action{
-  actionID:string
-  actionState:ActionState
+interface Action {
+  actionID: string
+  actionState: ActionState
 }
 
-enum ActionState{
+enum ActionState {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
   RUNNING = "RUNNING",

@@ -23,6 +23,7 @@ export const environment = {
     apiScheme: '${apiScheme}',
     apiHost: '${apiHost}',
     apiPort: '${apiPort}',
+    apiService:ApiService
 }
 `;
 writeFile(targetPath, envConfigFile, function (err) {

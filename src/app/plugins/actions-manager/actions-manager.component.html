@@ -22,3 +22,5 @@
     <mat-spinner/>
   </div>
 </ng-template>
+
+<app-widget-error-dialog [style.display]="showErrorDialog ? 'block' : 'none'" [messageError]="errorMessage" (buttonClick)="closeErrorDialog()" />

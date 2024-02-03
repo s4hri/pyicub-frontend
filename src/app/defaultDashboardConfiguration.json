@@ -6,9 +6,6 @@
     "rows": 50,
     "cols": 70
   },
-  "Plugin 2":{
-    "enabled": false
-  },
   "Robot Speech": {
     "enabled": true,
     "x": 70,

@@ -37,6 +37,9 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {GraphyComponent} from './graphy/graphy.component';
 import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} from './graphy/templates';
 import { ActionsManagerComponent } from './plugins/actions-manager/actions-manager.component';
+import {IApiService} from "./services/api/api.service.interface";
+import {ApiService} from "./services/api/api.service";
+import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +62,7 @@ import { ActionsManagerComponent } from './plugins/actions-manager/actions-manag
     EdgeTemplateDirective,
     NodeTemplateDirective,
     ActionsManagerComponent,
+    WidgetErrorDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +89,9 @@ import { ActionsManagerComponent } from './plugins/actions-manager/actions-manag
     MatSlideToggleModule
 
   ],
-  providers: [],
+  providers: [
+    {provide:IApiService,useClass:ApiService}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

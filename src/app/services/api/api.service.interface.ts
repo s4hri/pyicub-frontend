@@ -6,53 +6,66 @@ import { FSM } from '../../types/FSM';
 import { ICubEmoPart } from '../../types/ICubEmoPart';
 import { ICubEmoEmotion } from '../../types/ICubEmoEmotion';
 import { ICubEmoColor } from '../../types/ICubEmoColor';
+import {Injectable, InjectionToken} from "@angular/core";
 
-export interface IApiService {
-  getRobots(): Observable<Robot[]>;
-  getApplications(robotName: string): Observable<Application[]>;
-  getApplicationArgsTemplate(robotName: string, appName: string, appPort: string): Observable<ApplicationArgsTemplate>;
-  setApplicationArgs(robotName: string, appName: string, appPort: string, args: any): Observable<any>;
-  getApplicationFSM(robotName: string, appName: string, appPort: string): Observable<FSM>;
-  getServices(robotName: string, appName: string): Observable<any>;
-  checkAsyncRequestStatus(requestID: string, initCallback: () => void, runningCallback: () => void, doneCallback: (retval: any) => void, failedCallback: () => void): void;
-  runService<T = void>(robotName: string, appName: string, appPort: string, serviceName: string, body?: any): Observable<T>;
-  runServiceAsync(robotName: string, appName: string, appPort: string, serviceName: string, body?: any): Observable<string>;
-  fsmGetCurrentState(robotName: string, appName: string, appPort: string): Observable<string>;
-  emoAngry(robotName: string): Observable<any>;
-  emoClosingEyes(robotName: string): Observable<any>;
-  emoCun(robotName: string): Observable<any>;
-  emoEbSmile(robotName: string): Observable<any>;
-  emoEbSurprised(robotName: string): Observable<any>;
-  emoEvil(robotName: string): Observable<any>;
-  emoNeutral(robotName: string): Observable<any>;
-  emoOpeningEyes(robotName: string): Observable<any>;
-  emoSad(robotName: string): Observable<any>;
-  emoSendCmd(robotName: string, part: ICubEmoPart, emotion: ICubEmoEmotion): Observable<any>;
-  emoSetBrightness(robotName: string, brightness: 0 | 1 | 2 | 3 | 4 | 5): Observable<any>;
-  emoSetColor(robotName: string, color: ICubEmoColor): Observable<any>;
-  emoSmile(robotName: string): Observable<any>;
-  emoSurprised(robotName: string): Observable<any>;
-  gazeBlockEyes(robotName: string, vergence: number): Observable<any>;
-  gazeBlockNeck(robotName: string): Observable<any>;
-  gazeClearEyes(robotName: string): Observable<any>;
-  gazeClearNeck(robotName: string): Observable<any>;
-  gazeInit(robotName: string): Observable<any>;
-  gazeLookAtAbsAngles(robotName: string, azimuth: number, elevation: number, vergence: number, waitMotionDone?: boolean, timeout?: number): Observable<any>;
-  gazeLookAtFixationPoint(robotName: string, x: number, y: number, z: number, waitMotionDone?: boolean, timeout?: number): Observable<any>;
-  gazeLookAtRelAngles(robotName: string, azimuth: number, elevation: number, vergence: number, waitMotionDone?: boolean, timeout?: number): Observable<any>;
-  gazeReset(robotName: string): Observable<any>;
-  gazeSetParams(robotName: string, neck_tt: number, eyes_tt: number): Observable<any>;
-  gazeSetTrackingMode(robotName: string, mode: boolean): Observable<any>;
-  gazeWaitMotionDone(robotName: string, period?: number, timeout?: number): Observable<any>;
-  gazeWaitMotionOnset(robotName: string, speedRef?: number, period?: number, maxAttempts?: number): Observable<any>;
-  speechClose(robotName: string): Observable<any>;
-  speechSay(robotName: string, sentence: string, waitActionDone?: boolean): Observable<any>;
-  speechSayAsync(robotName: string, sentence: string, waitActionDone?: boolean): Observable<string>;
-  camLeftGetURI(robotName: string): Observable<URL>;
-  camLeftGetImgRes(robotName: string): Observable<{ width: number, height: number }>;
-  camRightGetImgRes(robotName: string): Observable<{ width: number, height: number }>;
-  camRightGetURI(robotName: string): Observable<URL>;
-  getRobotActions(robotName: string): Observable<any>;
-  playActionSync(robotName: string, actionID: string): Observable<any>;
-  playActionAsync(robotName:string, actionID: string): Observable<any>
+
+export const API_SERVICE_TOKEN = new InjectionToken<IApiService>(
+  'API SERVICE TOKEN'
+);
+
+@Injectable({
+  providedIn: 'root'
+})
+export abstract class IApiService {
+  abstract getRobots(): Observable<Robot[]>;
+  abstract getApplications(robotName: string): Observable<Application[]>;
+  abstract getApplicationArgsTemplate(robotName: string, appName: string, appPort: string): Observable<ApplicationArgsTemplate>;
+  abstract setApplicationArgs(robotName: string, appName: string, appPort: string, args: any): Observable<any>;
+  abstract getApplicationFSM(robotName: string, appName: string, appPort: string): Observable<FSM>;
+  abstract getServices(robotName: string, appName: string): Observable<any>;
+  abstract checkAsyncRequestStatus(requestID: string, initCallback: () => void, runningCallback: () => void, doneCallback: (retval: any) => void, failedCallback: () => void): void;
+  abstract runService<T = void>(robotName: string, appName: string, appPort: string, serviceName: string, body?: any): Observable<T>;
+  abstract runServiceAsync(robotName: string, appName: string, appPort: string, serviceName: string, body?: any): Observable<string>;
+  abstract fsmGetCurrentState(robotName: string, appName: string, appPort: string): Observable<string>;
+  abstract emoAngry(robotName: string): Observable<any>;
+  abstract emoClosingEyes(robotName: string): Observable<any>;
+  abstract emoCun(robotName: string): Observable<any>;
+  abstract emoEbSmile(robotName: string): Observable<any>;
+  abstract emoEbSurprised(robotName: string): Observable<any>;
+  abstract emoEvil(robotName: string): Observable<any>;
+  abstract emoNeutral(robotName: string): Observable<any>;
+  abstract emoOpeningEyes(robotName: string): Observable<any>;
+  abstract emoSad(robotName: string): Observable<any>;
+  abstract emoSendCmd(robotName: string, part: ICubEmoPart, emotion: ICubEmoEmotion): Observable<any>;
+  abstract emoSetBrightness(robotName: string, brightness: 0 | 1 | 2 | 3 | 4 | 5): Observable<any>;
+  abstract emoSetColor(robotName: string, color: ICubEmoColor): Observable<any>;
+  abstract emoSmile(robotName: string): Observable<any>;
+  abstract emoSurprised(robotName: string): Observable<any>;
+  abstract gazeBlockEyes(robotName: string, vergence: number): Observable<any>;
+  abstract gazeBlockNeck(robotName: string): Observable<any>;
+  abstract gazeClearEyes(robotName: string): Observable<any>;
+  abstract gazeClearNeck(robotName: string): Observable<any>;
+  abstract gazeInit(robotName: string): Observable<any>;
+  abstract gazeLookAtAbsAngles(robotName: string, azimuth: number, elevation: number, vergence: number, waitMotionDone?: boolean, timeout?: number): Observable<any>;
+  abstract gazeLookAtFixationPoint(robotName: string, x: number, y: number, z: number, waitMotionDone?: boolean, timeout?: number): Observable<any>;
+  abstract gazeLookAtRelAngles(robotName: string, azimuth: number, elevation: number, vergence: number, waitMotionDone?: boolean, timeout?: number): Observable<any>;
+  abstract gazeReset(robotName: string): Observable<any>;
+  abstract gazeSetParams(robotName: string, neck_tt: number, eyes_tt: number): Observable<any>;
+  abstract gazeSetTrackingMode(robotName: string, mode: boolean): Observable<any>;
+  abstract gazeWaitMotionDone(robotName: string, period?: number, timeout?: number): Observable<any>;
+  abstract gazeWaitMotionOnset(robotName: string, speedRef?: number, period?: number, maxAttempts?: number): Observable<any>;
+  abstract speechClose(robotName: string): Observable<any>;
+  abstract speechSay(robotName: string, sentence: string, waitActionDone?: boolean): Observable<any>;
+  abstract speechSayAsync(robotName: string, sentence: string, waitActionDone?: boolean): Observable<string>;
+  abstract camLeftGetURI(robotName: string): Observable<URL>;
+  abstract camLeftGetImgRes(robotName: string): Observable<{ width: number, height: number }>;
+  abstract camRightGetImgRes(robotName: string): Observable<{ width: number, height: number }>;
+  abstract camRightGetURI(robotName: string): Observable<URL>;
+  abstract getRobotActions(robotName: string): Observable<any>;
+  abstract playActionSync(robotName: string, actionID: string): Observable<any>;
+  abstract playActionAsync(robotName:string, actionID: string): Observable<any>;
+
+  constructor(){
+
+  }
 }

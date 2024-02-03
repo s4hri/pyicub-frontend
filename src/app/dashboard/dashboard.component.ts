@@ -109,7 +109,7 @@ export class DashboardComponent implements OnInit {
       maxRows: 100,
       maxItemCols: 100,
       maxItemRows: 100,
-      maxItemArea: 100000
+      maxItemArea: 100000,
     };
   }
 

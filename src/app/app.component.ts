@@ -23,8 +23,12 @@ export class AppComponent implements OnInit{
   }
 
   onDrawerCellClick(robot:Robot){
-    this.appState.selectRobot(robot);
-    this.router.navigate(['icub']);
+
+    if(!this.appState.selectedRobot || this.appState.selectedRobot.name !== robot.name){
+      this.appState.selectRobot(robot);
+      this.router.navigate(['icub']);
+    }
+
     this.isDrawerOpened = false;
   }
 
@@ -33,6 +37,7 @@ export class AppComponent implements OnInit{
   }
 
   onAppBarApplicationCellClick(application:Application){
+    this.appState.selectedRobot.selectedApplication = undefined;
     this.router.navigate(['icub']);
   }
 

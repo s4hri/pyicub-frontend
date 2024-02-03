@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {WidgetBaseComponent} from "../../widget-base/widget-base.component";
 import {InputNode} from "../../graphy/models/input-node.model";
 import {InputEdge} from "../../graphy/models/input-edge.model";
@@ -17,6 +17,9 @@ interface nodeData {
   styleUrl: './fsm.component.css'
 })
 export class FsmComponent extends WidgetBaseComponent implements OnInit {
+
+  showErrorDialog:boolean = false;
+  errorMessage:string;
 
   private _graphy: GraphyComponent<any, any>;
   @ViewChild(GraphyComponent)
@@ -58,7 +61,8 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
     forkJoin({
       fsm: this.getApplicationFSM(),
       currentStateName: this.fsmGetCurrentState()
-    }).subscribe(({fsm, currentStateName}) => {
+    }).subscribe({
+      next: ({fsm, currentStateName}) => {
 
       let inputEdges = fsm.edges.map(edge => {
         const inputEdge: InputEdge = {
@@ -132,6 +136,11 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
         this.isLoading = false;
       }
 
+    },
+      error:() => {
+        this.openErrorDialog("Impossibile caricare l'FSM.")
+        this.isLoading = false;
+      }
     })
 
   }
@@ -238,6 +247,16 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
       }
     })
     return reachableNodes;
+  }
+
+  openErrorDialog(errorMessage:string){
+    this.errorMessage = errorMessage;
+    this.showErrorDialog = true;
+  }
+
+  closeErrorDialog(){
+    this.errorMessage = "";
+    this.showErrorDialog = false;
   }
 
   protected readonly NodeStatus = NodeStatus;
