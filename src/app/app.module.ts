@@ -21,7 +21,6 @@ import {MatMenuModule} from '@angular/material/menu';
 import {AppbarApplicationCellComponent} from './appbar-application-cell/appbar-application-cell.component';
 import {FsmComponent} from './plugins/fsm/fsm.component';
 import {WidgetBaseComponent} from './widget-base/widget-base.component';
-import {NgxGraphModule} from "@swimlane/ngx-graph";
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -78,7 +77,6 @@ import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-d
     MatCardModule,
     MatMenuModule,
     GridsterModule,
-    NgxGraphModule,
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
@@ -89,9 +87,7 @@ import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-d
     MatSlideToggleModule
 
   ],
-  providers: [
-    {provide:IApiService,useClass:ApiService}
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {
