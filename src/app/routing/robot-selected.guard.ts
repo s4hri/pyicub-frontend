@@ -1,7 +1,7 @@
 import {CanActivateFn, Router} from '@angular/router';
-import {AppStateService} from "./services/app-state.service";
+import {AppStateService} from "../services/app-state.service";
 import {inject} from "@angular/core";
-import {SessionStorageService} from "./services/session-storage.service";
+import {SessionStorageService} from "../services/session-storage.service";
 
 
 export const robotSelectedGuard: CanActivateFn = (route, state) => {

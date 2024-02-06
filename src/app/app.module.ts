@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {GridsterModule} from 'angular-gridster2';
-import {AppRoutingModule} from './app-routing.module';
+import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HomePageComponent} from './home-page/home-page.component';
@@ -36,8 +36,6 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {GraphyComponent} from './graphy/graphy.component';
 import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} from './graphy/templates';
 import { ActionsManagerComponent } from './plugins/actions-manager/actions-manager.component';
-import {IApiService} from "./services/api/api.service.interface";
-import {ApiService} from "./services/api/api.service";
 import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-dialog.component';
 
 @NgModule({
