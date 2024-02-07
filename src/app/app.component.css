@@ -12,35 +12,43 @@
 }
 
 .drawer{
+  position:absolute;
   display:flex;
   justify-content: center;
   align-items: center;
+  min-width: 200px;
   width:18vw;
   background-color: rgb(119,161,215);
-  box-sizing: border-box;
   top:5%;
   bottom:5%;
-  border-radius: 1vw;
+  border-radius: 1vmax;
+
 }
 
 .drawer-robotCellContainer{
   margin:0%;
-  width:16vw;
-  margin-left:1vw;
-  margin-top:1vw;
+  aspect-ratio: 181/52;
+  width:100%;
+  box-sizing: border-box;
 }
 
 .app-bar{
+  position:relative;
   box-sizing: border-box;
   display: flex;
   background-color: rgb(119,161,215);
 }
 
 .app-bar-CellContainer{
-  box-sizing: border-box;
   aspect-ratio: 181/52;
-  margin-inline:0.5vw;
   height:80%;
+  margin-right:20px;
+}
+
+@media (max-width: 640px){
+  .app-bar-CellContainer{
+    height:60%;
+  }
 }
 
 .page-container{

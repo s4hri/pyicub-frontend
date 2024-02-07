@@ -4,6 +4,7 @@
 
 
 .application-cell-container{
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -33,6 +34,21 @@
 
 .application-cell-primaryText{
   text-align: center;
-  font-size: 1.4vw;
+  font-family: 'Roboto', "Helvetica Neue", sans-serif;
+  color:black;
   font-weight: bold;
+}
+
+@container (min-width: 200px) {
+  .application-cell-primaryText{
+    font-size: 8cqw;
+  }
+
+}
+
+@container (max-width: 199px) {
+  .application-cell-primaryText{
+    font-size: 8cqw;
+  }
+
 }

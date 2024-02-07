@@ -1,71 +1,76 @@
-import {Component, ViewChild, ViewContainerRef, AfterViewInit, OnInit, ComponentRef} from '@angular/core';
-import {GridsterConfig, GridType, DisplayGrid} from 'angular-gridster2';
-import {PluginService} from "../services/plugin.service";
-import {map} from "rxjs";
+import {Component, OnInit} from '@angular/core';
+import {AppStateService} from "../services/app-state.service";
+import {Plugin} from "../types/Plugin";
+import {MatDialog} from "@angular/material/dialog";
+import {PluginDialogComponent} from "../plugin-dialog/plugin-dialog.component";
+import {ApplicationArgsDialogComponent} from "../application-args-dialog/application-args-dialog.component";
 
 @Component({
   selector: 'app-application-page',
   templateUrl: './application-page.component.html',
   styleUrl: './application-page.component.css'
 })
-export class ApplicationPageComponent implements AfterViewInit,OnInit{
+export class ApplicationPageComponent implements OnInit{
 
-  @ViewChild('content', { read: ViewContainerRef })
-  content: ViewContainerRef;
-  private componentRefs = new Map<string, ComponentRef<any>>();
-  private prevComponentsRefs = new Map<string, ComponentRef<any>>();
+  plugins$ = this.appState.selectedRobot.selectedApplication.plugins$;
+  application = this.appState.selectedRobot.selectedApplication
 
-  options: GridsterConfig;
-  dashboard: Array<any>;
-  enabledPlugins$ = this.pluginsService.plugins$.pipe(
-    map(plugins => plugins.filter(plugin => plugin.enabled))
-  )
+  areApplicationArgsSet = false;
+  editModeEnabled = false;
 
-  constructor(public pluginsService:PluginService) {}
 
-  ngOnInit(): void {
-    this.options = {
-      gridType: GridType.Fit,
-      displayGrid: DisplayGrid.OnDragAndResize,
-      draggable: {
-        enabled: true,
-        ignoreContent:true,
-        dragHandleClass: 'drag-handler'
-      },
-      resizable: {
-        enabled: true
-      },
-      swapWhileDragging:true,
-      pushItems:true,
-      minCols: 100,
-      maxCols: 100,
-      minRows: 100,
-      maxRows: 100,
-      maxItemCols:100,
-      maxItemRows:100,
-      maxItemArea:100000
-    };
 
-    this.dashboard = [
-      { cols: 30, rows: 15, y: 0, x: 0 },
-      { cols: 30, rows: 30, y: 0, x: 2 }
-      // altri elementi della griglia...
-    ];
+  constructor(public appState:AppStateService,public dialog: MatDialog) {}
 
+  openSettingsDialog() {
+    const dialogRef = this.dialog.open(PluginDialogComponent, {
+      data: this.appState.selectedRobot.selectedApplication,
+      disableClose: true //evita che il dialog si chiuda cliccando all'esterno del suo frame
+    });
   }
 
-  ngAfterViewInit(): void {
-    this.options.api.optionsChanged()
-    //this.pluginsService.plugins$.subscribe(plugins => {
+  toggleEditMode(){
+    this.editModeEnabled = !this.editModeEnabled;
+  }
 
-      //this.content.clear()
-      //plugins.forEach(plugin => {
-        //if(plugin.enabled){
-          //const ref = this.content.createComponent(PluginWidgetContainerComponent)
-          //ref.setInput('widget',this.pluginsService.pluginMap[plugin.name])
-        //}
-      //})
-    //})
+  openArgsDialog(){
+    const dialogRef = this.dialog.open(ApplicationArgsDialogComponent,{
+      data: this.appState.selectedRobot.selectedApplication,
+      disableClose: true
+    })
+
+    dialogRef.afterClosed().subscribe(args => {
+      this.appState.setApplicationArgs(this.application,args).subscribe(() => {
+        this.areApplicationArgsSet = true;
+      })
+    })
+  }
+
+  onClick(){
+    console.log("CLIIIIIICK")
+    this.openSettingsDialog()
+  }
+
+  onSaveClick(){
+    this.appState.saveDashboardConfig(this.application)
+    console.log("Dashboard salvata")
+  }
+
+  onPluginToggle(plugin:Plugin){
+    this.appState.selectedRobot.selectedApplication.togglePlugin(plugin)
+  }
+
+  ngOnInit() {
+    //Se gli argomenti non sono stati gia impostati dall'utente, mostro il dialog per settarli
+    //quindi se argsTemplate non è vuoto e args lo è
+    const argsTemplateExists = Object.keys(this.application.argsTemplate).length !== 0
+    const areArgsSet = this.application.args && Object.keys(this.application.args).length !== 0
+    if( argsTemplateExists && !areArgsSet ){
+      this.openArgsDialog()
+    } else {
+      this.areApplicationArgsSet = true
+    }
+
   }
 
 }

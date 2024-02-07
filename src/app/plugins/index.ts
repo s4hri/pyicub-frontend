@@ -1,6 +1,7 @@
 
-import {Plugin1Component} from "./plugin1/plugin1.component";
-import {Plugin2Component} from "./plugin2/plugin2.component";
-import {ServicesListPluginComponent} from "./services-list-plugin/services-list-plugin.component";
+import {ActionsManagerComponent} from "./actions-manager/actions-manager.component";
+import {FsmComponent} from "./fsm/fsm.component";
+import {RobotCamViewerComponent} from "./robot-cam-viewer/robot-cam-viewer.component";
+import {RobotSpeechComponent} from "./robot-speech/robot-speech.component";
 
-export const pluginIndex = { "Plugin 1": Plugin1Component, "Plugin 2": Plugin2Component, "Lista Servizi": ServicesListPluginComponent }
+export const pluginIndex = { "Actions Manager": ActionsManagerComponent, "fsm": FsmComponent, "Robot Cam Viewer": RobotCamViewerComponent, "Robot Speech": RobotSpeechComponent }

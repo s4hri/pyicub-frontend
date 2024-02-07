@@ -1,9 +1,14 @@
 .robot-cell-container{
+  container-type: inline-size;
+  box-sizing: border-box;
+  padding:3%;
+  margin:5%;
   display: flex;
+  justify-content: space-between;
   background-color: white;
-  aspect-ratio: 181/52;
-  width:100%;
-  border-radius: 1vw;
+  width:90%;
+  height:100%;
+  border-radius: 5%/17.5%;
   box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
   transition: background-color 0.2s ease;
 }
@@ -19,31 +24,61 @@
 }
 
 .robot-cell-image{
-  width:20%;
+  height:100%;
   aspect-ratio: 1;
-  margin:5%;
-  justify-content: flex-start;
   background-color: #FFECC2;
-  border-radius: 50%;
   padding:3%;
+  border-radius: 50%;
   box-sizing: border-box;
 }
 
 .robot-cell-textContainer{
   display:flex;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  height:100%;
+  width:100%;
+  box-sizing: border-box;
+  padding-left:3%;
   flex-direction: column;
-  height: 100%;
   justify-content: center;
 }
 
 .robot-cell-primaryText{
   text-align: left;
-  font-size: 1.4vw;
+  color: black;
+  font-size: 16px;
+  font-family: Roboto, Helvetica Neue, sans-serif;
   font-weight: bold;
 }
 
 .robot-cell-secondaryText{
   text-align: left;
-  font-size: 0.7vw;
+  font-size: 8px;
+  color: black;
+  font-family: Roboto, Helvetica Neue, sans-serif;
   font-weight: normal;
 }
+
+@container (min-width: 200px) {
+  .robot-cell-primaryText{
+    font-size: 8cqw;
+  }
+
+  .robot-cell-secondaryText{
+    font-size:4cqw
+  }
+
+}
+
+@container (max-width: 199px) {
+  .robot-cell-primaryText{
+    font-size: 8cqw;
+  }
+
+  .robot-cell-secondaryText{
+    font-size:4cqw
+  }
+
+}
+

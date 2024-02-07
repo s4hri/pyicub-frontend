@@ -1,30 +1,37 @@
 import { Component,OnInit } from '@angular/core';
-import {RobotsService} from "./services/robots.service";
-import {UserSessionService} from "./user-session.service";
-import {Robot} from "./robotInterface";
+import {Robot} from "./types/Robot";
 import {Router} from "@angular/router";
-import {Application} from "./application";
+import {Application} from "./types/Application";
+import {AppStateService} from "./services/app-state.service";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
-  isDrawerOpened:boolean = true;
-  robots$ = this.robotsService.robots$;
-  isLoadingRobots$ = this.robotsService.isLoadingRobots$;
-  selectedRobot$ = this.userSessionService.selectedRobot$;
-  selectedApplication$ = this.userSessionService.selectedApplication$;
-  constructor(private robotsService:RobotsService, private userSessionService: UserSessionService, private router:Router){}
+export class AppComponent{
+
+  isDrawerOpened:boolean = false;
+  robots$ = this.appState.availableRobots$;
+  isLoadingRobots$ = this.appState.isLoadingRobots$;
+  selectedRobot$ = this.appState.selectedRobot$;
+
+  constructor(private appState:AppStateService, public router:Router){}
 
   onReloadButtonClick(){
-    this.robotsService.updateRobots();
+    this.appState.updateRobots();
   }
 
   onDrawerCellClick(robot:Robot){
-    this.userSessionService.selectRobot(robot);
-    this.router.navigate(['icub']);
+
+    if(!this.appState.selectedRobot || this.appState.selectedRobot.name !== robot.name){
+      this.appState.selectRobot(robot);
+    }
+
+    if(this.router.url !== '/icub'){
+      this.router.navigate(['icub']);
+    }
+
     this.isDrawerOpened = false;
   }
 
@@ -33,16 +40,12 @@ export class AppComponent implements OnInit{
   }
 
   onAppBarApplicationCellClick(application:Application){
-    this.userSessionService.selectApplication(null);
+    this.appState.selectedRobot.selectedApplication = undefined;
     this.router.navigate(['icub']);
   }
 
   onAppBarButtonClick(){
     this.isDrawerOpened = !this.isDrawerOpened;
-  }
-
-  ngOnInit(): void {
-    this.robotsService.updateRobots();
   }
 
 }

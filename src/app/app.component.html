@@ -1,23 +1,26 @@
-<mat-toolbar class="app-bar mat-elevation-z8 p-0">
+<mat-toolbar class="app-bar">
   <button mat-button (click)="onAppBarButtonClick()">
     <mat-icon>menu</mat-icon>
   </button>
 
-    <div *ngIf="selectedRobot$ | async" class="app-bar-CellContainer">
-      <appbar-robot-cell (cellClicked)="onAppBarRobotCellClick($event)" [robot]="selectedRobot$ | async"/>
-    </div>
-    <div  *ngIf="(selectedRobot$ | async) && (selectedApplication$ | async)" class="app-bar-CellContainer">
-      <appbar-application-cell (cellClicked)="onAppBarApplicationCellClick($event)" [application]="selectedApplication$ | async"/>
-    </div>
+  <div *ngIf="(selectedRobot$ | async) && router.url !== '/'" class="app-bar-CellContainer">
+    <appbar-robot-cell (cellClicked)="onAppBarRobotCellClick($event)" [robot]="selectedRobot$ | async"/>
+  </div>
+  <div *ngIf="(selectedRobot$ | async) && ((selectedRobot$ | async).selectedApplication) && router.url === '/icub/application'" class="app-bar-CellContainer">
+    <appbar-application-cell (cellClicked)="onAppBarApplicationCellClick($event)"
+                             [application]="(selectedRobot$ | async).selectedApplication"/>
+  </div>
 </mat-toolbar>
+
 <mat-sidenav-container class="drawer-container">
-  <mat-sidenav mode="over" [(opened)]="isDrawerOpened" class="drawer" >
+  <mat-sidenav mode="over" [(opened)]="isDrawerOpened" class="drawer">
     <div *ngIf="isLoadingRobots$ | async; else notLoading" class="spinner-container">
       <mat-progress-spinner mode="indeterminate" class="orange-spinner"/>
     </div>
     <ng-template #notLoading>
-      <div *ngFor="let robot of robots$ | async" class="drawer-robotCellContainer">
-        <app-robot-cell (cellClicked)="onDrawerCellClick($event)" [robot]="robot"/>
+      <div class="drawer-robotCellContainer">
+        <app-robot-cell style="width:100%;background-color: yellow" *ngFor="let robot of robots$ | async"
+                        (cellClicked)="onDrawerCellClick($event)" [robot]="robot"/>
       </div>
       <div class="reload-button-container">
         <button (click)="onReloadButtonClick()" class="reload-button">

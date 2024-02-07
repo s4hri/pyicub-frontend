@@ -1,45 +1,62 @@
-import { Component, OnInit } from '@angular/core';
-import {ApplicationsService} from "../services/applications.service";
-import {UserSessionService} from "../user-session.service";
-import {Application} from "../application";
-import {map, Observable, tap} from "rxjs";
-import {Robot} from "../robotInterface";
+import { Component } from '@angular/core';
+import {Application} from "../types/Application";
 import {Router} from "@angular/router";
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {AppStateService} from "../services/app-state.service";
 
 @Component({
   selector: 'app-applications-page',
   templateUrl: './applications-page.component.html',
   styleUrl: './applications-page.component.css'
 })
-export class ApplicationsPageComponent implements OnInit{
+export class ApplicationsPageComponent{
 
-  applications$: Observable<Application[] | undefined>;
-  isLoadingApplications$ = this.applicationsService.isLoadingApplications$;
-  selectedRobot: Robot;
+  //per eliminare il BreakpointObserver quando il componente è distrutto
+  destroyed = new Subject<void>();
+  selectedRobot$ = this.appState.selectedRobot$;
+  gridColsNumber = 2;
 
   onApplicationClick(application:Application){
-    this.userSession.selectApplication(application);
+    this.appState.selectApplication(application);
     this.router.navigate(['icub/application']);
   }
 
-  constructor(private applicationsService:ApplicationsService, private userSession:UserSessionService,private router:Router) {}
+  constructor(public appState:AppStateService,private router:Router,private breakpointObserver: BreakpointObserver) {
+    breakpointObserver
+      .observe([
+        Breakpoints.XSmall,
+        Breakpoints.Small,
+        Breakpoints.Medium,
+        Breakpoints.Large,
+        Breakpoints.XLarge,
+      ])
+      .pipe(takeUntil(this.destroyed))
+      .subscribe(result => {
 
-  ngOnInit() {
+        const breakpoint = Object.keys(result.breakpoints).find( key =>{
+          return result.breakpoints[key]
+        })
 
-    this.userSession.selectedRobot$.subscribe(robot => {
-      this.selectedRobot = robot;
-      this.applicationsService.updateRobotApplications(this.selectedRobot.name);
-    })
+        switch(breakpoint){
+          case Breakpoints.XSmall:
+            this.gridColsNumber = 2;
+            break;
+          case Breakpoints.Small:
+            this.gridColsNumber = 2;
+            break;
+          case Breakpoints.Medium:
+            this.gridColsNumber = 3;
+            break;
+          case Breakpoints.Large:
+            this.gridColsNumber = 4;
+            break;
+          case Breakpoints.XLarge:
+            this.gridColsNumber = 5;
+            break;
+        }
 
-    this.applicationsService.updateRobotApplications(this.selectedRobot.name);
-
-    this.applications$ = this.applicationsService.robotApplications$.pipe(
-      tap( value => console.log(value)),
-      map(robotApps => robotApps[this.selectedRobot.name])
-    )
-    console.log(this.userSession.selectedRobot)
-
+      })
   }
-
-
 }

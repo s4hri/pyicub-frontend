@@ -1,4 +1,8 @@
+import {ApiService} from "../app/services/api/api.service";
+
 export const environment = {
-   apiHost: 'localhost',
-   apiPort: '9001'
-};
+    apiScheme: 'http',
+    apiHost: 'localhost',
+    apiPort: '9001',
+    apiService:ApiService
+}
