@@ -10,7 +10,7 @@
   </ng-container>
 
   <ng-container *nodeTemplate="let node; nodes: nodes">
-    <svg (click)="onNodeClick(node)" overflow="visible" [matTooltip]="node.data.description"Aggiunt [matTooltipShowDelay]="1000">
+    <svg (click)="onNodeClick(node)" overflow="visible" [matTooltip]="node.data.description" [matTooltipShowDelay]="1000">
       <rect rx="10" ry="10" [attr.width]="node._width" [attr.height]="node._height" [style.fill]="nodeColors[node.data.state]" stroke="black" stroke-width="2"></rect>
       <!-- Centra il testo sia orizzontalmente che verticalmente -->
       <text text-anchor="middle" dominant-baseline="central" [attr.x]="node._width / 2" [attr.y]="node._height / 2">{{ node.data.name }}</text>
