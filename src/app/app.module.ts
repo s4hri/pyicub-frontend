@@ -37,6 +37,7 @@ import {GraphyComponent} from './graphy/graphy.component';
 import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} from './graphy/templates';
 import { ActionsManagerComponent } from './plugins/actions-manager/actions-manager.component';
 import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-dialog.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -61,30 +62,31 @@ import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-d
     ActionsManagerComponent,
     WidgetErrorDialogComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatButtonModule,
-    HttpClientModule,
-    MatProgressSpinnerModule,
-    MatGridListModule,
-    MatCardModule,
-    MatMenuModule,
-    GridsterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatDialogModule,
-    MatCheckboxModule,
-    MatInputModule,
-    MatSlideToggleModule
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatButtonModule,
+        HttpClientModule,
+        MatProgressSpinnerModule,
+        MatGridListModule,
+        MatCardModule,
+        MatMenuModule,
+        GridsterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatSlideToggleModule,
+        MatTooltipModule
 
-  ],
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

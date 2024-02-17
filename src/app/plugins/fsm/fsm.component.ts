@@ -8,7 +8,8 @@ import {forkJoin} from "rxjs";
 
 interface nodeData {
   name: string,
-  state: NodeStatus
+  state: NodeStatus,
+  description:string
 }
 
 @Component({
@@ -78,7 +79,8 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
           id: node.id,
           data: {
             name: node.name,
-            state: NodeStatus.INACTIVE
+            state: NodeStatus.INACTIVE,
+            description:node.description
           }
         }
         return inputNode
