@@ -21,6 +21,7 @@ import * as defaultDashboardConfig from "../../defaultDashboardConfiguration.jso
 import {IApiService} from "./api.service.interface";
 import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
 import {LocalStorageService} from "../local-storage.service";
+import {getApplicationFSMResponse} from "./types/GetApplicationFSMResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +87,7 @@ export class ApiService implements IApiService {
                 const enabled = pluginDefaultData?.enabled || false;
                 application.plugins.push(new Plugin(pluginName, componentName, enabled, cols, rows, x, y))
               }
+              console.log(application.argsTemplate)
               return application
             })
           )
@@ -134,6 +136,7 @@ export class ApiService implements IApiService {
   getApplicationArgsTemplate(robotName: string, appName: string, appPort: string) {
     return this.runService<GetApplicationArgsTemplateResponse>(robotName, appName, appPort, "getArgsTemplate").pipe(
       map(response => {
+        console.log("ARGSTEMPLATE: ",response)
         return this.getArgsTemplate(response)
       })
     )
@@ -143,79 +146,35 @@ export class ApiService implements IApiService {
     return this.runService(robotName, appName, appPort, "setArgs", {"input_args": args})
   }
 
-
   getApplicationFSM(robotName: string, appName: string, appPort: string) {
-
-    return this.runService<getApplicationFSMResponse>(robotName, appName, appPort, "fsm.getTransitions").pipe(
+    return this.runService<getApplicationFSMResponse>(robotName,appName,appPort,"fsm.toJSON").pipe(
       map(response => {
-        let nodes: FSMNode[] = [];
-        let edges: FSMEdge[] = [];
 
-        for (let responseItem of response) {
-
-          //se il nodo sorgente o destinazione non è gia stato creato, lo aggiungo alla lista.
-          if (!nodes.find(node => node.id === responseItem.dest)) {
-            nodes.push({name: responseItem.dest, id: responseItem.dest})
+        let nodes: FSMNode[] = response.states.map(state => {
+          let node:FSMNode = {
+            name:state.name,
+            id:state.name,
+            description:state.description
           }
-
-          if (!nodes.find(node => node.id === responseItem.source)) {
-            nodes.push({name: responseItem.source, id: responseItem.source})
-          }
-
-          /*
-          if (!stateNames.includes(responseItem.dest)){
-            stateNames.push(responseItem.dest)
-          }
-          if (!stateNames.includes(responseItem.source)){
-            stateNames.push(responseItem.source)
-          }
-
-           */
-
-          //creo il collegamento
-          const edge: FSMEdge = {
-            sourceID: responseItem.source,
-            targetID: responseItem.dest,
-            trigger: responseItem.trigger
-          }
-          edges.push(edge)
-
-        }
-
-        if (nodes.length === 0) {
-          throw (new Error("Non ci sono FSM associate a questa applicazione"))
-        }
-
-        /*
-        states = stateNames.map(stateName => {
-          let triggers:{[key:string]:string} = {};
-          for (let responseItem of response){
-            if(responseItem.source === stateName){
-              triggers[responseItem.trigger] = responseItem.dest;
-            }
-          }
-
-          return new State(stateName,triggers)
+          return node
         })
 
+        let edges: FSMEdge[] = response.transitions.map(transition => {
+          let edge:FSMEdge = {
+            sourceID: transition.source,
+            targetID:transition.dest,
+            trigger:transition.trigger
+          }
+          return edge
+        })
 
-
-        let initIndex = states.findIndex(state => state.stateName === "init");
-        let initState = states.find(state => state.stateName === "init");
-        let tempState = states[0];
-        states[0] = initState;
-        states[initIndex] = tempState;
-
-         */
-
-        //imposto lo stato init come primo dell'array, in modo da farlo comparire a sinistra rispetto agli altri
-        const initIndex = nodes.findIndex(node => node.id === 'init')
-
-        if (initIndex !== 0) {
-          const temp = nodes[0]
-          nodes[0] = nodes[initIndex]
-          nodes[initIndex] = temp
+        let initState:FSMNode = {
+          name: response.initial_state,
+          id: response.initial_state,
+          description: ""
         }
+        //inserisco lo stato iniziale come primo dell'array. è importante che sia il primo poichè cosi il motore grafico che renderizza l'FSM lo posiziona all'estrema sinistra.
+        nodes.unshift(initState)
 
         const fsmDefaultConfig = defaultDashboardConfig["fsm"];
         const x = fsmDefaultConfig.x || 0;
@@ -224,6 +183,7 @@ export class ApiService implements IApiService {
         const rows = fsmDefaultConfig.rows || 70;
 
         return new FSM(nodes, edges, cols, rows, x, y)
+
       })
     )
   }
@@ -523,10 +483,5 @@ export class ApiService implements IApiService {
 
 }
 
-type getApplicationFSMResponse = getApplicationFSMResponseElement[]
 
-interface getApplicationFSMResponseElement {
-  dest: string,
-  source: string,
-  trigger: string
-}
+

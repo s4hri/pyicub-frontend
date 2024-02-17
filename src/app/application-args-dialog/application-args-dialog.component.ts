@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Application} from "../types/Application";
 import {ApplicationArgType} from "../types/ApplicationArgType";
@@ -8,7 +8,7 @@ import {ApplicationArgType} from "../types/ApplicationArgType";
   templateUrl: './application-args-dialog.component.html',
   styleUrl: './application-args-dialog.component.css'
 })
-export class ApplicationArgsDialogComponent{
+export class ApplicationArgsDialogComponent implements OnInit{
 
   args:any = {}
 
@@ -31,4 +31,8 @@ export class ApplicationArgsDialogComponent{
 
   protected readonly Object = Object;
   protected readonly ApplicationArgType = ApplicationArgType;
+
+  ngOnInit() {
+    console.log(Object.keys(this.data.argsTemplate))
+  }
 }
