@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {Application} from "../types/Application";
 import {ActivatedRoute, Router} from "@angular/router";
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {map, Subject} from 'rxjs';
-import {switchMap, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {AppStateService} from "../services/app-state.service";
 
 @Component({
