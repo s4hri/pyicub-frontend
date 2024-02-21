@@ -12,7 +12,7 @@ import {SessionStorageService} from "./session-storage.service";
 })
 export class AppStateService {
 
-  private readonly _availableRobots = new BehaviorSubject<Robot[]>([])
+  private readonly _availableRobots = new BehaviorSubject<Robot[]>(undefined)
   readonly availableRobots$ = this._availableRobots.asObservable();
 
   get availableRobots():Robot[]{
@@ -54,21 +54,25 @@ export class AppStateService {
 
     this.apiService.getRobots().subscribe(robots => {
       console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
-      this.availableRobots = robots
+
+
+
       const selectedRobotName = this.sessionStorageService.getSelectedRobot()
       const selectedApplicationName = this.sessionStorageService.getSelectedApplication()
 
       if(selectedRobotName){
-        const robot = this.availableRobots.find(robot => robot.name === selectedRobotName)
+        const robot = robots.find(robot => robot.name === selectedRobotName)
 
-        if(selectedApplicationName){
+        if(robot && selectedApplicationName){
           const application = robot.applications.find(application => application.name === selectedApplicationName)
           robot.selectedApplication = application
         }
         this.selectedRobot = robot;
       }
 
+      this.availableRobots = robots
       this.isLoadingRobots = false;
+
 
     })
 

@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Application} from "../types/Application";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {map, Subject} from 'rxjs';
+import {switchMap, takeUntil} from 'rxjs/operators';
 import {AppStateService} from "../services/app-state.service";
 
 @Component({
@@ -11,7 +11,7 @@ import {AppStateService} from "../services/app-state.service";
   templateUrl: './applications-page.component.html',
   styleUrl: './applications-page.component.css'
 })
-export class ApplicationsPageComponent{
+export class ApplicationsPageComponent implements OnInit{
 
   //per eliminare il BreakpointObserver quando il componente è distrutto
   destroyed = new Subject<void>();
@@ -20,10 +20,10 @@ export class ApplicationsPageComponent{
 
   onApplicationClick(application:Application){
     this.appState.selectApplication(application);
-    this.router.navigate(['icub/application']);
+    this.router.navigate([`${application.robotName}/${application.name}`]);
   }
 
-  constructor(public appState:AppStateService,private router:Router,private breakpointObserver: BreakpointObserver) {
+  constructor(private route:ActivatedRoute,public appState:AppStateService,private router:Router,private breakpointObserver: BreakpointObserver) {
     breakpointObserver
       .observe([
         Breakpoints.XSmall,
@@ -58,5 +58,29 @@ export class ApplicationsPageComponent{
         }
 
       })
+  }
+
+  ngOnInit() {
+    this.appState.availableRobots$.subscribe(robots => {
+      if(robots){
+        this.route.paramMap.subscribe(params => {
+          const robotName = params.get('robotName');
+
+          //se il parametro inserito non corrisponde a nessun robot, reindirizza in homepage
+          let selectedRobot = robots.find(robot => robot.name === robotName)
+
+          if(!selectedRobot){
+            this.router.navigate([''])
+            console.log("Non è stato trovato un robot corrispondente a quello indicato. Reindirizzo in Homepage.")
+            return
+          }
+
+          if(!this.appState.selectedRobot || this.appState.selectedRobot.name !== robotName){
+            this.appState.selectRobot(selectedRobot)
+          }
+
+        })
+      }
+    })
   }
 }

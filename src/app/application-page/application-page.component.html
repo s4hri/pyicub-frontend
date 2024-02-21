@@ -1,4 +1,4 @@
-<div style="width:100%;height:100%;display:flex;flex-direction: column;background-color: rgb(242,242,242)">
+<div *ngIf="!(appState.isLoadingRobots$ | async);else elseBlock" style="width:100%;height:100%;display:flex;flex-direction: column;background-color: rgb(242,242,242)">
   <div style="display: flex;justify-content: flex-end">
     <button mat-fab extended (click)="onSaveClick()" color="white" class="application-action-button optional-xs-button">
       <mat-icon>save</mat-icon>
@@ -17,3 +17,9 @@
     <app-dashboard *ngIf="areApplicationArgsSet" [application]="application" [editModeEnabled]="editModeEnabled"></app-dashboard>
   </div>
 </div>
+
+<ng-template #elseBlock>
+  <div  style="display:flex;height:100%;width:100%;align-items: center;justify-content: center">
+    <mat-spinner/>
+  </div>
+</ng-template>

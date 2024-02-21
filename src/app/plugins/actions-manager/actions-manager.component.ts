@@ -36,7 +36,8 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
   ngOnInit() {
     this.getRobotActions().subscribe({
         next: actions => {
-          const newActions: Action[] = actions.map(action => {
+          const filteredActions = actions.filter(action => action.startsWith(this.application.name + ".")).map(action => action.substring(this.application.name.length + 1))
+          const newActions: Action[] = filteredActions.map(action => {
             return {actionID: action, actionState: ActionState.ACTIVE}
           })
           this.actions = newActions;
@@ -64,7 +65,7 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
 
       this.playActionAsync(selectedAction.actionID).subscribe(reqID => {
 
-        console.log("RISPOSTA PLAYACTION: ",reqID)
+        //console.log("RISPOSTA PLAYACTION: ",reqID)
 
         const onRunning = () => {
           this.updateActionState(selectedAction, ActionState.RUNNING)

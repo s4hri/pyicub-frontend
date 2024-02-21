@@ -8,8 +8,8 @@ import {applicationSelectedGuard} from "./application-selected.guard";
 
 const routes: Routes = [
   {path:'', component:HomePageComponent},
-  {path:'icub/application', component:ApplicationPageComponent,canActivate:[applicationSelectedGuard]},
-  {path:'icub', component:ApplicationsPageComponent,canActivate:[robotSelectedGuard]},
+  {path:':robotName',component:ApplicationsPageComponent},
+  {path:':robotName/:appName', component:ApplicationPageComponent}
 ];
 
 @NgModule({
