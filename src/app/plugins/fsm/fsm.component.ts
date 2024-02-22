@@ -204,10 +204,10 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
 
           this.updateNodeState(selectedNode,NodeStatus.DONE)
           const reachableNodes = this.findReachableNodes(selectedNode.id)
-          console.log(`Reachable nodes from ${selectedNode.id}:`)
-          console.log(reachableNodes)
+          //console.log(`Reachable nodes from ${selectedNode.id}:`)
+          //console.log(reachableNodes)
           for(let reachableNode of reachableNodes){
-            console.log(reachableNode.id, " ATTIVATO")
+            //console.log(reachableNode.id, " ATTIVATO")
             this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
           }
           this.graphy.setFocusToNode(selectedNode.id)

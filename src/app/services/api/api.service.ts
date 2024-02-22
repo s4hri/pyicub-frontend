@@ -46,7 +46,7 @@ export class ApiService implements IApiService {
         const robotsObservables = robots.map(robot => this.getApplications(robot.name).pipe(
           map(applications => {
             robot.applications = applications
-            console.log(robot)
+            //console.log(robot)
             return robot
           })
         ));
@@ -87,7 +87,7 @@ export class ApiService implements IApiService {
                 const enabled = pluginDefaultData?.enabled || false;
                 application.plugins.push(new Plugin(pluginName, componentName, enabled, cols, rows, x, y))
               }
-              console.log(application.argsTemplate)
+              //console.log(application.argsTemplate)
               return application
             })
           )
@@ -136,7 +136,7 @@ export class ApiService implements IApiService {
   getApplicationArgsTemplate(robotName: string, appName: string, appPort: string) {
     return this.runService<GetApplicationArgsTemplateResponse>(robotName, appName, appPort, "getArgsTemplate").pipe(
       map(response => {
-        console.log("ARGSTEMPLATE: ",response)
+        //console.log("ARGSTEMPLATE: ",response)
         return this.getArgsTemplate(response)
       })
     )

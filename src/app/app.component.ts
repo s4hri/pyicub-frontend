@@ -57,8 +57,8 @@ export class AppComponent implements OnInit{
     ).subscribe((event: NavigationEnd) => {
       const path = event.url.substring(1);
       let segments = path.split('/').filter(segment => segment.length > 0);
-      console.log(segments)
-      console.log(segments.length)
+      //console.log(segments)
+      //console.log(segments.length)
 
       if(segments.length == 0){
         this.showAppbarApplicationCell = false;

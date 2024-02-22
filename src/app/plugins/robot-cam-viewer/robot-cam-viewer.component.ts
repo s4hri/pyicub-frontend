@@ -29,7 +29,7 @@ export class RobotCamViewerComponent extends WidgetBaseComponent implements OnIn
     }).subscribe({
 
         next: result => {
-          console.log(result)
+          //console.log(result)
           const notSecureUrl = result.url.toString()
           this.rightCamURI = this.sanitizer.bypassSecurityTrustResourceUrl(notSecureUrl);
           this.camImgHeight = result.imgSize.height;

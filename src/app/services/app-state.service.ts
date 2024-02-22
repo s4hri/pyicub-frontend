@@ -44,7 +44,7 @@ export class AppStateService {
   }
 
   constructor(public apiService:ApiService, private localStorageService:LocalStorageService,private sessionStorageService:SessionStorageService) {
-    console.log("COSTRUTTORE CHIAMATO")
+    //console.log("COSTRUTTORE CHIAMATO")
     this.initApp()
 
   }
@@ -53,7 +53,7 @@ export class AppStateService {
     this.isLoadingRobots = true;
 
     this.apiService.getRobots().subscribe(robots => {
-      console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
+      //console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
 
 
 
@@ -82,7 +82,7 @@ export class AppStateService {
     this.isLoadingRobots = true;
 
     this.apiService.getRobots().subscribe(robots => {
-      console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
+      //console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
       this.availableRobots = robots
       this.isLoadingRobots = false;
 

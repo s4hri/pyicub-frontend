@@ -25,28 +25,6 @@
   border-radius: 4px;
   transition: border 0.2s ease;
   font-weight: 600;
-
-  &:hover,
-  &:focus {
-    cursor: pointer;
-    border: 1px solid blue;
-  }
-
-  &__content {
-    &__title {
-      display: block;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      margin: 0.5rem 0;
-    }
-
-    &__id {
-      display: block;
-      font-weight: 500;
-      color: lightgray;
-    }
-  }
 }
 
 .edge {

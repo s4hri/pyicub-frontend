@@ -42,7 +42,7 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
           })
           this.actions = newActions;
           this.isLoading = false;
-          console.log(this.actions)
+          //console.log(this.actions)
         },
         error: err => {
           console.log(err)

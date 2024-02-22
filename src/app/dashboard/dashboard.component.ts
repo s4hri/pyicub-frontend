@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
 
   @Input()
   set editModeEnabled(value: boolean) {
-    if (value) {
+    if (value && this.options) {
       this.options.draggable = {
         enabled: true,
         ignoreContent: true,
@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
         enabled: true
       }
 
-    } else {
+    } else if(this.options) {
 
       this.options.draggable = {
         enabled: false
@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
 
     }
 
-    if (this.options.api && this.options.api.optionsChanged) {
+    if (this.options?.api && this.options.api.optionsChanged) {
       this.options.api.optionsChanged();
     }
 
