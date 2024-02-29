@@ -38,6 +38,7 @@ import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} fro
 import { ActionsManagerComponent } from './plugins/actions-manager/actions-manager.component';
 import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-dialog.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { SavedDashboardDialogComponent } from './saved-dashboard-dialog/saved-dashboard-dialog.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     NodeTemplateDirective,
     ActionsManagerComponent,
     WidgetErrorDialogComponent,
+    SavedDashboardDialogComponent,
   ],
     imports: [
         BrowserModule,

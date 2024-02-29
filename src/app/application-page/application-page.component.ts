@@ -6,6 +6,7 @@ import {PluginDialogComponent} from "../plugin-dialog/plugin-dialog.component";
 import {ApplicationArgsDialogComponent} from "../application-args-dialog/application-args-dialog.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Application} from "../types/Application";
+import {SavedDashboardDialogComponent} from "../saved-dashboard-dialog/saved-dashboard-dialog.component";
 
 @Component({
   selector: 'app-application-page',
@@ -44,13 +45,17 @@ export class ApplicationPageComponent implements OnInit{
     })
   }
 
+  openSavedDashboardDialog(){
+    const dialogRef = this.dialog.open(SavedDashboardDialogComponent)
+  }
+
   onClick(){
-    //console.log("CLIIIIIICK")
     this.openSettingsDialog()
   }
 
   onSaveClick(){
     this.appState.saveDashboardConfig(this.application)
+    this.openSavedDashboardDialog()
     console.log("Dashboard salvata")
   }
 

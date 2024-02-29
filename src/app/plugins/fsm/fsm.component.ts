@@ -86,6 +86,12 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
         return inputNode
       })
 
+        if(inputNodes.length === 1){
+          this.openErrorDialog("Impossibile caricare l'FSM.")
+          this.isLoading = false;
+          return;
+        }
+
       //rimuovo il nodo "init" e sostituisco tutti i suoi collegamenti con quelli del vero nodo iniziale
       inputNodes = inputNodes.filter(node => node.id !== "init");
       const startingEdge = inputEdges.find(edge => edge.sourceId === "init");
@@ -98,6 +104,7 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
 
 
       inputEdges = inputEdges.filter(edge => edge.sourceId !== "init");
+      console.log(inputEdges)
       inputEdges.forEach(edge => {
         if (edge.targetId === "init") {
           edge.targetId = startingNode.id;

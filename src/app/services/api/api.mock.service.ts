@@ -167,9 +167,9 @@ export class ApiMockService implements IApiService {
 
   getRobots(): Observable<Robot[]> {
 
-    const robot1 = new Robot("iCubMock1", new URL("http://localhost:8001/pyicub/iCubMock1"))
-    const robot2 = new Robot("iCubMock2", new URL("http://localhost:8001/pyicub/iCubMock2"))
-    const robot3 = new Robot("iCubMock3", new URL("http://localhost:8001/pyicub/iCubMock3"))
+    const robot1 = new Robot("iCub 1", new URL("http://localhost:8001/pyicub/iCub1"))
+    const robot2 = new Robot("iCub 2", new URL("http://localhost:8002/pyicub/iCub2"))
+    const robot3 = new Robot("iCub 3", new URL("http://localhost:8003/pyicub/iCub3"))
 
     const numAppRobot1 = 3
     const numAppRobot2 = 2;
@@ -180,19 +180,19 @@ export class ApiMockService implements IApiService {
         robot1.applications = []
       }
 
-      let application = new Application(`iCubMock1`,`appMock${i+1}Robot1`,"http://localhost:8001/pyicub/iCubMock1")
+      let application = new Application(`iCub 1`,`app${i+1}Robot1`,"http://localhost:8001/pyicub/iCubMock1")
       application.argsTemplate = {
-        nome:{
+        name:{
           type:ApplicationArgType.STRING,
           value:"prova"
         },
-        cognome:{
-          type:ApplicationArgType.STRING,
-          value:"riprova"
+        age:{
+          type:ApplicationArgType.NUMBER,
+          value:18
         },
-        eta:{
+        difficulty:{
           type:ApplicationArgType.ARRAY_NUMBER,
-          value:[18,25,30,50]
+          value:[1,2,3,4]
         }
       }
       for (const [pluginName, componentName] of Object.entries(pluginIndex)) {

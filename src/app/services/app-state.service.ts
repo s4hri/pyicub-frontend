@@ -49,7 +49,7 @@ export class AppStateService {
 
   }
 
-  private initApp(){
+  private initApp(){ 
     this.isLoadingRobots = true;
 
     this.apiService.getRobots().subscribe(robots => {
