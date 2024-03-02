@@ -40,6 +40,8 @@ import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-d
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { SavedDashboardDialogComponent } from './saved-dashboard-dialog/saved-dashboard-dialog.component';
 import { RestoreSessionDialogComponent } from './restore-session-dialog/restore-session-dialog.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import { ServicesManagerComponent } from './plugins/services-manager/services-manager.component';
 
 @NgModule({
   declarations: [
@@ -65,32 +67,34 @@ import { RestoreSessionDialogComponent } from './restore-session-dialog/restore-
     WidgetErrorDialogComponent,
     SavedDashboardDialogComponent,
     RestoreSessionDialogComponent,
+    ServicesManagerComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatButtonModule,
-        HttpClientModule,
-        MatProgressSpinnerModule,
-        MatGridListModule,
-        MatCardModule,
-        MatMenuModule,
-        GridsterModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        MatDialogModule,
-        MatCheckboxModule,
-        MatInputModule,
-        MatSlideToggleModule,
-        MatTooltipModule
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatButtonModule,
+    HttpClientModule,
+    MatProgressSpinnerModule,
+    MatGridListModule,
+    MatCardModule,
+    MatMenuModule,
+    GridsterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatTooltipModule,
+    MatExpansionModule
 
-    ],
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

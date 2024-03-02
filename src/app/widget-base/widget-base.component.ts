@@ -33,6 +33,10 @@ export class WidgetBaseComponent{
     return this.apiService.getApplicationFSM(this.application.robotName,this.application.name,this.application.url.port)
   }
 
+  getApplicationServices(){
+    return this.apiService.getServices(this.application.robotName,this.application.name)
+  }
+
   checkAsyncRequestStatus(requestID:string,initCallback:() => void = () => {},runningCallback: () => void = () => {},doneCallback: (retval:any) => void = () => {},failedCallback: () => void = () => {}){
     return this.apiService.checkAsyncRequestStatus(requestID,initCallback,runningCallback,doneCallback,failedCallback)
   }

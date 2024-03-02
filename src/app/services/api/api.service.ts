@@ -6,7 +6,7 @@ import {catchError, forkJoin, interval, map, mergeMap, of, switchMap, takeWhile,
 import {GetRequestStatusResponse} from "./types/GetRequestStatusResponse";
 import {ICubRequestStatus} from "../../types/ICubRequestStatus";
 import {Application} from "../../types/Application";
-import {FSM, FSMNode, FSMEdge} from "../../types/FSM";
+import {FSM, FSMEdge, FSMNode} from "../../types/FSM";
 import {GetApplicationArgsTemplateResponse} from "./types/GetApplicationArgsTemplateResponse";
 import {ApplicationArgsTemplate} from "../../types/ApplicationArgsTemplate";
 import {ApplicationArgType} from "../../types/ApplicationArgType";
@@ -23,6 +23,7 @@ import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
 import {LocalStorageService} from "../local-storage.service";
 import {getApplicationFSMResponse} from "./types/GetApplicationFSMResponse";
 import {SessionStorageService} from "../session-storage.service";
+import {Service, ServiceState} from "../../types/Service";
 
 @Injectable({
   providedIn: 'root'
@@ -197,7 +198,18 @@ export class ApiService implements IApiService {
     const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub/${robotName}/${appName}`;
     return this.http.get<GetApplicationsServicesResponse>(path).pipe(
       map(response => {
-        return Object.entries(response).map(([key, value]) => value)
+        let services:Service[] = Object.entries(response).map(([name, service]) =>{
+          const argsTemplate = this.getArgsTemplate(service.signature);
+          const newService:Service = {
+            name:name,
+            argsTemplate:argsTemplate,
+            args:{},
+            state:ServiceState.ACTIVE
+          }
+          return newService
+        })
+
+        return services
       })
     )
   }

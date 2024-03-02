@@ -1,7 +1,8 @@
 
 export interface ServiceListItem{
   name:string,
-  url:string
+  url:string,
+  signature:any
 }
 
 
