@@ -22,6 +22,7 @@ import {IApiService} from "./api.service.interface";
 import {GetRobotActionsResponse} from "./types/GetRobotActionsResponse";
 import {LocalStorageService} from "../local-storage.service";
 import {getApplicationFSMResponse} from "./types/GetApplicationFSMResponse";
+import {SessionStorageService} from "../session-storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class ApiService implements IApiService {
 
   private asyncRequestsStatus: { [key: string]: ICubRequestStatus } = {}
 
-  constructor(private http: HttpClient,private localStorageService:LocalStorageService) {
+  constructor(private http: HttpClient,private localStorageService:LocalStorageService,private sessionStorageService:SessionStorageService) {
   }
 
   getRobots() {
@@ -77,6 +78,7 @@ export class ApiService implements IApiService {
             }),
             map(argsTemplate => {
               application.argsTemplate = argsTemplate;
+              application.args = this.sessionStorageService.getApplicationArgs(robotName,application.name) || {}
               const savedDashboard = this.localStorageService.getDashboardConfig(application)
               for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
                 const pluginDefaultData = (savedDashboard && savedDashboard[pluginName]) ? savedDashboard[pluginName] : defaultDashboardConfig[pluginName];
@@ -134,7 +136,7 @@ export class ApiService implements IApiService {
   }
 
   getApplicationArgsTemplate(robotName: string, appName: string, appPort: string) {
-    return this.runService<GetApplicationArgsTemplateResponse>(robotName, appName, appPort, "getArgsTemplate").pipe(
+    return this.runService<GetApplicationArgsTemplateResponse>(robotName, appName, appPort, "utils.getArgsTemplate").pipe(
       map(response => {
         //console.log("ARGSTEMPLATE: ",response)
         return this.getArgsTemplate(response)
@@ -143,7 +145,10 @@ export class ApiService implements IApiService {
   }
 
   setApplicationArgs(robotName: string, appName: string, appPort: string, args) {
-    return this.runService(robotName, appName, appPort, "setArgs", {"input_args": args})
+    return this.runService(robotName, appName, appPort, "utils.setArgs", {"input_args": args})
+  }
+  applicatioConfigure(robotName: string, appName: string, appPort: string, args) {
+    return this.runService(robotName, appName, appPort, "utils.configure", {"input_args": args})
   }
 
   getApplicationFSM(robotName: string, appName: string, appPort: string) {
@@ -257,84 +262,84 @@ export class ApiService implements IApiService {
     return this.runService<string>(robotName, appName, appPort, "fsm.getCurrentState")
   }
 
-  emoAngry(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.angry")
+  emoAngry(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.angry")
   }
 
-  emoClosingEyes(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.closingEyes")
+  emoClosingEyes(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.closingEyes")
   }
 
-  emoCun(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.cun")
+  emoCun(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.cun")
   }
 
-  emoEbSmile(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.eb_smile")
+  emoEbSmile(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.eb_smile")
   }
 
-  emoEbSurprised(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.eb_surprised")
+  emoEbSurprised(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.eb_surprised")
   }
 
-  emoEvil(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "helper", "emo.evil")
+  emoEvil(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.evil")
   }
 
-  emoNeutral(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.neutral")
+  emoNeutral(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.neutral")
   }
 
-  emoOpeningEyes(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.openingEyes")
+  emoOpeningEyes(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.openingEyes")
   }
 
-  emoSad(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.sad")
+  emoSad(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.sad")
   }
 
-  emoSendCmd(robotName: string, part: ICubEmoPart, emotion: ICubEmoEmotion) {
-    return this.runService(robotName, "helper", this.port, "emo.sendCmd", {part: part, emo: emotion})
+  emoSendCmd(robotName: string, appName: string, appPort: string, part: ICubEmoPart, emotion: ICubEmoEmotion) {
+    return this.runService(robotName, appName, appPort, "helper.emo.sendCmd", {part: part, emo: emotion})
   }
 
-  emoSetBrightness(robotName: string, brightness: 0 | 1 | 2 | 3 | 4 | 5) {
-    return this.runService(robotName, "helper", this.port, "emo.setBrightness", {brightness: brightness})
+  emoSetBrightness(robotName: string, appName: string, appPort: string, brightness: 0 | 1 | 2 | 3 | 4 | 5) {
+    return this.runService(robotName, appName, appPort, "helper.emo.setBrightness", {brightness: brightness})
   }
 
-  emoSetColor(robotName: string, color: ICubEmoColor) {
-    return this.runService(robotName, "helper", this.port, "emo.setColor", {color: color})
+  emoSetColor(robotName: string, appName: string, appPort: string, color: ICubEmoColor) {
+    return this.runService(robotName, appName, appPort, "helper.emo.setColor", {color: color})
   }
 
-  emoSmile(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.smile")
+  emoSmile(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.smile")
   }
 
-  emoSurprised(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "emo.surprised")
+  emoSurprised(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.emo.surprised")
   }
 
-  gazeBlockEyes(robotName: string, vergence: number) {
-    return this.runService(robotName, "helper", this.port, "gaze.blockEyes", {vergence: vergence})
+  gazeBlockEyes(robotName: string, appName: string, appPort: string, vergence: number) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.blockEyes", {vergence: vergence})
   }
 
-  gazeBlockNeck(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "gaze.blockNeck")
+  gazeBlockNeck(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.blockNeck")
   }
 
-  gazeClearEyes(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "gaze.clearEyes")
+  gazeClearEyes(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.clearEyes")
   }
 
-  gazeClearNeck(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "gaze.clearNeck")
+  gazeClearNeck(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.clearNeck")
   }
 
-  gazeInit(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "gaze.init")
+  gazeInit(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.init")
   }
 
-  gazeLookAtAbsAngles(robotName: string, azimuth: number, elevation: number, vergence: number, waitMotionDone: boolean = true, timeout: number = 0.0) {
-    return this.runService(robotName, "helper", this.port, "gaze.lookAtAbsAngles", {
+  gazeLookAtAbsAngles(robotName: string, appName: string, appPort: string, azimuth: number, elevation: number, vergence: number, waitMotionDone: boolean = true, timeout: number = 0.0) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.lookAtAbsAngles", {
       azi: azimuth,
       ele: elevation,
       ver: vergence,
@@ -343,8 +348,8 @@ export class ApiService implements IApiService {
     })
   }
 
-  gazeLookAtFixationPoint(robotName: string, x: number, y: number, z: number, waitMotionDone: boolean = true, timeout: number = 0.0) {
-    return this.runService(robotName, "helper", this.port, "gaze.lookAtFixationPoint", {
+  gazeLookAtFixationPoint(robotName: string, appName: string, appPort: string, x: number, y: number, z: number, waitMotionDone: boolean = true, timeout: number = 0.0) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.lookAtFixationPoint", {
       x: x,
       y: y,
       z: z,
@@ -353,8 +358,8 @@ export class ApiService implements IApiService {
     })
   }
 
-  gazeLookAtRelAngles(robotName: string, azimuth: number, elevation: number, vergence: number, waitMotionDone: boolean = true, timeout: number = 0.0) {
-    return this.runService(robotName, "helper", this.port, "gaze.lookAtRelAngles", {
+  gazeLookAtRelAngles(robotName: string, appName: string, appPort: string, azimuth: number, elevation: number, vergence: number, waitMotionDone: boolean = true, timeout: number = 0.0) {
+    return this.runService(robotName, appName, this.port, "helper.gaze.lookAtRelAngles", {
       azi: azimuth,
       ele: elevation,
       ver: vergence,
@@ -363,56 +368,56 @@ export class ApiService implements IApiService {
     })
   }
 
-  gazeReset(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "gaze.reset")
+  gazeReset(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.reset")
   }
 
-  gazeSetParams(robotName: string, neck_tt: number, eyes_tt: number) {
-    return this.runService(robotName, "helper", this.port, "gaze.setParams", {neck_tt: neck_tt, eyes_tt: eyes_tt})
+  gazeSetParams(robotName: string, appName: string, appPort: string, neck_tt: number, eyes_tt: number) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.setParams", {neck_tt: neck_tt, eyes_tt: eyes_tt})
   }
 
-  gazeSetTrackingMode(robotName: string, mode: boolean) {
-    return this.runService(robotName, "helper", this.port, "gaze.setTrackingMode", {mode: mode})
+  gazeSetTrackingMode(robotName: string, appName: string, appPort: string, mode: boolean) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.setTrackingMode", {mode: mode})
   }
 
-  gazeWaitMotionDone(robotName: string, period: number = 0.1, timeout: number = 0) {
-    return this.runService(robotName, "helper", this.port, "gaze.waitMotionDone", {period: period, timeout: timeout})
+  gazeWaitMotionDone(robotName: string, appName: string, appPort: string, period: number = 0.1, timeout: number = 0) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.waitMotionDone", {period: period, timeout: timeout})
   }
 
-  gazeWaitMotionOnset(robotName: string, speedRef: number = 0, period: number = 0.1, maxAttempts: number = 50) {
-    return this.runService(robotName, "helper", this.port, "gaze.waitMotionOnset", {
+  gazeWaitMotionOnset(robotName: string, appName: string, appPort: string, speedRef: number = 0, period: number = 0.1, maxAttempts: number = 50) {
+    return this.runService(robotName, appName, appPort, "helper.gaze.waitMotionOnset", {
       speed_ref: speedRef,
       period: period,
       max_attempts: maxAttempts
     })
   }
 
-  speechClose(robotName: string) {
-    return this.runService(robotName, "helper", this.port, "speech.close")
+  speechClose(robotName: string, appName: string, appPort: string) {
+    return this.runService(robotName, appName, appPort, "helper.speech.close")
   }
 
-  speechSay(robotName: string, sentence: string, waitActionDone: boolean = true) {
-    return this.runService(robotName, "helper", this.port, "speech.say", {
+  speechSay(robotName: string, appName: string, appPort: string, sentence: string, waitActionDone: boolean = true) {
+    return this.runService(robotName, appName, appPort, "helper.speech.say", {
       something: sentence,
       waitActionDone: waitActionDone
     })
   }
 
-  speechSayAsync(robotName: string, sentence: string, waitActionDone: boolean = true) {
-    return this.runServiceAsync(robotName, "helper", this.port, "speech.say", {
+  speechSayAsync(robotName: string, appName: string, appPort: string, sentence: string, waitActionDone: boolean = true) {
+    return this.runServiceAsync(robotName, appName, appPort, "helper.speech.say", {
       something: sentence,
       waitActionDone: waitActionDone
     })
   }
 
-  camLeftGetURI(robotName: string) {
-    return this.runService<string>(robotName, "helper", this.port, "cam_left.getURI").pipe(
+  camLeftGetURI(robotName: string, appName: string, appPort: string,) {
+    return this.runService<string>(robotName, appName, appPort, "helper.cam_left.getURI").pipe(
       map(stringURL => new URL(stringURL))
     )
   }
 
-  camLeftGetImgRes(robotName: string) {
-    return this.runService<number[]>(robotName, "helper", this.port, "cam_left.getImgRes").pipe(
+  camLeftGetImgRes(robotName: string, appName: string, appPort: string,) {
+    return this.runService<number[]>(robotName, appName, appPort, "helper.cam_left.getImgRes").pipe(
       map(arrayRes => {
         let imgFrameSize = {
           width: 0,
@@ -437,8 +442,8 @@ export class ApiService implements IApiService {
     )
   }
 
-  camRightGetImgRes(robotName: string) {
-    return this.runService<number[]>(robotName, "helper", this.port, "cam_right.getImgRes").pipe(
+  camRightGetImgRes(robotName: string, appName: string, appPort: string,) {
+    return this.runService<number[]>(robotName, appName, appPort, "helper.cam_right.getImgRes").pipe(
       map(arrayRes => {
         let imgFrameSize = {
           width: 0,
@@ -463,22 +468,22 @@ export class ApiService implements IApiService {
     )
   }
 
-  camRightGetURI(robotName: string) {
-    return this.runService<string>(robotName, "helper", this.port, "cam_right.getURI").pipe(
+  camRightGetURI(robotName: string, appName: string, appPort: string,) {
+    return this.runService<string>(robotName, appName, appPort, "helper.cam_right.getURI").pipe(
       map(stringURL => new URL(stringURL))
     )
   }
 
-  getRobotActions(robotName: string) {
-    return this.runService<GetRobotActionsResponse>(robotName, "helper", this.port, "actions.getActions")
+  getRobotActions(robotName: string, appName: string, appPort: string,) {
+    return this.runService<GetRobotActionsResponse>(robotName, appName, appPort, "helper.actions.getActions")
   }
 
-  playActionSync(robotName:string,actionID:string){
-    return this.runService<void>(robotName,"helper",this.port,"actions.playAction",{action_id:actionID})
+  playActionSync(robotName:string, appName: string, appPort: string,actionID:string){
+    return this.runService<void>(robotName,appName,appPort,"helper.actions.playAction",{action_id:actionID})
   }
 
-  playActionAsync(robotName:string,actionID:string){
-    return this.runServiceAsync(robotName,"helper",this.port,"actions.playAction",{action_id:actionID})
+  playActionAsync(robotName:string, appName: string, appPort: string, actionID:string){
+    return this.runServiceAsync(robotName,appName,appPort,"helper.actions.playAction",{action_id:actionID})
   }
 
 }

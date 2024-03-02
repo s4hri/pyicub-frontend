@@ -49,7 +49,7 @@ export class AppStateService {
 
   }
 
-  private initApp(){ 
+  private initApp(){
     this.isLoadingRobots = true;
 
     this.apiService.getRobots().subscribe(robots => {
@@ -100,9 +100,10 @@ export class AppStateService {
     this.sessionStorageService.saveSelectedApplication(application.name)
   }
 
-  setApplicationArgs(application:Application,args){
+  configureApplication(application:Application,args){
     application.args = args;
-    return this.apiService.setApplicationArgs(application.robotName,application.name,application.url.port,args)
+    this.sessionStorageService.saveApplicationArgs(application.robotName,application.name,args)
+    return this.apiService.applicatioConfigure(application.robotName,application.name,application.url.port,args)
   }
 
   public saveDashboardConfig(application:Application){

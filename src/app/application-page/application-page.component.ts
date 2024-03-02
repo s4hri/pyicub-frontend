@@ -7,6 +7,8 @@ import {ApplicationArgsDialogComponent} from "../application-args-dialog/applica
 import {ActivatedRoute, Router} from "@angular/router";
 import {Application} from "../types/Application";
 import {SavedDashboardDialogComponent} from "../saved-dashboard-dialog/saved-dashboard-dialog.component";
+import {RestoreSessionDialogComponent} from "../restore-session-dialog/restore-session-dialog.component";
+import {SessionStorageService} from "../services/session-storage.service";
 
 @Component({
   selector: 'app-application-page',
@@ -16,10 +18,10 @@ import {SavedDashboardDialogComponent} from "../saved-dashboard-dialog/saved-das
 export class ApplicationPageComponent implements OnInit{
 
   application:Application;
-  areApplicationArgsSet = false;
+  isApplicationConfigured = false;
   editModeEnabled = false;
 
-  constructor(private route:ActivatedRoute, private router:Router, public appState:AppStateService,public dialog: MatDialog,private changeDec:ChangeDetectorRef) {}
+  constructor(private route:ActivatedRoute, private router:Router, public appState:AppStateService,public dialog: MatDialog,private changeDec:ChangeDetectorRef, private sessionStorage:SessionStorageService) {}
 
   openSettingsDialog() {
     const dialogRef = this.dialog.open(PluginDialogComponent, {
@@ -39,10 +41,29 @@ export class ApplicationPageComponent implements OnInit{
     })
 
     dialogRef.afterClosed().subscribe(args => {
-      this.appState.setApplicationArgs(this.application,args).subscribe(() => {
-        this.areApplicationArgsSet = true;
+      this.appState.configureApplication(this.application,args).subscribe(() => {
+        this.isApplicationConfigured = true;
       })
     })
+  }
+
+  openRestoreSessionDialog(){
+    const dialogRef = this.dialog.open(RestoreSessionDialogComponent,{
+      disableClose: true
+    })
+
+    dialogRef.afterClosed().subscribe(shouldRestore => {
+
+      if(!shouldRestore){
+        this.application.args = {};
+        this.sessionStorage.saveApplicationArgs(this.application.robotName,this.application.name,{})
+        this.openArgsDialog()
+      } else {
+        this.isApplicationConfigured = true;
+      }
+
+    })
+
   }
 
   openSavedDashboardDialog(){
@@ -97,10 +118,13 @@ export class ApplicationPageComponent implements OnInit{
           //quindi se argsTemplate non è vuoto e args lo è
           const argsTemplateExists = Object.keys(this.application.argsTemplate).length !== 0
           const areArgsSet = this.application.args && Object.keys(this.application.args).length !== 0
-          if( argsTemplateExists && !areArgsSet ){
+
+          if(!argsTemplateExists){
+            this.isApplicationConfigured = true;
+          }else if(!areArgsSet){
             this.openArgsDialog()
           } else {
-            this.areApplicationArgsSet = true
+            this.openRestoreSessionDialog()
           }
 
           //Il timeout senza durate serve per mettere l'evento in coda a tutte le altre attività asincrone

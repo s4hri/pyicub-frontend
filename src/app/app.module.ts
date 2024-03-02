@@ -39,6 +39,7 @@ import { ActionsManagerComponent } from './plugins/actions-manager/actions-manag
 import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-dialog.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { SavedDashboardDialogComponent } from './saved-dashboard-dialog/saved-dashboard-dialog.component';
+import { RestoreSessionDialogComponent } from './restore-session-dialog/restore-session-dialog.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { SavedDashboardDialogComponent } from './saved-dashboard-dialog/saved-da
     ActionsManagerComponent,
     WidgetErrorDialogComponent,
     SavedDashboardDialogComponent,
+    RestoreSessionDialogComponent,
   ],
     imports: [
         BrowserModule,

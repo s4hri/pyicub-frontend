@@ -18,78 +18,81 @@ import {ApplicationArgType} from "../../types/ApplicationArgType";
   providedIn: 'root'
 })
 export class ApiMockService implements IApiService {
-  camLeftGetImgRes(robotName: string): Observable<{ width: number; height: number }> {
+  camLeftGetImgRes(robotName: string, appName: string, appPort: string): Observable<{ width: number; height: number }> {
     return undefined;
   }
 
-  camLeftGetURI(robotName: string): Observable<URL> {
+  camLeftGetURI(robotName: string, appName: string, appPort: string): Observable<URL> {
     return undefined;
   }
 
-  camRightGetImgRes(robotName: string): Observable<{ width: number; height: number }> {
+  camRightGetImgRes(robotName: string, appName: string, appPort: string): Observable<{
+    width: number;
+    height: number
+  }> {
     return undefined;
   }
 
-  camRightGetURI(robotName: string): Observable<URL> {
+  camRightGetURI(robotName: string, appName: string, appPort: string): Observable<URL> {
     return undefined;
   }
 
   checkAsyncRequestStatus(requestID: string, initCallback: () => void, runningCallback: () => void, doneCallback: (retval: any) => void, failedCallback: () => void): void {
   }
 
-  emoAngry(robotName: string): Observable<any> {
+  emoAngry(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoClosingEyes(robotName: string): Observable<any> {
+  emoClosingEyes(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoCun(robotName: string): Observable<any> {
+  emoCun(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoEbSmile(robotName: string): Observable<any> {
+  emoEbSmile(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoEbSurprised(robotName: string): Observable<any> {
+  emoEbSurprised(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoEvil(robotName: string): Observable<any> {
+  emoEvil(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoNeutral(robotName: string): Observable<any> {
+  emoNeutral(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoOpeningEyes(robotName: string): Observable<any> {
+  emoOpeningEyes(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoSad(robotName: string): Observable<any> {
+  emoSad(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoSendCmd(robotName: string, part: ICubEmoPart, emotion: ICubEmoEmotion): Observable<any> {
+  emoSendCmd(robotName: string, appName: string, appPort: string, part: ICubEmoPart, emotion: ICubEmoEmotion): Observable<any> {
     return undefined;
   }
 
-  emoSetBrightness(robotName: string, brightness: 0 | 1 | 2 | 3 | 4 | 5): Observable<any> {
+  emoSetBrightness(robotName: string, appName: string, appPort: string, brightness: 0 | 1 | 2 | 3 | 4 | 5): Observable<any> {
     return undefined;
   }
 
-  emoSetColor(robotName: string, color: ICubEmoColor): Observable<any> {
+  emoSetColor(robotName: string, appName: string, appPort: string, color: ICubEmoColor): Observable<any> {
     return undefined;
   }
 
-  emoSmile(robotName: string): Observable<any> {
+  emoSmile(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  emoSurprised(robotName: string): Observable<any> {
+  emoSurprised(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
@@ -97,55 +100,55 @@ export class ApiMockService implements IApiService {
     return undefined;
   }
 
-  gazeBlockEyes(robotName: string, vergence: number): Observable<any> {
+  gazeBlockEyes(robotName: string, appName: string, appPort: string, vergence: number): Observable<any> {
     return undefined;
   }
 
-  gazeBlockNeck(robotName: string): Observable<any> {
+  gazeBlockNeck(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  gazeClearEyes(robotName: string): Observable<any> {
+  gazeClearEyes(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  gazeClearNeck(robotName: string): Observable<any> {
+  gazeClearNeck(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  gazeInit(robotName: string): Observable<any> {
+  gazeInit(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  gazeLookAtAbsAngles(robotName: string, azimuth: number, elevation: number, vergence: number, waitMotionDone?: boolean, timeout?: number): Observable<any> {
+  gazeLookAtAbsAngles(robotName: string, appName: string, appPort: string, azimuth: number, elevation: number, vergence: number, waitMotionDone?: boolean, timeout?: number): Observable<any> {
     return undefined;
   }
 
-  gazeLookAtFixationPoint(robotName: string, x: number, y: number, z: number, waitMotionDone?: boolean, timeout?: number): Observable<any> {
+  gazeLookAtFixationPoint(robotName: string, appName: string, appPort: string, x: number, y: number, z: number, waitMotionDone?: boolean, timeout?: number): Observable<any> {
     return undefined;
   }
 
-  gazeLookAtRelAngles(robotName: string, azimuth: number, elevation: number, vergence: number, waitMotionDone?: boolean, timeout?: number): Observable<any> {
+  gazeLookAtRelAngles(robotName: string, appName: string, appPort: string, azimuth: number, elevation: number, vergence: number, waitMotionDone?: boolean, timeout?: number): Observable<any> {
     return undefined;
   }
 
-  gazeReset(robotName: string): Observable<any> {
+  gazeReset(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  gazeSetParams(robotName: string, neck_tt: number, eyes_tt: number): Observable<any> {
+  gazeSetParams(robotName: string, appName: string, appPort: string, neck_tt: number, eyes_tt: number): Observable<any> {
     return undefined;
   }
 
-  gazeSetTrackingMode(robotName: string, mode: boolean): Observable<any> {
+  gazeSetTrackingMode(robotName: string, appName: string, appPort: string, mode: boolean): Observable<any> {
     return undefined;
   }
 
-  gazeWaitMotionDone(robotName: string, period?: number, timeout?: number): Observable<any> {
+  gazeWaitMotionDone(robotName: string, appName: string, appPort: string, period?: number, timeout?: number): Observable<any> {
     return undefined;
   }
 
-  gazeWaitMotionOnset(robotName: string, speedRef?: number, period?: number, maxAttempts?: number): Observable<any> {
+  gazeWaitMotionOnset(robotName: string, appName: string, appPort: string, speedRef?: number, period?: number, maxAttempts?: number): Observable<any> {
     return undefined;
   }
 
@@ -161,7 +164,7 @@ export class ApiMockService implements IApiService {
     return undefined;
   }
 
-  getRobotActions(robotName: string): Observable<any> {
+  getRobotActions(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
@@ -248,11 +251,11 @@ export class ApiMockService implements IApiService {
     return undefined;
   }
 
-  playActionAsync(robotName: string, actionID: string): Observable<any> {
+  playActionAsync(robotName: string, appName: string, appPort: string, actionID: string): Observable<any> {
     return undefined;
   }
 
-  playActionSync(robotName: string, actionID: string): Observable<any> {
+  playActionSync(robotName: string, appName: string, appPort: string, actionID: string): Observable<any> {
     return undefined;
   }
 
@@ -268,16 +271,17 @@ export class ApiMockService implements IApiService {
     return undefined;
   }
 
-  speechClose(robotName: string): Observable<any> {
+  speechClose(robotName: string, appName: string, appPort: string): Observable<any> {
     return undefined;
   }
 
-  speechSay(robotName: string, sentence: string, waitActionDone?: boolean): Observable<any> {
+  speechSay(robotName: string, appName: string, appPort: string, sentence: string, waitActionDone?: boolean): Observable<any> {
     return undefined;
   }
 
-  speechSayAsync(robotName: string, sentence: string, waitActionDone?: boolean): Observable<string> {
+  speechSayAsync(robotName: string, appName: string, appPort: string, sentence: string, waitActionDone?: boolean): Observable<string> {
     return undefined;
   }
+
 
 }
