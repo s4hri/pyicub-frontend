@@ -14,7 +14,7 @@
     </button>
   </div>
   <div style="flex:1">
-    <app-dashboard *ngIf="isApplicationConfigured" [application]="application" [editModeEnabled]="editModeEnabled"></app-dashboard>
+    <app-dashboard *ngIf="canShowApplication" [application]="application" [editModeEnabled]="editModeEnabled"></app-dashboard>
   </div>
 </div>
 

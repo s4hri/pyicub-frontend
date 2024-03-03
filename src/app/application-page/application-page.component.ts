@@ -18,7 +18,7 @@ import {SessionStorageService} from "../services/session-storage.service";
 export class ApplicationPageComponent implements OnInit{
 
   application:Application;
-  isApplicationConfigured = false;
+  canShowApplication = false;
   editModeEnabled = false;
 
   constructor(private route:ActivatedRoute, private router:Router, public appState:AppStateService,public dialog: MatDialog,private changeDec:ChangeDetectorRef, private sessionStorage:SessionStorageService) {}
@@ -42,7 +42,8 @@ export class ApplicationPageComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe(args => {
       this.appState.configureApplication(this.application,args).subscribe(() => {
-        this.isApplicationConfigured = true;
+        this.application.isConfigured = true;
+        this.canShowApplication = true;
       })
     })
   }
@@ -53,13 +54,27 @@ export class ApplicationPageComponent implements OnInit{
     })
 
     dialogRef.afterClosed().subscribe(shouldRestore => {
+      const argsTemplateExists = Object.keys(this.application.argsTemplate).length !== 0
 
+      //se l'utente ha selezionato di ripristinare la sessione
       if(!shouldRestore){
-        this.application.args = {};
-        this.sessionStorage.saveApplicationArgs(this.application.robotName,this.application.name,{})
-        this.openArgsDialog()
+
+        //ed esistono argomenti da selezionare, mostro il popup degli argomenti
+        if(argsTemplateExists){
+          this.application.args = {};
+          this.sessionStorage.saveApplicationArgs(this.application.robotName,this.application.name,{})
+          this.openArgsDialog()
+
+          //e non esistono argomenti da selezionare, invio la configure vuota
+        } else {
+          this.appState.configureApplication(this.application,{}).subscribe(() => {
+            this.application.isConfigured = true;
+            this.canShowApplication = true;
+          })
+        }
+
       } else {
-        this.isApplicationConfigured = true;
+        this.canShowApplication = true;
       }
 
     })
@@ -90,6 +105,7 @@ export class ApplicationPageComponent implements OnInit{
         this.route.paramMap.subscribe(params => {
           const robotName = params.get('robotName');
           const appName = params.get('appName');
+
           //se i parametri inseriti non corrispondono a nessuna coppia robot-applicazione reindirizzo alla HomePage
           let selectedRobot = robots.find(robot => robot.name === robotName)
 
@@ -107,6 +123,7 @@ export class ApplicationPageComponent implements OnInit{
             return
           }
 
+
           if(!this.appState.selectedRobot || this.appState.selectedRobot.name !== robotName){
             this.appState.selectRobot(selectedRobot)
           }
@@ -118,14 +135,33 @@ export class ApplicationPageComponent implements OnInit{
           //quindi se argsTemplate non è vuoto e args lo è
           const argsTemplateExists = Object.keys(this.application.argsTemplate).length !== 0
           const areArgsSet = this.application.args && Object.keys(this.application.args).length !== 0
+          const isApplicationConfigured = this.application.isConfigured;
 
+          //se l'applicazione è gia stata configurata mostro il dialog per scegliere se ripristinare la sessione
+          if(isApplicationConfigured){
+            this.openRestoreSessionDialog()
+
+            //se l'applicazione non è gia stata configurata e non ci sono argomenti da configurare, invio la configure senza parametri
+          } else if(!argsTemplateExists){
+            this.appState.configureApplication(this.application, {}).subscribe(() => {
+              this.application.isConfigured = true;
+              this.canShowApplication = true;
+            })
+
+            //se l'applicazione non è gia stata configurata, ci sono argomenti da configurare e non sono stati ancora selezionati, mostro il dialog per la scelta degli argomenti
+          } else if(!areArgsSet){
+            this.openArgsDialog()
+          }
+
+          /*
           if(!argsTemplateExists){
-            this.isApplicationConfigured = true;
+            this.canShowApplication = true;
           }else if(!areArgsSet){
             this.openArgsDialog()
           } else {
             this.openRestoreSessionDialog()
           }
+          */
 
           //Il timeout senza durate serve per mettere l'evento in coda a tutte le altre attività asincrone
           setTimeout(() => {

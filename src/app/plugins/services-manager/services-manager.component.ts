@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { WidgetBaseComponent } from '../../widget-base/widget-base.component';
 import {Service, ServiceState} from "../../types/Service";
 import {ApplicationArgType} from "../../types/ApplicationArgType";
+import {Series} from "d3-shape";
 
 @Component({
   selector: 'app-services-manager',
@@ -32,6 +33,16 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
       return this.services.filter(service => service.name.toLowerCase().includes(this.search.toLowerCase()))
     }
 
+  }
+
+  canRunService(service:Service){
+    let canRun = true;
+    for(let arg of Object.keys(service.argsTemplate)){
+      if(!service.args[arg]){
+        canRun = false;
+      }
+    }
+    return canRun
   }
 
   hasArguments(service:Service){
@@ -134,4 +145,5 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
 
   protected readonly ApplicationArgType = ApplicationArgType;
   protected readonly Object = Object;
+  protected readonly ServiceState = ServiceState;
 }

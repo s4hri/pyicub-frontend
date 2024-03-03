@@ -6,6 +6,9 @@ import {
 } from '@angular/core';
 import {DisplayGrid, GridsterConfig, GridsterItem, GridsterItemComponent, GridType} from "angular-gridster2";
 import {Application} from "../types/Application";
+import {MatDialog} from "@angular/material/dialog";
+import {RestoreSessionDialogComponent} from "../restore-session-dialog/restore-session-dialog.component";
+import {DashboardFullDialogComponent} from "../dashboard-full-dialog/dashboard-full-dialog.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -50,7 +53,13 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  constructor(private cdRef: ChangeDetectorRef) {
+  constructor(private cdRef: ChangeDetectorRef,private dialog:MatDialog) {
+  }
+
+  openFullDashboardDialog(){
+    const dialogRef = this.dialog.open(DashboardFullDialogComponent,{
+      disableClose: true
+    })
   }
 
   itemChange(item:GridsterItem, itemComponent:GridsterItemComponent) {
@@ -69,7 +78,16 @@ export class DashboardComponent implements OnInit {
 
   itemInit(item:GridsterItem, itemComponent:GridsterItemComponent) {
 
+    //se nella dashboard non c'è lo spazio necessario a mostrare il plugin, lo disabilita e mostra un messaggio all'utente
+    if(itemComponent.notPlaced){
+      const plugin = this.application.plugins.find(plugin => plugin.name === item['id'])
+      this.application.togglePlugin(plugin)
+      this.openFullDashboardDialog()
+      return
+    }
+
     let intervalID = setInterval(() => {
+
       if (itemComponent.width && itemComponent.height) {
         this.itemsSize[item['id']] = {
           width: itemComponent.width,

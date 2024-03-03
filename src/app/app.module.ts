@@ -42,6 +42,7 @@ import { SavedDashboardDialogComponent } from './saved-dashboard-dialog/saved-da
 import { RestoreSessionDialogComponent } from './restore-session-dialog/restore-session-dialog.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import { ServicesManagerComponent } from './plugins/services-manager/services-manager.component';
+import { DashboardFullDialogComponent } from './dashboard-full-dialog/dashboard-full-dialog.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { ServicesManagerComponent } from './plugins/services-manager/services-ma
     SavedDashboardDialogComponent,
     RestoreSessionDialogComponent,
     ServicesManagerComponent,
+    DashboardFullDialogComponent,
   ],
   imports: [
     BrowserModule,

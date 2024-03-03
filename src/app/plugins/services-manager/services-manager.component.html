@@ -60,7 +60,7 @@
                   </div>
                 </form>
 
-                <button mat-button (click)="onServiceClick(service)">
+                <button mat-button (click)="onServiceClick(service)" [disabled]="!canRunService(service) || service.state!==ServiceState.ACTIVE">
                   RUN SERVICE
                 </button>
 

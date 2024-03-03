@@ -15,6 +15,7 @@ export class Application{
   description:string
   args:ApplicationArgs = {};
   argsTemplate:ApplicationArgsTemplate = {}
+  isConfigured = false;
 
   private readonly _isLoading = new BehaviorSubject<boolean>(true)
   readonly isLoading$ = this._isLoading.asObservable();
@@ -55,21 +56,6 @@ export class Application{
     this.url = new URL(url);
     this.description = description;
     this.plugins = plugins;
-  }
-
-
-//TODO: da aggiornare
-  exportToJSON():string{
-    let json:{[key:string]:string} = {};
-    json["robotName"] = this.robotName;
-    json["name"] = this.name;
-    json["url"] = this.url.toString();
-    json["description"] = this.description;
-    let plugins = []
-    for(let plugin of this.plugins){
-      plugins.push(plugin.exportToJSON())
-    }
-    return JSON.stringify(json)
   }
 
 }
