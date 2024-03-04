@@ -63,9 +63,10 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
         }
       })
 
-      this.playActionAsync(selectedAction.actionID).subscribe(reqID => {
+      this.playActionAsync(`${this.application.name}.${selectedAction.actionID}`).subscribe(reqID => {
+        console.log(selectedAction.actionID)
 
-        //console.log("RISPOSTA PLAYACTION: ",reqID)
+        console.log("RISPOSTA PLAYACTION: ",reqID)
 
         const onRunning = () => {
           this.updateActionState(selectedAction, ActionState.RUNNING)
