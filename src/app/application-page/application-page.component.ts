@@ -63,7 +63,9 @@ export class ApplicationPageComponent implements OnInit{
         //ed esistono argomenti da selezionare, mostro il popup degli argomenti
         if(argsTemplateExists){
           this.application.args = {};
+          this.application.isConfigured = false;
           this.sessionStorage.saveApplicationArgs(this.application.robotName,this.application.name,{})
+          this.sessionStorage.saveIsApplicationConfigured(this.application.robotName,this.application.name,false)
           this.openArgsDialog()
 
           //e non esistono argomenti da selezionare, invio la configure vuota
