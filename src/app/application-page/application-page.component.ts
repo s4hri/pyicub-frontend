@@ -138,7 +138,6 @@ export class ApplicationPageComponent implements OnInit{
           const argsTemplateExists = Object.keys(this.application.argsTemplate).length !== 0
           const areArgsSet = this.application.args && Object.keys(this.application.args).length !== 0
           const isApplicationConfigured = this.application.isConfigured;
-          console.log(this.application)
           //se l'applicazione è gia stata configurata mostro il dialog per scegliere se ripristinare la sessione
           if(isApplicationConfigured){
 
