@@ -61,7 +61,7 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
         }
       })
 
-      this.runServiceAsync(selectedService.name,selectedService.args).subscribe(reqID => {
+      this.runServiceAsync(`${this.application.name}.${selectedService.name}`,selectedService.args).subscribe(reqID => {
 
         //console.log("RISPOSTA PLAYACTION: ",reqID)
 
@@ -125,11 +125,13 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
   ngOnInit() {
     this.getApplicationServices().subscribe({
         next: services => {
-          //const filteredActions = actions.filter(action => action.startsWith(this.application.name + ".")).map(action => action.substring(this.application.name.length + 1))
-          //const newActions: Action[] = filteredActions.map(action => {
-            //return {actionID: action, actionState: ActionState.ACTIVE}
-          //})
-          this.services = services;
+          const filteredServices = services.filter(service => service.name.startsWith(this.application.name + ".")).map(service => {
+            return {
+              ...service,
+              name:service.name.substring(this.application.name.length + 1)
+            }
+          })
+          this.services = filteredServices;
           this.isLoading = false;
           //console.log(this.actions)
         },

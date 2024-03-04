@@ -7,7 +7,7 @@ import {Application} from "../types/Application";
 import {AppStateService} from "../services/app-state.service";
 import {Plugin} from "../types/Plugin";
 
-///*
+/*
 @Component({
   selector: 'app-widget-base',
   templateUrl: './widget-base.component.html',
@@ -209,9 +209,9 @@ export class WidgetBaseComponent{
 
 }
 
-//*/
+*/
 
-/*
+///*
 @Component({
   selector: 'app-widget-base',
   templateUrl: './widget-base.component.html',
@@ -416,4 +416,4 @@ export class WidgetBaseComponent {
   }
 
 }
-*/
+//*/

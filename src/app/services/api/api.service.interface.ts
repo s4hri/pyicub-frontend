@@ -8,7 +8,7 @@ import { ICubEmoEmotion } from '../../types/ICubEmoEmotion';
 import { ICubEmoColor } from '../../types/ICubEmoColor';
 import {Injectable, InjectionToken} from "@angular/core";
 
-///*
+/*
 @Injectable({
   providedIn: 'root'
 })
@@ -66,9 +66,9 @@ export abstract class IApiService {
   }
 }
 
-//*/
+*/
 
-/*
+///*
 @Injectable({
   providedIn: 'root'
 })
@@ -125,4 +125,4 @@ export abstract class IApiService {
 
   }
 }
-*/
+//*/

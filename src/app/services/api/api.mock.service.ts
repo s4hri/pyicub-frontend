@@ -13,7 +13,7 @@ import * as defaultDashboardConfig from "../../defaultDashboardConfiguration.jso
 import {Plugin} from "../../types/Plugin";
 import {ApplicationArgType} from "../../types/ApplicationArgType";
 
-///*
+/*
 @Injectable({
   providedIn: 'root'
 })
@@ -286,9 +286,9 @@ export class ApiMockService implements IApiService {
 
 }
 
-//*/
+*/
 
-/*
+///*
 @Injectable({
   providedIn: 'root'
 })
@@ -556,4 +556,4 @@ export class ApiMockService implements IApiService {
   }
 
 }
-*/
+//*/

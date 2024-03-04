@@ -25,7 +25,7 @@ import {getApplicationFSMResponse} from "./types/GetApplicationFSMResponse";
 import {SessionStorageService} from "../session-storage.service";
 import {Service, ServiceState} from "../../types/Service";
 
-///*
+/*
 @Injectable({
   providedIn: 'root'
 })
@@ -501,9 +501,9 @@ export class ApiService implements IApiService {
 
 }
 
-//*/
+*/
 
-/*
+///*
 
 @Injectable({
   providedIn: 'root'
@@ -616,7 +616,7 @@ export class ApiService implements IApiService {
   }
 
   getApplicationArgsTemplate(robotName: string, appName: string, appPort: string) {
-    return this.runService<GetApplicationArgsTemplateResponse>(robotName, appName, appPort, "getArgsTemplate").pipe(
+    return this.runService<GetApplicationArgsTemplateResponse>(robotName, appName, appPort, "utils.getArgsTemplate").pipe(
       map(response => {
         //console.log("ARGSTEMPLATE: ",response)
         return this.getArgsTemplate(response)
@@ -625,7 +625,7 @@ export class ApiService implements IApiService {
   }
 
   setApplicationArgs(robotName: string, appName: string, appPort: string, args) {
-    return this.runService(robotName, appName, appPort, "setArgs", {"input_args": args})
+    return this.runService(robotName, appName, appPort, "utils.setArgs", {"input_args": args})
   }
 
   applicatioConfigure(robotName: string, appName: string, appPort: string, args) {
@@ -979,7 +979,6 @@ export class ApiService implements IApiService {
   }
 
 }
-
- */
+//*/
 
 
