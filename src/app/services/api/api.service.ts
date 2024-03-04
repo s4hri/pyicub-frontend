@@ -517,7 +517,7 @@ export class ApiService implements IApiService {
 
   private asyncRequestsStatus: { [key: string]: ICubRequestStatus } = {}
 
-  constructor(private http: HttpClient,private localStorageService:LocalStorageService) {
+  constructor(private http: HttpClient,private localStorageService:LocalStorageService, private sessionStorageService:SessionStorageService) {
   }
 
   getRobots() {
@@ -559,6 +559,8 @@ export class ApiService implements IApiService {
             }),
             map(argsTemplate => {
               application.argsTemplate = argsTemplate;
+              application.args = this.sessionStorageService.getApplicationArgs(robotName,application.name) || {}
+              application.isConfigured = this.sessionStorageService.getIsApplicationConfigured(robotName,application.name)
               const savedDashboard = this.localStorageService.getDashboardConfig(application)
               for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
                 const pluginDefaultData = (savedDashboard && savedDashboard[pluginName]) ? savedDashboard[pluginName] : defaultDashboardConfig[pluginName];
@@ -629,6 +631,7 @@ export class ApiService implements IApiService {
   }
 
   applicatioConfigure(robotName: string, appName: string, appPort: string, args) {
+    console.log("chiamata configure")
     return this.runService(robotName, appName, appPort, "utils.configure", {"input_args": args})
   }
 

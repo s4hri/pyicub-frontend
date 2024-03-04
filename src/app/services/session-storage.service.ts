@@ -42,6 +42,15 @@ public saveApplicationArgs(robotName:string,applicationName:string,args){
     sessionStorage.setItem(`${robotName}_${applicationName}_ARGS`,argsString)
 }
 
+public saveIsApplicationConfigured(robotName:string,applicationName:string,isConfigured:boolean){
+    sessionStorage.setItem(`${robotName}_${applicationName}_ISCONFIGURED`, isConfigured ? "true" : "false")
+}
+
+public getIsApplicationConfigured(robotName:string,applicationName:string):boolean{
+  const isConfiguredString = sessionStorage.getItem(`${robotName}_${applicationName}_ISCONFIGURED`);
+  return isConfiguredString === "true"
+}
+
 public getApplicationArgs(robotName:string,applicationName:string):DashboardConfig{
   const argsString = sessionStorage.getItem(`${robotName}_${applicationName}_ARGS`)
 
