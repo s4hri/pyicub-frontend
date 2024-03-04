@@ -43,6 +43,7 @@ export class ApplicationPageComponent implements OnInit{
     dialogRef.afterClosed().subscribe(args => {
       this.appState.configureApplication(this.application,args).subscribe(() => {
         this.application.isConfigured = true;
+        this.sessionStorage.saveIsApplicationConfigured(this.application.robotName,this.application.name,true)
         this.canShowApplication = true;
       })
     })
@@ -62,13 +63,16 @@ export class ApplicationPageComponent implements OnInit{
         //ed esistono argomenti da selezionare, mostro il popup degli argomenti
         if(argsTemplateExists){
           this.application.args = {};
+          this.application.isConfigured = false;
           this.sessionStorage.saveApplicationArgs(this.application.robotName,this.application.name,{})
+          this.sessionStorage.saveIsApplicationConfigured(this.application.robotName,this.application.name,false)
           this.openArgsDialog()
 
           //e non esistono argomenti da selezionare, invio la configure vuota
         } else {
           this.appState.configureApplication(this.application,{}).subscribe(() => {
             this.application.isConfigured = true;
+            this.sessionStorage.saveIsApplicationConfigured(this.application.robotName,this.application.name,true)
             this.canShowApplication = true;
           })
         }
@@ -136,15 +140,16 @@ export class ApplicationPageComponent implements OnInit{
           const argsTemplateExists = Object.keys(this.application.argsTemplate).length !== 0
           const areArgsSet = this.application.args && Object.keys(this.application.args).length !== 0
           const isApplicationConfigured = this.application.isConfigured;
-
           //se l'applicazione è gia stata configurata mostro il dialog per scegliere se ripristinare la sessione
           if(isApplicationConfigured){
+
             this.openRestoreSessionDialog()
 
             //se l'applicazione non è gia stata configurata e non ci sono argomenti da configurare, invio la configure senza parametri
           } else if(!argsTemplateExists){
             this.appState.configureApplication(this.application, {}).subscribe(() => {
               this.application.isConfigured = true;
+              this.sessionStorage.saveIsApplicationConfigured(this.application.robotName,this.application.name,true)
               this.canShowApplication = true;
             })
 
