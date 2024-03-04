@@ -3,10 +3,10 @@
     <mat-icon>menu</mat-icon>
   </button>
 
-  <div *ngIf="(selectedRobot$ | async) && router.url !== '/'" class="app-bar-CellContainer">
+  <div *ngIf="showAppbarRobotCell && (selectedRobot$ | async)" class="app-bar-CellContainer">
     <appbar-robot-cell (cellClicked)="onAppBarRobotCellClick($event)" [robot]="selectedRobot$ | async"/>
   </div>
-  <div *ngIf="(selectedRobot$ | async) && ((selectedRobot$ | async).selectedApplication) && router.url === '/icub/application'" class="app-bar-CellContainer">
+  <div *ngIf="showAppbarApplicationCell && (selectedRobot$ | async) && (selectedRobot$ | async).selectedApplication" class="app-bar-CellContainer"> 
     <appbar-application-cell (cellClicked)="onAppBarApplicationCellClick($event)"
                              [application]="(selectedRobot$ | async).selectedApplication"/>
   </div>

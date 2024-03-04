@@ -12,7 +12,7 @@ import {SessionStorageService} from "./session-storage.service";
 })
 export class AppStateService {
 
-  private readonly _availableRobots = new BehaviorSubject<Robot[]>([])
+  private readonly _availableRobots = new BehaviorSubject<Robot[]>(undefined)
   readonly availableRobots$ = this._availableRobots.asObservable();
 
   get availableRobots():Robot[]{
@@ -44,7 +44,7 @@ export class AppStateService {
   }
 
   constructor(public apiService:ApiService, private localStorageService:LocalStorageService,private sessionStorageService:SessionStorageService) {
-    console.log("COSTRUTTORE CHIAMATO")
+    //console.log("COSTRUTTORE CHIAMATO")
     this.initApp()
 
   }
@@ -53,22 +53,26 @@ export class AppStateService {
     this.isLoadingRobots = true;
 
     this.apiService.getRobots().subscribe(robots => {
-      console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
-      this.availableRobots = robots
+      //console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
+
+
+
       const selectedRobotName = this.sessionStorageService.getSelectedRobot()
       const selectedApplicationName = this.sessionStorageService.getSelectedApplication()
 
       if(selectedRobotName){
-        const robot = this.availableRobots.find(robot => robot.name === selectedRobotName)
+        const robot = robots.find(robot => robot.name === selectedRobotName)
 
-        if(selectedApplicationName){
+        if(robot && selectedApplicationName){
           const application = robot.applications.find(application => application.name === selectedApplicationName)
           robot.selectedApplication = application
         }
         this.selectedRobot = robot;
       }
 
+      this.availableRobots = robots
       this.isLoadingRobots = false;
+
 
     })
 
@@ -78,7 +82,7 @@ export class AppStateService {
     this.isLoadingRobots = true;
 
     this.apiService.getRobots().subscribe(robots => {
-      console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
+      //console.log("ROBOTS",JSON.parse(JSON.stringify(robots)))
       this.availableRobots = robots
       this.isLoadingRobots = false;
 
@@ -96,9 +100,10 @@ export class AppStateService {
     this.sessionStorageService.saveSelectedApplication(application.name)
   }
 
-  setApplicationArgs(application:Application,args){
+  configureApplication(application:Application,args){
     application.args = args;
-    return this.apiService.setApplicationArgs(application.robotName,application.name,application.url.port,args)
+    this.sessionStorageService.saveApplicationArgs(application.robotName,application.name,args)
+    return this.apiService.applicatioConfigure(application.robotName,application.name,application.url.port,args)
   }
 
   public saveDashboardConfig(application:Application){

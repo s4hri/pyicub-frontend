@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import {Application} from "../types/Application";
+import {DashboardConfig} from "./local-storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,23 @@ public getSelectedRobot(){
 
 public saveSelectedApplication(applicationName:string){
     return sessionStorage.setItem(this.SELECTED_APPLICATION_KEY,applicationName)
+}
+
+public saveApplicationArgs(robotName:string,applicationName:string,args){
+    const argsString = JSON.stringify(args)
+    sessionStorage.setItem(`${robotName}_${applicationName}_ARGS`,argsString)
+}
+
+public getApplicationArgs(robotName:string,applicationName:string):DashboardConfig{
+  const argsString = sessionStorage.getItem(`${robotName}_${applicationName}_ARGS`)
+
+  if(!argsString){
+    return undefined
+  }
+
+  const args = JSON.parse(argsString)
+  return args
+
 }
 
 public getSelectedApplication(){

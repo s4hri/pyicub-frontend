@@ -17,13 +17,11 @@ const apiHost = process.env['PYICUB_API_PROXY_HOST'] || 'localhost'
 const apiPort = process.env['PYICUB_API_PROXY_PORT'] || '9001';
 
 // `environment.ts` file structure
-const envConfigFile = `import {ApiService} from "../app/services/api/api.service";
-
+const envConfigFile = `
 export const environment = {
     apiScheme: '${apiScheme}',
     apiHost: '${apiHost}',
     apiPort: '${apiPort}',
-    apiService:ApiService
 }
 `;
 writeFile(targetPath, envConfigFile, function (err) {

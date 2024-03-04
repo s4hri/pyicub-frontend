@@ -11,7 +11,8 @@ export enum NodeStatus{
 
 export interface FSMNode {
   id:string,
-  name:string
+  name:string,
+  description:string
 }
 
 export interface FSMEdge {

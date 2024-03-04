@@ -26,9 +26,10 @@ export class ApplicationArgsDialogComponent{
 
   onButtonClick(): void {
     this.dialogRef.close(this.args);
-    console.log(this.args)
+    //console.log(this.args)
   }
 
   protected readonly Object = Object;
   protected readonly ApplicationArgType = ApplicationArgType;
+
 }

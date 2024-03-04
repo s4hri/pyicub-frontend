@@ -1,14 +1,14 @@
-<h1 mat-dialog-title>Selezione argomenti</h1>
+<h1 mat-dialog-title>Parameters selection</h1>
 <div mat-dialog-content>
 
   <form style="padding-top:5px;padding-bottom:5px">
     <div *ngFor="let arg of Object.keys(data.argsTemplate)">
       <div [ngSwitch]="data.argsTemplate[arg].type">
- 
+
         <!-- Caso STRING -->
         <mat-form-field *ngSwitchCase="ApplicationArgType.STRING" appearance="outline">
           <mat-label>{{arg}}</mat-label>
-          <input matInput type="text" [(ngModel)]="args[arg]" name="{{arg}}_InputString" placeholder="Inserisci testo">
+          <input matInput type="text" [(ngModel)]="args[arg]" name="{{arg}}_InputString" placeholder="Type something...">
         </mat-form-field>
 
         <!-- Caso NUMBER -->

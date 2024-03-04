@@ -8,7 +8,8 @@ import {forkJoin} from "rxjs";
 
 interface nodeData {
   name: string,
-  state: NodeStatus
+  state: NodeStatus,
+  description:string
 }
 
 @Component({
@@ -78,11 +79,18 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
           id: node.id,
           data: {
             name: node.name,
-            state: NodeStatus.INACTIVE
+            state: NodeStatus.INACTIVE,
+            description:node.description
           }
         }
         return inputNode
       })
+
+        if(inputNodes.length === 1){
+          this.openErrorDialog("Impossibile caricare l'FSM.")
+          this.isLoading = false;
+          return;
+        }
 
       //rimuovo il nodo "init" e sostituisco tutti i suoi collegamenti con quelli del vero nodo iniziale
       inputNodes = inputNodes.filter(node => node.id !== "init");
@@ -96,6 +104,7 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
 
 
       inputEdges = inputEdges.filter(edge => edge.sourceId !== "init");
+      console.log(inputEdges)
       inputEdges.forEach(edge => {
         if (edge.targetId === "init") {
           edge.targetId = startingNode.id;
@@ -202,10 +211,10 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
 
           this.updateNodeState(selectedNode,NodeStatus.DONE)
           const reachableNodes = this.findReachableNodes(selectedNode.id)
-          console.log(`Reachable nodes from ${selectedNode.id}:`)
-          console.log(reachableNodes)
+          //console.log(`Reachable nodes from ${selectedNode.id}:`)
+          //console.log(reachableNodes)
           for(let reachableNode of reachableNodes){
-            console.log(reachableNode.id, " ATTIVATO")
+            //console.log(reachableNode.id, " ATTIVATO")
             this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
           }
           this.graphy.setFocusToNode(selectedNode.id)

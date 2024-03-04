@@ -37,6 +37,12 @@ import {GraphyComponent} from './graphy/graphy.component';
 import {DefsTemplateDirective, EdgeTemplateDirective, NodeTemplateDirective} from './graphy/templates';
 import { ActionsManagerComponent } from './plugins/actions-manager/actions-manager.component';
 import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-dialog.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import { SavedDashboardDialogComponent } from './saved-dashboard-dialog/saved-dashboard-dialog.component';
+import { RestoreSessionDialogComponent } from './restore-session-dialog/restore-session-dialog.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import { ServicesManagerComponent } from './plugins/services-manager/services-manager.component';
+import { DashboardFullDialogComponent } from './dashboard-full-dialog/dashboard-full-dialog.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +66,10 @@ import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-d
     NodeTemplateDirective,
     ActionsManagerComponent,
     WidgetErrorDialogComponent,
+    SavedDashboardDialogComponent,
+    RestoreSessionDialogComponent,
+    ServicesManagerComponent,
+    DashboardFullDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,7 +92,9 @@ import { WidgetErrorDialogComponent } from './widget-error-dialog/widget-error-d
     MatDialogModule,
     MatCheckboxModule,
     MatInputModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatTooltipModule,
+    MatExpansionModule
 
   ],
   providers: [],
