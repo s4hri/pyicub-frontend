@@ -37,7 +37,7 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
   }
 
   nodeColors = {
-    INACTIVE: 'gray',
+    INACTIVE: 'white',
     ACTIVE: 'white',
     RUNNING: 'yellow',
     FAILED: 'red',
@@ -152,6 +152,12 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
       }
     })
 
+  }
+
+  isEdgeActive(edge:InputEdge){
+    const targetNode = this.getNodeByID(edge.targetId)
+    const sourceNode = this.getNodeByID(edge.sourceId)
+    return sourceNode.data.state !== NodeStatus.INACTIVE && targetNode.data.state === NodeStatus.ACTIVE
   }
 
   onNodeClick(selectedNode: InputNode<nodeData>) {

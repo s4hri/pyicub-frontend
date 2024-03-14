@@ -24,7 +24,8 @@
 
 .input-section{
   display: flex;
-  width:100%;
+  width:calc(100% - 10px);
+  margin-bottom: 5px;
 }
 
 .widget-container{

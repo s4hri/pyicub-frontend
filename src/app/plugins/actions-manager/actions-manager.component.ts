@@ -16,7 +16,7 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
   errorMessage: string;
 
   nodeColors = {
-    INACTIVE: 'gray',
+    INACTIVE: 'white',
     ACTIVE: 'white',
     RUNNING: 'yellow',
     FAILED: 'red',
@@ -40,7 +40,20 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
           const newActions: Action[] = filteredActions.map(action => {
             return {actionID: action, actionState: ActionState.ACTIVE}
           })
-          this.actions = newActions;
+          this.actions = newActions.sort((a, b) => {
+              const nameA = a.actionID.toUpperCase();
+              const nameB = b.actionID.toUpperCase();
+              if (nameA < nameB) {
+                return -1;
+              }
+              if (nameA > nameB) {
+                return 1;
+              }
+
+              // sono uguali
+              return 0;
+          });
+
           this.isLoading = false;
           //console.log(this.actions)
         },
@@ -118,6 +131,7 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
     this.showErrorDialog = false;
   }
 
+  protected readonly ActionState = ActionState;
 }
 
 interface Action {
