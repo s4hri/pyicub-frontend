@@ -16,11 +16,12 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
   errorMessage: string;
 
   nodeColors = {
-    INACTIVE: 'gray',
+    INACTIVE: 'white',
     ACTIVE: 'white',
-    RUNNING: 'yellow',
+    RUNNING: 'greenyellow',
     FAILED: 'red',
-    DONE: 'green'
+    DONE: 'green',
+    TIMEOUT: 'yellow'
   }
 
   get filteredActions(): Action[] {
@@ -40,7 +41,20 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
           const newActions: Action[] = filteredActions.map(action => {
             return {actionID: action, actionState: ActionState.ACTIVE}
           })
-          this.actions = newActions;
+          this.actions = newActions.sort((a, b) => {
+              const nameA = a.actionID.toUpperCase();
+              const nameB = b.actionID.toUpperCase();
+              if (nameA < nameB) {
+                return -1;
+              }
+              if (nameA > nameB) {
+                return 1;
+              }
+
+              // sono uguali
+              return 0;
+          });
+
           this.isLoading = false;
           //console.log(this.actions)
         },
@@ -93,7 +107,17 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
           }, 2000)
         }
 
-        this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed)
+        const onTimeout = () => {
+
+          this.updateActionState(selectedAction, ActionState.TIMEOUT)
+          setTimeout(() => {
+            this.actions.forEach(action => {
+              this.updateActionState(action, ActionState.ACTIVE)
+            })
+          }, 2000)
+        }
+
+        this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed,onTimeout)
 
       })
     }
@@ -118,6 +142,7 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
     this.showErrorDialog = false;
   }
 
+  protected readonly ActionState = ActionState;
 }
 
 interface Action {
@@ -130,5 +155,6 @@ enum ActionState {
   INACTIVE = "INACTIVE",
   RUNNING = "RUNNING",
   DONE = "DONE",
-  FAILED = "FAILED"
+  FAILED = "FAILED",
+  TIMEOUT = "TIMEOUT"
 }

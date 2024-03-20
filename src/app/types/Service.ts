@@ -5,7 +5,8 @@ export enum ServiceState {
   INACTIVE = "INACTIVE",
   RUNNING = "RUNNING",
   DONE = "DONE",
-  FAILED = "FAILED"
+  FAILED = "FAILED",
+  TIMEOUT = "TIMEOUT"
 }
 
 export interface Service{

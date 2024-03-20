@@ -18,11 +18,12 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
   errorMessage: string;
 
   nodeColors = {
-    INACTIVE: 'gray',
+    INACTIVE: 'white',
     ACTIVE: 'white',
     RUNNING: 'yellow',
     FAILED: 'red',
-    DONE: 'green'
+    DONE: 'green',
+    TIMEOUT: 'red'
   }
 
   get filteredServices(): Service[] {
@@ -90,7 +91,17 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
           }, 2000)
         }
 
-        this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed)
+        const onTimeout = () => {
+
+          this.updateServiceState(selectedService, ServiceState.TIMEOUT)
+          setTimeout(() => {
+            this.services.forEach(action => {
+              this.updateServiceState(action, ServiceState.ACTIVE)
+            })
+          }, 2000)
+        }
+
+        this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed,onTimeout)
 
       })
     }
@@ -110,8 +121,6 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
       return service
     })
   }
-
-
   openErrorDialog(errorMessage: string) {
     this.errorMessage = errorMessage;
     this.showErrorDialog = true;
@@ -131,7 +140,19 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
               name:service.name.substring(this.application.name.length + 1)
             }
           })
-          this.services = filteredServices;
+          this.services = filteredServices.sort((a, b) => {
+            const nameA = a.name.toUpperCase();
+            const nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+
+            // names must be equal
+            return 0;
+          });;
           this.isLoading = false;
           //console.log(this.actions)
         },

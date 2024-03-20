@@ -37,7 +37,7 @@ export class ApiService implements IApiService {
 
   private asyncRequestsStatus: { [key: string]: ICubRequestStatus } = {}
 
-  constructor(private http: HttpClient,private localStorageService:LocalStorageService, private sessionStorageService:SessionStorageService) {
+  constructor(private http: HttpClient, private localStorageService: LocalStorageService, private sessionStorageService: SessionStorageService) {
   }
 
   getRobots() {
@@ -79,8 +79,8 @@ export class ApiService implements IApiService {
             }),
             map(argsTemplate => {
               application.argsTemplate = argsTemplate;
-              application.args = this.sessionStorageService.getApplicationArgs(robotName,application.name) || {}
-              application.isConfigured = this.sessionStorageService.getIsApplicationConfigured(robotName,application.name)
+              application.args = this.sessionStorageService.getApplicationArgs(robotName, application.name) || {}
+              application.isConfigured = this.sessionStorageService.getIsApplicationConfigured(robotName, application.name)
               const savedDashboard = this.localStorageService.getDashboardConfig(application)
               for (const [pluginName, componentName] of Object.entries(pluginIndex)) {
                 const pluginDefaultData = (savedDashboard && savedDashboard[pluginName]) ? savedDashboard[pluginName] : defaultDashboardConfig[pluginName];
@@ -156,28 +156,28 @@ export class ApiService implements IApiService {
   }
 
   getApplicationFSM(robotName: string, appName: string, appPort: string) {
-    return this.runService<getApplicationFSMResponse>(robotName,appName,appPort,"fsm.toJSON").pipe(
+    return this.runService<getApplicationFSMResponse>(robotName, appName, appPort, "fsm.toJSON").pipe(
       map(response => {
 
         let nodes: FSMNode[] = response.states.map(state => {
-          let node:FSMNode = {
-            name:state.name,
-            id:state.name,
-            description:state.description
+          let node: FSMNode = {
+            name: state.name,
+            id: state.name,
+            description: state.description
           }
           return node
         })
 
         let edges: FSMEdge[] = response.transitions.map(transition => {
-          let edge:FSMEdge = {
+          let edge: FSMEdge = {
             sourceID: transition.source,
-            targetID:transition.dest,
-            trigger:transition.trigger
+            targetID: transition.dest,
+            trigger: transition.trigger
           }
           return edge
         })
 
-        let initState:FSMNode = {
+        let initState: FSMNode = {
           name: response.initial_state,
           id: response.initial_state,
           description: ""
@@ -201,13 +201,13 @@ export class ApiService implements IApiService {
     const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub/${robotName}/${appName}`;
     return this.http.get<GetApplicationsServicesResponse>(path).pipe(
       map(response => {
-        let services:Service[] = Object.entries(response).map(([name, service]) =>{
+        let services: Service[] = Object.entries(response).map(([name, service]) => {
           const argsTemplate = this.getArgsTemplate(service.signature);
-          const newService:Service = {
-            name:name,
-            argsTemplate:argsTemplate,
-            args:{},
-            state:ServiceState.ACTIVE
+          const newService: Service = {
+            name: name,
+            argsTemplate: argsTemplate,
+            args: {},
+            state: ServiceState.ACTIVE
           }
           return newService
         })
@@ -218,10 +218,12 @@ export class ApiService implements IApiService {
   }
 
   checkAsyncRequestStatus(requestID: string, initCallback: () => void = () => {
-  }, runningCallback: () => void = () => {
-  }, doneCallback: (retval: any) => void = () => {
-  }, failedCallback: () => void = () => {
-  }) {
+                          }, runningCallback: () => void = () => {
+                          }, doneCallback: (retval: any) => void = () => {
+                          }, failedCallback: () => void = () => {
+                          },
+                          timeoutCallback: () => void = () => {
+                          }) {
     const url = new URL(requestID);
     const requestStatusPath = `${this.scheme}://${this.hostname}:${url.port}${url.pathname}`;
     this.asyncRequestsStatus[requestID] = ICubRequestStatus.INIT
@@ -247,6 +249,10 @@ export class ApiService implements IApiService {
               case ICubRequestStatus.FAILED:
                 this.asyncRequestsStatus[requestID] = ICubRequestStatus.FAILED;
                 failedCallback();
+                break;
+              case ICubRequestStatus.TIMEOUT:
+                this.asyncRequestsStatus[requestID] = ICubRequestStatus.TIMEOUT;
+                timeoutCallback();
                 break;
               default:
                 console.log("unknown response status:")
@@ -493,12 +499,12 @@ export class ApiService implements IApiService {
     return this.runService<GetRobotActionsResponse>(robotName, "helper", this.port, "actions.getActions")
   }
 
-  playActionSync(robotName:string,actionID:string){
-    return this.runService<void>(robotName,"helper",this.port,"actions.playAction",{action_id:actionID})
+  playActionSync(robotName: string, actionID: string) {
+    return this.runService<void>(robotName, "helper", this.port, "actions.playAction", {action_id: actionID})
   }
 
-  playActionAsync(robotName:string,actionID:string){
-    return this.runServiceAsync(robotName,"helper",this.port,"actions.playAction",{action_id:actionID})
+  playActionAsync(robotName: string, actionID: string) {
+    return this.runServiceAsync(robotName, "helper", this.port, "actions.playAction", {action_id: actionID})
   }
 
 }

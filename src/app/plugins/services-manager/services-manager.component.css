@@ -23,6 +23,13 @@
   overflow:hidden
 }
 
+.action-button-form{
+  padding:30px;
+  border:black solid 2px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+
 
 .action-button{
   padding:30px;
@@ -40,6 +47,13 @@
     padding:5cqw
   }
 
+  .action-button-form{
+    padding-bottom:4cqw;
+    padding-top:4cqw;
+    padding-left: 4cqw;
+    padding-right: 4cqw;
+  }
+
 }
 
 @container (max-width: 199px) {
@@ -49,6 +63,13 @@
 
   .action-button{
     padding:5cqw
+  }
+
+  .action-button-form{
+    padding-bottom:4cqw;
+    padding-top:4cqw;
+    padding-left: 3.5cqw;
+    padding-right: 3.5cqw;
   }
 
 }
