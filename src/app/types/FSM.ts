@@ -6,7 +6,8 @@ export enum NodeStatus{
   ACTIVE = "ACTIVE",
   RUNNING = "RUNNING",
   DONE = "DONE" ,
-  FAILED = "FAILED"
+  FAILED = "FAILED",
+  TIMEOUT = "TIMEOUT"
 }
 
 export interface FSMNode {

@@ -22,7 +22,8 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
     ACTIVE: 'white',
     RUNNING: 'yellow',
     FAILED: 'red',
-    DONE: 'green'
+    DONE: 'green',
+    TIMEOUT: 'red'
   }
 
   get filteredServices(): Service[] {
@@ -90,7 +91,17 @@ export class ServicesManagerComponent extends WidgetBaseComponent implements OnI
           }, 2000)
         }
 
-        this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed)
+        const onTimeout = () => {
+
+          this.updateServiceState(selectedService, ServiceState.TIMEOUT)
+          setTimeout(() => {
+            this.services.forEach(action => {
+              this.updateServiceState(action, ServiceState.ACTIVE)
+            })
+          }, 2000)
+        }
+
+        this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed,onTimeout)
 
       })
     }

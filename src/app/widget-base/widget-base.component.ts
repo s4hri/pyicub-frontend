@@ -37,8 +37,9 @@ export class WidgetBaseComponent {
   }, runningCallback: () => void = () => {
   }, doneCallback: (retval: any) => void = () => {
   }, failedCallback: () => void = () => {
+  },timeoutCallback: () => void = () => {
   }) {
-    return this.apiService.checkAsyncRequestStatus(requestID, initCallback, runningCallback, doneCallback, failedCallback)
+    return this.apiService.checkAsyncRequestStatus(requestID, initCallback, runningCallback, doneCallback, failedCallback,timeoutCallback)
   }
 
   runService(serviceName: string, body: any) {

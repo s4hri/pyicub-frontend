@@ -18,9 +18,10 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
   nodeColors = {
     INACTIVE: 'white',
     ACTIVE: 'white',
-    RUNNING: 'yellow',
+    RUNNING: 'greenyellow',
     FAILED: 'red',
-    DONE: 'green'
+    DONE: 'green',
+    TIMEOUT: 'yellow'
   }
 
   get filteredActions(): Action[] {
@@ -106,7 +107,17 @@ export class ActionsManagerComponent extends WidgetBaseComponent implements OnIn
           }, 2000)
         }
 
-        this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed)
+        const onTimeout = () => {
+
+          this.updateActionState(selectedAction, ActionState.TIMEOUT)
+          setTimeout(() => {
+            this.actions.forEach(action => {
+              this.updateActionState(action, ActionState.ACTIVE)
+            })
+          }, 2000)
+        }
+
+        this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed,onTimeout)
 
       })
     }
@@ -144,5 +155,6 @@ enum ActionState {
   INACTIVE = "INACTIVE",
   RUNNING = "RUNNING",
   DONE = "DONE",
-  FAILED = "FAILED"
+  FAILED = "FAILED",
+  TIMEOUT = "TIMEOUT"
 }

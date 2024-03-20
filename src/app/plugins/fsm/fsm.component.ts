@@ -39,10 +39,11 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
   nodeColors = {
     INACTIVE: 'white',
     ACTIVE: 'white',
-    RUNNING: 'yellow',
+    RUNNING: 'greenyellow',
     FAILED: 'red',
     CURRENT: 'white',
-    DONE: 'green'
+    DONE: 'green',
+    TIMEOUT: 'yellow'
   }
 
   isLoading = true
@@ -217,10 +218,7 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
 
           this.updateNodeState(selectedNode,NodeStatus.DONE)
           const reachableNodes = this.findReachableNodes(selectedNode.id)
-          //console.log(`Reachable nodes from ${selectedNode.id}:`)
-          //console.log(reachableNodes)
           for(let reachableNode of reachableNodes){
-            //console.log(reachableNode.id, " ATTIVATO")
             this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
           }
           this.graphy.setFocusToNode(selectedNode.id)
@@ -229,10 +227,64 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit {
       }
 
       const onFailed = () => {
-        this.updateNodeState(selectedNode,NodeStatus.FAILED)
+
+        //se è un nodo collegato ad "init" invia il trigger di restart
+        const terminalNode = this.terminalNodes.find(node => node.nodeID === selectedNode.id)
+        if(terminalNode){
+          this.fsmRunStep(terminalNode.restartTrigger).subscribe(reqID => {
+
+            const onRestartDone = () => {
+              this.updateNodeState(selectedNode,NodeStatus.FAILED)
+              const reachableNodes = this.findReachableNodes(selectedNode.id)
+              for(let reachableNode of reachableNodes){
+                this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
+              }
+            }
+            this.checkAsyncRequestStatus(reqID,undefined,undefined,onRestartDone)
+          })
+
+        } else {
+
+          this.updateNodeState(selectedNode,NodeStatus.FAILED)
+          const reachableNodes = this.findReachableNodes(selectedNode.id)
+          for(let reachableNode of reachableNodes){
+            this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
+          }
+          this.graphy.setFocusToNode(selectedNode.id)
+        }
+
       }
 
-      this.checkAsyncRequestStatus(reqID,undefined,onRunning,onDone,onFailed)
+      const onTimeout = () => {
+
+        //se è un nodo collegato ad "init" invia il trigger di restart
+        const terminalNode = this.terminalNodes.find(node => node.nodeID === selectedNode.id)
+        if(terminalNode){
+          this.fsmRunStep(terminalNode.restartTrigger).subscribe(reqID => {
+
+            const onRestartDone = () => {
+              this.updateNodeState(selectedNode,NodeStatus.TIMEOUT)
+              const reachableNodes = this.findReachableNodes(selectedNode.id)
+              for(let reachableNode of reachableNodes){
+                this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
+              }
+            }
+            this.checkAsyncRequestStatus(reqID,undefined,undefined,onRestartDone)
+          })
+
+        } else {
+
+          this.updateNodeState(selectedNode,NodeStatus.TIMEOUT)
+          const reachableNodes = this.findReachableNodes(selectedNode.id)
+          for(let reachableNode of reachableNodes){
+            this.updateNodeState(reachableNode,NodeStatus.ACTIVE)
+          }
+          this.graphy.setFocusToNode(selectedNode.id)
+        }
+
+      }
+
+      this.checkAsyncRequestStatus(reqID,undefined,onRunning,onDone,onFailed,onTimeout)
 
     })
 
