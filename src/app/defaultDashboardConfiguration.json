@@ -1,30 +1,46 @@
 {
-  "fsm": {
-    "enabled": true,
-    "x": 0,
+  "Actions Manager":
+  {
+    "x":72,
+    "y":47,
+    "cols":28,
+    "rows":53,
+    "enabled":true
+  },
+  
+  "Finite State Machine":
+  {
+    "x":0,
+    "y":47,
+    "cols":72,
+    "rows":53,
+    "enabled":true
+  },
+  
+  "Robot Cam Viewer":
+  {
+    "x":31,
     "y":0,
-    "rows": 50,
-    "cols": 70
+    "cols":41,
+    "rows":47,
+    "enabled":true
   },
-  "Robot Speech": {
-    "enabled": true,
-    "x": 70,
-    "y": 0,
-    "rows": 50,
-    "cols": 30
+  
+  "Robot Speech":
+  {
+    "x":0,
+    "y":0,
+    "cols":31,
+    "rows":47,
+    "enabled":true
   },
-  "Robot Cam Viewer": {
-    "enabled": true,
-    "x": 0,
-    "y":50,
-    "rows": 50,
-    "cols": 50
-  },
-  "Actions Manager": {
-    "enabled": true,
-    "x": 50,
-    "y": 50,
-    "rows": 50,
-    "cols": 50
-  }
+  
+  "Services Manager":
+  {
+    "x":72,
+    "y":0,
+    "cols":28,
+    "rows":47,
+    "enabled":true
+    }
 }

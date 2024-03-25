@@ -39,12 +39,12 @@ export class FSM implements DashboardItem{
     this.rows = rows;
     this.x = x;
     this.y = y;
-    this.id = 'fsm'
+    this.id = 'Finite State Machine'
   }
 
   exportToJSON():string{
     let json:{[key:string]:string} = {};
-    return "fsm"
+    return "Finite State Machine"
   }
 
 }
