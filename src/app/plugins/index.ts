@@ -5,4 +5,4 @@ import {RobotCamViewerComponent} from "./robot-cam-viewer/robot-cam-viewer.compo
 import {RobotSpeechComponent} from "./robot-speech/robot-speech.component";
 import {ServicesManagerComponent} from "./services-manager/services-manager.component";
 
-export const pluginIndex = { "Actions Manager": ActionsManagerComponent, "fsm": FsmComponent, "Robot Cam Viewer": RobotCamViewerComponent, "Robot Speech": RobotSpeechComponent, "Services Manager": ServicesManagerComponent }
+export const pluginIndex = { "Actions Manager": ActionsManagerComponent, "Finite State Machine": FsmComponent, "Robot Cam Viewer": RobotCamViewerComponent, "Robot Speech": RobotSpeechComponent, "Services Manager": ServicesManagerComponent }

@@ -185,7 +185,7 @@ export class ApiService implements IApiService {
         //inserisco lo stato iniziale come primo dell'array. è importante che sia il primo poichè cosi il motore grafico che renderizza l'FSM lo posiziona all'estrema sinistra.
         nodes.unshift(initState)
 
-        const fsmDefaultConfig = defaultDashboardConfig["fsm"];
+        const fsmDefaultConfig = defaultDashboardConfig["Finite State Machine"];
         const x = fsmDefaultConfig.x || 0;
         const y = fsmDefaultConfig.y || 0;
         const cols = fsmDefaultConfig.cols || 50;
