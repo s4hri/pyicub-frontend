@@ -54,8 +54,8 @@ export class WidgetBaseComponent {
     return this.apiService.fsmGetCurrentState(this.application.robotName, this.application.name, this.application.url.port)
   }
 
-  fsmGetProcesses() {
-    return this.apiService.fsmGetProcesses()
+  fsmGetCurrentProcess() {
+    return this.apiService.fsmGetCurrentProcess()
   }
 
   fsmRunStep(trigger: string) {

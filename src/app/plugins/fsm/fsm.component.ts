@@ -65,27 +65,30 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
     
       // Call fsmGetProcesses and pass the reqID to checkAsyncRequestStatus
       this.fsmGetCurrentState().subscribe(currentState => {
-        let currentNode = this.getNodeByID(currentState);
+        
 
         if (currentState == "init") {
           if(this.previousNodeID) {
-            this.updateNodeState(this.getNodeByID(this.previousNodeID), NodeStatus.INACTIVE); 
+            this.updateNodeState(this.getNodeByID(this.previousNodeID), NodeStatus.INACTIVE);
           }
-          this.previousNodeID = this.terminalNodes.find(node => node.nodeID === currentNode.id).nodeID
+          return;
         }
 
+        let currentNode = this.getNodeByID(currentState);
+
         // Fetch current state first
-        this.fsmGetProcesses().subscribe(reqID => {
-          
+        this.fsmGetCurrentProcess().subscribe(reqID => {          
       
           this.currentNodeID = currentNode.id;
           this.graphy.setFocusToNode(currentNode.id);
           
           const onRunning = () => {
-            this.updateNodeState(currentNode, NodeStatus.RUNNING);
             if(this.previousNodeID) {
-              this.updateNodeState(this.getNodeByID(this.previousNodeID), NodeStatus.INACTIVE); 
+              this.updateNodeState(this.getNodeByID(this.previousNodeID), NodeStatus.INACTIVE);
+              this.graphy.setFocusToNode(this.previousNodeID);
             }
+            this.updateNodeState(currentNode, NodeStatus.RUNNING);
+            this.graphy.setFocusToNode(currentNode.id);
           };
     
           const onDone = () => {
@@ -122,7 +125,7 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
           this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed, onTimeout);
         });
       });
-    }, 1000);
+    }, 250);
     
     forkJoin({
       fsm: this.getApplicationFSM(),
@@ -237,113 +240,20 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
 
   private runStep(selectedNode: InputNode<nodeData>) {
     let trigger: string;
-
+    
+    const terminalNode = this.terminalNodes.find(node => node.nodeID === this.currentNodeID);
+    if(terminalNode){
+      this.fsmRunStep(terminalNode.restartTrigger).subscribe();
+    }
+    
     if (selectedNode.id === this.startingNode.nodeID) {
       trigger = this.startingNode.startTrigger;
     } else {
       const selectedEdge = this.edges.find(edge => edge.sourceId === this.currentNodeID && edge.targetId === selectedNode.id);
       trigger = selectedEdge.id;
     }
-
-    if (this.currentNodeID !== "init") {
-      const currentNode = this.getNodeByID(this.currentNodeID);
-      this.updateNodeState(currentNode, NodeStatus.INACTIVE);
-      const reachableNodes = this.findReachableNodes(currentNode.id);
-      for (let reachableNode of reachableNodes) {
-        if (reachableNode.id !== selectedNode.id) {
-          this.updateNodeState(reachableNode, NodeStatus.INACTIVE);
-        }
-      }
-    }
-
-    this.currentNodeID = selectedNode.id;
-    this.graphy.setFocusToNode(selectedNode.id);
-
-    this.fsmRunStep(trigger).subscribe(reqID => {
-
-      const onRunning = () => {
-        this.updateNodeState(selectedNode, NodeStatus.RUNNING);
-      }
-
-      const onDone = () => {
-        const terminalNode = this.terminalNodes.find(node => node.nodeID === selectedNode.id);
-        if (terminalNode) {
-          this.fsmRunStep(terminalNode.restartTrigger).subscribe(reqID => {
-
-            const onRestartDone = () => {
-              this.updateNodeState(selectedNode, NodeStatus.DONE);
-              const reachableNodes = this.findReachableNodes(selectedNode.id);
-              for (let reachableNode of reachableNodes) {
-                this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
-              }
-            }
-            this.checkAsyncRequestStatus(reqID, undefined, undefined, onRestartDone);
-          });
-
-        } else {
-          this.updateNodeState(selectedNode, NodeStatus.DONE);
-          const reachableNodes = this.findReachableNodes(selectedNode.id);
-          for (let reachableNode of reachableNodes) {
-            this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
-          }
-          this.graphy.setFocusToNode(selectedNode.id);
-        }
-      }
-
-      const onFailed = () => {
-        const terminalNode = this.terminalNodes.find(node => node.nodeID === selectedNode.id);
-        if (terminalNode) {
-          this.fsmRunStep(terminalNode.restartTrigger).subscribe(reqID => {
-
-            const onRestartDone = () => {
-              this.updateNodeState(selectedNode, NodeStatus.FAILED);
-              const reachableNodes = this.findReachableNodes(selectedNode.id);
-              for (let reachableNode of reachableNodes) {
-                this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
-              }
-            }
-            this.checkAsyncRequestStatus(reqID, undefined, undefined, onRestartDone);
-          });
-
-        } else {
-          this.updateNodeState(selectedNode, NodeStatus.FAILED);
-          const reachableNodes = this.findReachableNodes(selectedNode.id);
-          for (let reachableNode of reachableNodes) {
-            this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
-          }
-          this.graphy.setFocusToNode(selectedNode.id);
-        }
-      }
-
-      const onTimeout = () => {
-        const terminalNode = this.terminalNodes.find(node => node.nodeID === selectedNode.id);
-        if (terminalNode) {
-          this.fsmRunStep(terminalNode.restartTrigger).subscribe(reqID => {
-
-            const onRestartDone = () => {
-              this.updateNodeState(selectedNode, NodeStatus.TIMEOUT);
-              const reachableNodes = this.findReachableNodes(selectedNode.id);
-              for (let reachableNode of reachableNodes) {
-                this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
-              }
-            }
-            this.checkAsyncRequestStatus(reqID, undefined, undefined, onRestartDone);
-          });
-
-        } else {
-          this.updateNodeState(selectedNode, NodeStatus.TIMEOUT);
-          const reachableNodes = this.findReachableNodes(selectedNode.id);
-          for (let reachableNode of reachableNodes) {
-            this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
-          }
-          this.graphy.setFocusToNode(selectedNode.id);
-        }
-      }
-
-      this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed, onTimeout);
-
-    });
-
+    //this.currentNodeID = selectedNode.id;
+    this.fsmRunStep(trigger).subscribe();
   }
 
   private updateNodeState(nodeToUpdate: InputNode<nodeData>, updatedState: NodeStatus) {
