@@ -283,6 +283,11 @@ export class ApiService implements IApiService {
     return this.runService<string>(robotName, appName, appPort, "fsm.getCurrentState")
   }
 
+  fsmGetCurrentProcess() {
+    const path = `${this.scheme}://${this.hostname}:${this.port}/pyicub/processes?name=fsm.runStep`
+    return this.http.get<string>(path)
+  }
+
   emoAngry(robotName: string) {
     return this.runService(robotName, "helper", this.port, "emo.angry")
   }
