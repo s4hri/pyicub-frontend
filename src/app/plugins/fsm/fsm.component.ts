@@ -80,15 +80,12 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
         this.fsmGetCurrentProcess().subscribe(reqID => {          
       
           this.currentNodeID = currentNode.id;
-          this.graphy.setFocusToNode(currentNode.id);
           
           const onRunning = () => {
-            if(this.previousNodeID) {
-              this.updateNodeState(this.getNodeByID(this.previousNodeID), NodeStatus.INACTIVE);
-              this.graphy.setFocusToNode(this.previousNodeID);
+            if(this.previousNodeID == currentNode.id) {
+                return;
             }
             this.updateNodeState(currentNode, NodeStatus.RUNNING);
-            this.graphy.setFocusToNode(currentNode.id);
           };
     
           const onDone = () => {
@@ -98,7 +95,15 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
               this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
             }
             this.previousNodeID = currentNode.id;
-            this.graphy.setFocusToNode(currentNode.id);
+
+            const existsInTerminalNodes = this.terminalNodes.some(node => node.nodeID === currentNode.id);
+            if (existsInTerminalNodes) {
+              for (let node of this.nodes) {
+                if (node.id !== this.startingNode.nodeID) {
+                  this.updateNodeState(node, NodeStatus.INACTIVE);
+                }
+              }
+            }
           };
     
           const onFailed = () => {
@@ -108,7 +113,6 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
               this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
             }
             this.previousNodeID = currentNode.id;
-            this.graphy.setFocusToNode(currentNode.id);  
           };
     
           const onTimeout = () => {
@@ -118,7 +122,6 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
               this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
             }
             this.previousNodeID = currentNode.id;
-            this.graphy.setFocusToNode(currentNode.id);  
           };
     
           // Call checkAsyncRequestStatus with the current state passed to onRunning
@@ -229,7 +232,8 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
   isEdgeActive(edge: InputEdge) {
     const targetNode = this.getNodeByID(edge.targetId);
     const sourceNode = this.getNodeByID(edge.sourceId);
-    return sourceNode.data.state !== NodeStatus.INACTIVE && targetNode.data.state === NodeStatus.ACTIVE;
+    //return sourceNode.data.state !== NodeStatus.INACTIVE && targetNode.data.state === NodeStatus.ACTIVE;
+    return (sourceNode.data.state !== NodeStatus.INACTIVE && targetNode.data.state === NodeStatus.ACTIVE) || (sourceNode.data.state == NodeStatus.DONE)
   }
 
   onNodeClick(selectedNode: InputNode<nodeData>) {
