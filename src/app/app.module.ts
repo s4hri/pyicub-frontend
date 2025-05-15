@@ -43,6 +43,7 @@ import { RestoreSessionDialogComponent } from './restore-session-dialog/restore-
 import {MatExpansionModule} from "@angular/material/expansion";
 import { ServicesManagerComponent } from './plugins/services-manager/services-manager.component';
 import { DashboardFullDialogComponent } from './dashboard-full-dialog/dashboard-full-dialog.component';
+import { PopoverDirective } from './common/popover/popover.directive';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { DashboardFullDialogComponent } from './dashboard-full-dialog/dashboard-
     RestoreSessionDialogComponent,
     ServicesManagerComponent,
     DashboardFullDialogComponent,
+    PopoverDirective,
   ],
   imports: [
     BrowserModule,
