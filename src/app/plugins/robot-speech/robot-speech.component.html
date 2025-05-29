@@ -6,9 +6,9 @@
   </div>
   <div class="input-section">
     <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1;background-color: white">
-      <input matInput #messageInput [(ngModel)]="newMessage" (keydown.enter)="onEnterPress()" placeholder="Type something..." [disabled]="inputDisabled" >
+      <input matInput #messageInput [(ngModel)]="newMessage" (keydown.enter)="onEnterPress()" placeholder="Type something..."  >
     </mat-form-field>
-    <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()">
+    <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()" [disabled]="inputDisabled">
       <mat-icon>send</mat-icon>
     </button>
   </div>
