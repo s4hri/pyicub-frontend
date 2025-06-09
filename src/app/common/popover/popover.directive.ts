@@ -1,4 +1,6 @@
 import {Directive, ElementRef, HostListener, Input} from '@angular/core';
+import {InputNode} from "../../graphy/models/input-node.model";
+import {NodeStatus} from "../../types/FSM";
 
 @Directive({
   selector: '[appPopover]'
@@ -14,11 +16,13 @@ export class PopoverDirective {
   constructor(private el: ElementRef) {
   }
 
-  @HostListener('mouseenter') onMouseEnter() {
-    if (!this.popover) {
-      this.show()
-    }
+  @HostListener('mouseenter')
+  onMouseEnter() {
+    if (!this.popover && this.content && this.content.trim().length > 0) {
+      this.show();
   }
+  }
+
   @HostListener('mouseleave') onMouseLeave() {
     if (this.popover) {
       this.hide()
@@ -43,7 +47,6 @@ export class PopoverDirective {
   creat(){
     this.popover = document.createElement('span')
     this.popover.classList.add('ng-popover')
-    console.log(this.content)
     this.popover.innerHTML = this.content
     document.body.appendChild(this.popover)
   }
