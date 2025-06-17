@@ -12,14 +12,16 @@
   overflow: auto;
 }
 
-.message-text-container{
+.message-text-container {
   margin-left: 5px;
   margin-right: 5px;
   margin-bottom: 5px;
-  max-width:100%;
-  box-sizing:border-box;
+  box-sizing: border-box;
   padding: 10px 15px;
   border-radius: 10px;
+  align-self: flex-end;
+  max-width: 15em;
+  overflow-wrap: anywhere;
 }
 
 .input-section{

@@ -1,12 +1,20 @@
 <div class="widget-container">
   <div #scrollContainer class="messages-container">
-    <div class="message-text-container" *ngFor="let message of messages" [ngStyle]="{'background-color':messageColors[message.status]}">
-      {{message.text}}
+    <div  *ngFor="let message of messages" style="width: 100%; display:contents">
+     <div class="message-text-container" [ngStyle]="{'background-color': messageColors[message.status]}">
+        {{message.text}}
+      </div>
     </div >
   </div>
   <div class="input-section">
-    <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1;background-color: white">
-      <input matInput #messageInput [(ngModel)]="newMessage" (keydown.enter)="onEnterPress()" placeholder="Type something..."  >
+        <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1">
+      <textarea matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="2"
+            [(ngModel)]="newMessage" (keydown.enter)="onEnterPress(); false" placeholder="Type something..."></textarea>
+
     </mat-form-field>
     <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()" [disabled]="inputDisabled">
       <mat-icon>send</mat-icon>
