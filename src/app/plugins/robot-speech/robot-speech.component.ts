@@ -28,7 +28,7 @@ export class RobotSpeechComponent extends WidgetBaseComponent {
 
   onEnterPress() {
     if (this.inputDisabled) {
-    return; // Do nothing if input is disabled
+      return; // Do nothing if input is disabled
     }
     this.sendMessage()
   }
