@@ -1,0 +1,28 @@
+<div class="widget-container" >
+  <div #scrollContainer class="messages-container" >
+    <div *ngFor="let message of messages" style="width: 100%; display:contents" >
+      <div class="message-text-container" [ngStyle]="{'background-color': messageColors[message.status]}">
+        {{message.text}}
+      </div>
+      <div class="llm-message-text-container" style="background-color: #ab47bc">
+        <mat-spinner *ngIf="message.status === 'SENDING' && !message.llm_response" diameter="25"></mat-spinner>
+        <span [class.typing]="message.status === 'SENDING' && message.llm_response" [innerHTML]="message.llm_response_safe"></span>
+
+      </div>
+    </div>
+  </div>
+  <div class="input-section" >
+    <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1;background-color: white">
+      <textarea matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="2"
+            [(ngModel)]="newMessage" (keydown.enter)="onEnterPress(); false" placeholder="Type something..."></textarea>
+<!--      <input matInput #messageInput [(ngModel)]="newMessage" (keydown.enter)="onEnterPress()" placeholder="Type something...">-->
+    </mat-form-field>
+    <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()" [disabled]="inputDisabled">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

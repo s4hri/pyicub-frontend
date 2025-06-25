@@ -436,6 +436,12 @@ export class ApiService implements IApiService {
     })
   }
 
+  llmQueryAsync(robotName: string, text: string) {
+    return this.runServiceAsync(robotName, "helper", this.port, "gpt.query", {
+    text: text
+  });
+  }
+
   camLeftGetURI(robotName: string) {
     return this.runService<string>(robotName, "helper", this.port, "cam_left.getURI").pipe(
       map(stringURL => new URL(stringURL))

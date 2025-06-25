@@ -44,6 +44,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import { ServicesManagerComponent } from './plugins/services-manager/services-manager.component';
 import { DashboardFullDialogComponent } from './dashboard-full-dialog/dashboard-full-dialog.component';
 import { PopoverDirective } from './common/popover/popover.directive';
+import { LlmChatboxComponent } from './plugins/llm-chatbox/llm-chatbox.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { PopoverDirective } from './common/popover/popover.directive';
     ServicesManagerComponent,
     DashboardFullDialogComponent,
     PopoverDirective,
+    LlmChatboxComponent,
   ],
   imports: [
     BrowserModule,

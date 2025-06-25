@@ -7,7 +7,7 @@
     "rows":53,
     "enabled":true
   },
-  
+
   "Finite State Machine":
   {
     "x":0,
@@ -16,31 +16,40 @@
     "rows":53,
     "enabled":true
   },
-  
+
   "Robot Cam Viewer":
   {
-    "x":31,
+    "x":60,
     "y":0,
-    "cols":41,
+    "cols":40,
     "rows":47,
     "enabled":true
   },
-  
+
   "Robot Speech":
   {
     "x":0,
     "y":0,
-    "cols":31,
+    "cols":30,
     "rows":47,
     "enabled":true
   },
-  
+
   "Services Manager":
   {
     "x":72,
     "y":0,
     "cols":28,
     "rows":47,
+    "enabled":false
+    },
+
+  "LLM Chatbox":
+  {
+   "x":30,
+    "y":0,
+    "cols":30,
+    "rows":47,
     "enabled":true
-    }
+  }
 }
