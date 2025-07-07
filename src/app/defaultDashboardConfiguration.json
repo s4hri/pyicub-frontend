@@ -19,29 +19,29 @@
 
   "Robot Cam Viewer":
   {
-    "x":60,
+    "x":31,
     "y":0,
-    "cols":40,
+    "cols":41,
     "rows":47,
     "enabled":true
   },
-
+  
   "Robot Speech":
   {
     "x":0,
     "y":0,
-    "cols":30,
+    "cols":31,
     "rows":47,
     "enabled":true
   },
-
+  
   "Services Manager":
   {
     "x":72,
     "y":0,
     "cols":28,
     "rows":47,
-    "enabled":false
+    "enabled":true
     },
 
   "LLM Chatbox":
@@ -50,6 +50,6 @@
     "y":0,
     "cols":30,
     "rows":47,
-    "enabled":true
+    "enabled":false
   }
 }
