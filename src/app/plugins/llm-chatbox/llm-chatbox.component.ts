@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {WidgetBaseComponent} from '../../widget-base/widget-base.component';
 import {MatInput} from "@angular/material/input";
-import { DomSanitizer } from '@angular/platform-browser';
+import { CommunicationService, LLMToSpeechEvent} from '../../services/communication.service';
 
 @Component({
   selector: 'app-llm-chatbox',
@@ -18,15 +18,27 @@ export class LlmChatboxComponent extends WidgetBaseComponent {
     "SENT": 'lightgreen',
     "FAILED": 'indianred'
   }
-  messages: { text: string, status: string,llm_response?: string;llm_response_safe?: any; }[] = [];
+  messages: { text: string, status: string,llm_response?: string; is_editing:any; finished:any}[] = [];
   newMessage = ""
   inputDisabled = false;
+  
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private communicationService: CommunicationService
   ) {
     super();
+  }
+
+  sendMessageToRobotSpeech(message_text){
+    console.log("seding message to the chatbox")
+    console.log(message_text)
+    const LLMToSpeechEvent_obj: LLMToSpeechEvent = {
+      pluginId: 'LLM_Chatbox',
+      eventType: 'newLLMResponse',
+      payload: { content: message_text }
+    };
+    this.communicationService.publishLLMToSpeechEvent(LLMToSpeechEvent_obj);
   }
 
   onEnterPress() {
@@ -35,7 +47,6 @@ export class LlmChatboxComponent extends WidgetBaseComponent {
     }
     this.sendMessage()
   }
-      // Modify typeWriterEffect to sanitize HTML
   private typeWriterEffect(messageObject: any, fullText: string) {
     let currentIndex = 0;
     messageObject.llm_response = '';
@@ -55,20 +66,54 @@ export class LlmChatboxComponent extends WidgetBaseComponent {
           messageObject.llm_response += fullText[currentIndex];
           currentIndex++;
         }
-        // Sanitize the HTML content
-        messageObject.llm_response_safe = this.sanitizer.bypassSecurityTrustHtml(messageObject.llm_response);
         this.cdr.detectChanges();
-        this.scrollToBottom();
       } else {
         clearInterval(intervalId);
         messageObject.status = "SENT";
         this.inputDisabled = false;
         this.cdr.detectChanges();
+        messageObject.finished = true;
       }
+      
     }, 20);
+    
   }
 
+enableEditingAtCursor(event: MouseEvent, message: any, spanEl: HTMLElement) {
+  message.is_editing = true;
+  message.finished = false;
 
+  setTimeout(() => {
+    spanEl.focus();
+
+    const range = document.caretRangeFromPoint
+      ? document.caretRangeFromPoint(event.clientX, event.clientY)
+      : (event as any).rangeParent
+        ? (() => {
+            const range = document.createRange();
+            range.setStart((event as any).rangeParent, (event as any).rangeOffset);
+            return range;
+          })()
+        : null;
+
+    if (range) {
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }, 0);
+}
+
+saveEditing(event: any, message: any, fromEnter = false) {
+  if (fromEnter) {
+    event.preventDefault(); 
+  }
+  console.log("finished editing")
+  message.llm_response = event.target.innerText;
+  console.log(this.messages)
+  message.is_editing = false;
+  message.finished = true;
+}
 
   sendMessage() {
     if (this.newMessage.trim()) {
@@ -76,7 +121,9 @@ export class LlmChatboxComponent extends WidgetBaseComponent {
       let messageObject = {
         text: this.newMessage,
         status: "SENDING",
-        llm_response: undefined
+        llm_response: undefined,
+        is_editing:false,
+        finished:false,
       };
       const inputMessage = this.newMessage;
       this.newMessage = "";
@@ -115,6 +162,10 @@ export class LlmChatboxComponent extends WidgetBaseComponent {
         }
       })
     }
+  }
+
+  send_to_speech(message){
+    this.sendMessageToRobotSpeech(message.llm_response)
   }
 
 
