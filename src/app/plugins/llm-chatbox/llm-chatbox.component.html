@@ -1,0 +1,42 @@
+<div class="widget-container" >
+  <div #scrollContainer class="messages-container" >
+    <div *ngFor="let message of messages" style="width: 100%; display:contents" >
+      <div class="message-text-container" [ngStyle]="{'background-color': messageColors[message.status]}">
+        {{message.text}}
+      </div>
+      <div class="llm-message-text-container"   (dblclick)="enableEditingAtCursor($event, message, editableSpan)">
+        <mat-spinner *ngIf="message.status === 'SENDING' && !message.llm_response" diameter="25"></mat-spinner>
+
+        <div class="message-content-and-button">
+          <span #editableSpan [attr.contenteditable]="message.is_editing ? 'true' : null"
+          (blur)="saveEditing($event, message)"
+          (keydown.enter)="saveEditing($event, message, true)"
+          [class.typing]="message.status === 'SENDING' && message.llm_response"
+          [innerHTML]="message.llm_response"></span>
+
+          <button 
+          *ngIf="message.finished" 
+          (click)="send_to_speech(message)" 
+          class="plugin-action-button" 
+          matTooltip="Send to robot"
+          matTooltipPosition="right" >
+            <mat-icon class="material-symbols-outlined">record_voice_over</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="input-section" >
+    <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1;background-color: white">
+      <textarea matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="2"
+            [(ngModel)]="newMessage" (keydown.enter)="onEnterPress(); false" placeholder="Type something..."></textarea>
+    </mat-form-field>
+    <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()" [disabled]="inputDisabled">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

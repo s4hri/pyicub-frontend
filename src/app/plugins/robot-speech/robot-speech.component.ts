@@ -1,6 +1,10 @@
 import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {WidgetBaseComponent} from '../../widget-base/widget-base.component';
 import {MatInput} from "@angular/material/input";
+import { CommunicationService, LLMToSpeechEvent } from '../../services/communication.service';
+import { Subscription } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-robot-speech',
@@ -18,14 +22,39 @@ export class RobotSpeechComponent extends WidgetBaseComponent {
     "SENT": 'lightgreen',
     "FAILED": 'indianred'
   }
+  private subscriptions = new Subscription();
   messages: { text: string, status: string }[] = [];
+  lastLLMToSpeechEvent: LLMToSpeechEvent | null = null;
   newMessage = ""
   inputDisabled = false;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef, 
+    private communicationService: CommunicationService) {
     super();
   }
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.communicationService.pluginEvents$.subscribe(
+        (event: LLMToSpeechEvent) => {
+          const messageText = event.payload['content']
+          console.log('robot speech recieved the message', messageText);
+          this.lastLLMToSpeechEvent = event;
+          if (!this.inputDisabled){
+           this.newMessage = messageText;
+          this.sendMessage()           
+          }
+        }
+      )
+    );
 
+ 
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe(); // Unsubscribe all at once
+  }
   onEnterPress() {
     if (this.inputDisabled) {
       return; // Do nothing if input is disabled
@@ -34,6 +63,7 @@ export class RobotSpeechComponent extends WidgetBaseComponent {
   }
 
   sendMessage() {
+    console.log("send message called with ", this.newMessage)
     if (this.newMessage.trim()) {
       this.inputDisabled = true;
       let messageObject = {

@@ -194,6 +194,10 @@ export class WidgetBaseComponent {
     return this.apiService.speechSayAsync(this.application.robotName, sentence, waitActionDone)
   }
 
+  llmQueryAsync(sentence: string) {
+    return this.apiService.llmQueryAsync(this.application.robotName, sentence)
+  }
+
 
   camLeftGetURI() {
     return this.apiService.camLeftGetURI(this.application.robotName)
