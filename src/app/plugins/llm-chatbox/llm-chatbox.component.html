@@ -14,10 +14,10 @@
           [class.typing]="message.status === 'SENDING' && message.llm_response"
           [innerHTML]="message.llm_response"></span>
 
-          <button 
-          *ngIf="message.finished" 
-          (click)="send_to_speech(message)" 
-          class="plugin-action-button" 
+          <button
+          *ngIf="message.finished"
+          (click)="send_to_speech(message)"
+          class="plugin-action-button"
           matTooltip="Send to robot"
           matTooltipPosition="right" >
             <mat-icon class="material-symbols-outlined">record_voice_over</mat-icon>
@@ -27,14 +27,12 @@
     </div>
   </div>
   <div class="input-section" >
-    <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1;background-color: white">
-      <textarea matInput
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="2"
-            [(ngModel)]="newMessage" (keydown.enter)="onEnterPress(); false" placeholder="Type something..."></textarea>
-    </mat-form-field>
+
+    <app-autocompletion
+      style="flex:1"
+      [(newMessage)]="newMessage"
+      [commonQuestionsPath]="'assets/llm-common.txt'"
+      (enterPressed)="onEnterPress()"></app-autocompletion>
     <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()" [disabled]="inputDisabled">
       <mat-icon>send</mat-icon>
     </button>

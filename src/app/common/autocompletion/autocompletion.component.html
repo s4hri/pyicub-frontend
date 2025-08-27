@@ -1,0 +1,24 @@
+<div style="position: relative; width: 100%;">
+  <mat-form-field subscriptSizing="dynamic" appearance="outline" style="width: 100%;">
+    <textarea matInput
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="2"
+              [ngModel]="newMessage"
+              (ngModelChange)="onInput($event)"
+              (keydown)="onKeyDown($event)"
+              placeholder="Type something...">
+    </textarea>
+  </mat-form-field>
+
+  <div *ngIf="showSuggestions" class="autocomplete-list" tabindex="0">
+    <div *ngFor="let suggestion of suggestions; let i = index"
+         #item
+         class="autocomplete-item"
+         [class.highlighted]="i === highlightedIndex"
+         (click)="selectSuggestion(suggestion)">
+      {{ suggestion }}
+    </div>
+  </div>
+</div>

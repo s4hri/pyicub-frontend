@@ -7,15 +7,12 @@
     </div >
   </div>
   <div class="input-section">
-        <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex:1">
-      <textarea matInput
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="2"
-            [(ngModel)]="newMessage" (keydown.enter)="onEnterPress(); false" placeholder="Type something..."></textarea>
 
-    </mat-form-field>
+    <app-autocompletion
+      style="flex:1"
+      [(newMessage)]="newMessage"
+      [commonQuestionsPath]="'assets/speech-common.txt'"
+      (enterPressed)="onEnterPress()"></app-autocompletion>
     <button mat-button style="height:100%;background-color: rgb(119,161,215)" (click)="sendMessage()" [disabled]="inputDisabled">
       <mat-icon>send</mat-icon>
     </button>
