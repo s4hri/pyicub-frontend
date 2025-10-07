@@ -62,10 +62,10 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
 
     this.pollingInterval = setInterval(() => {
       console.log("Polling message: Component is alive and polling every 1000ms");
-    
+
       // Call fsmGetProcesses and pass the reqID to checkAsyncRequestStatus
       this.fsmGetCurrentState().subscribe(currentState => {
-        
+
 
         if (currentState == "init") {
           if(this.previousNodeID) {
@@ -77,20 +77,27 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
         let currentNode = this.getNodeByID(currentState);
 
         // Fetch current state first
-        this.fsmGetCurrentProcess().subscribe(reqID => {          
-      
+        this.fsmGetCurrentProcess().subscribe(reqID => {
+
           this.currentNodeID = currentNode.id;
-          
+
           const onRunning = () => {
             if(this.previousNodeID == currentNode.id) {
                 return;
             }
             this.updateNodeState(currentNode, NodeStatus.RUNNING);
           };
-    
+
           const onDone = () => {
             this.updateNodeState(currentNode, NodeStatus.DONE);
             const reachableNodes = this.findReachableNodes(currentNode.id);
+            // Deactivate not reachable nodes
+            const notReachableNodes = this.nodes.filter(a => !reachableNodes.some(b => b.id === a.id))
+            for (let node of notReachableNodes){
+              if (node.data.state === NodeStatus.ACTIVE){
+                this.updateNodeState(node, NodeStatus.INACTIVE)
+              }
+            }
             for (let reachableNode of reachableNodes) {
               this.updateNodeState(reachableNode, NodeStatus.ACTIVE);
             }
@@ -105,7 +112,7 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
               }
             }
           };
-    
+
           const onFailed = () => {
             this.updateNodeState(currentNode, NodeStatus.FAILED);
             const reachableNodes = this.findReachableNodes(currentNode.id);
@@ -114,7 +121,7 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
             }
             this.previousNodeID = currentNode.id;
           };
-    
+
           const onTimeout = () => {
             this.updateNodeState(currentNode, NodeStatus.TIMEOUT);
             const reachableNodes = this.findReachableNodes(currentNode.id);
@@ -123,13 +130,13 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
             }
             this.previousNodeID = currentNode.id;
           };
-    
+
           // Call checkAsyncRequestStatus with the current state passed to onRunning
           this.checkAsyncRequestStatus(reqID, undefined, onRunning, onDone, onFailed, onTimeout);
         });
       });
     }, 250);
-    
+
     forkJoin({
       fsm: this.getApplicationFSM(),
       currentStateName: this.fsmGetCurrentState()
@@ -244,12 +251,12 @@ export class FsmComponent extends WidgetBaseComponent implements OnInit, OnDestr
 
   private runStep(selectedNode: InputNode<nodeData>) {
     let trigger: string;
-    
+
     const terminalNode = this.terminalNodes.find(node => node.nodeID === this.currentNodeID);
     if(terminalNode){
       this.fsmRunStep(terminalNode.restartTrigger).subscribe();
     }
-    
+
     if (selectedNode.id === this.startingNode.nodeID) {
       trigger = this.startingNode.startTrigger;
     } else {
